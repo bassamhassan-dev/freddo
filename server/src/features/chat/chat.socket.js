@@ -46,8 +46,10 @@ export function attachChatSocket(httpServer) {
     if (isAdmin) {
       socket.join('chat:admins');
       // Admin opens a thread: join its room and clear the admin unread count.
-      socket.on('chat:join', async (conversationId, ack) => {
-        const exists = await ChatConversation.exists({ _id: conversationId });
+      // The client emits { conversationId }; accept a bare string too.
+      socket.on('chat:join', async (payload, ack) => {
+        const conversationId = typeof payload === 'string' ? payload : payload?.conversationId;
+        const exists = conversationId && await ChatConversation.exists({ _id: conversationId });
         if (!exists) return ack?.({ error: 'not_found' });
         socket.join(roomFor(conversationId));
         await chatService.markRead(conversationId, 'admin');

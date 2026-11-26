@@ -132,3 +132,43 @@ test('socket round trip: customer message reaches the admins room live', async (
 test('a socket without a valid token is rejected', async () => {
   await assert.rejects(openSocket('not-a-token'));
 });
+
+// Regression (S26 runtime bug): the client emits chat:join with an OBJECT
+// { conversationId }, and the handler used to pass it straight into
+// findOne at path _id - CastError on Bassam's machine, uncovered by tests.
+test('admin joins and replies over the socket with the client payload shape', async () => {
+  const customer = await makeUser('chat-c3@example.com', ROLES.CUSTOMER);
+  const admin = await makeUser('chat-a3@example.com', ROLES.ADMIN);
+
+  const sent = await api('/mine/messages', { method: 'POST', token: customer.token, body: { text: 'لو سمحت' } });
+  assert.equal(sent.status, 201);
+  const list = await api('/admin', { token: admin.token });
+  const conversationId = list.body.data.conversations[0].id;
+  assert.equal(list.body.data.conversations[0].unreadForAdmin, 1);
+
+  const adminSocket = await openSocket(admin.token);
+  const customerSocket = await openSocket(customer.token);
+
+  // The exact client emit: an object payload, not a bare string.
+  const joinAck = await adminSocket.emitWithAck('chat:join', { conversationId });
+  assert.equal(joinAck.ok, true);
+
+  // Joining cleared the admin unread counter.
+  const after = await api('/admin', { token: admin.token });
+  assert.equal(after.body.data.conversations[0].unreadForAdmin, 0);
+
+  // Admin sends over the socket with the client body shape; the customer,
+  // sitting in the conversation room, receives it live.
+  const received = new Promise((resolve) => customerSocket.on('chat:message', resolve));
+  const sendAck = await adminSocket.emitWithAck('chat:send', { conversationId, text: 'أهلاً، أمرك؟' });
+  assert.equal(sendAck.ok, true);
+  const payload = await received;
+  assert.equal(payload.message.text, 'أهلاً، أمرك؟');
+  assert.equal(payload.message.senderRole, 'admin');
+
+  const history = await api(`/admin/${conversationId}/messages`, { token: admin.token });
+  assert.equal(history.body.data.messages.length, 2);
+
+  adminSocket.close();
+  customerSocket.close();
+});
