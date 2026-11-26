@@ -146,7 +146,11 @@ export default function AdminPage({ lang }) {
                 </div>
                 <p className="mt-1 text-sm text-secondary">
                   {order.customer.name} · <span dir="ltr">{order.customer.phone}</span>
+                  {' · '}{t(lang, `fulfillment_${order.fulfillmentType || 'pickup'}`)}
                 </p>
+                {order.fulfillmentType === 'delivery' && order.deliveryAddress && (
+                  <p className="mt-1 text-sm text-foreground">{t(lang, 'deliveryAddress')}: {order.deliveryAddress}</p>
+                )}
                 <p className="mt-1 text-sm text-foreground">
                   {order.items.map((item) => `${item.name[lang]}${item.variantLabel ? ` (${item.variantLabel[lang]})` : ''} ×${item.qty}`).join('، ')}
                 </p>

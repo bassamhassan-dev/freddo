@@ -351,5 +351,11 @@
   "admin.accounts.adjust": "تعديل النقاط",
   "admin.accounts.adjustPoints": "± نقاط",
   "admin.accounts.adjustReason": "السبب (بيسجل في الكشف)",
-  "admin.accounts.adjustApply": "طبّق"
+  "admin.accounts.adjustApply": "طبّق",
+  "fulfillment": "طريقة الاستلام",
+  "fulfillment_pickup": "استلام من الفرع",
+  "fulfillment_delivery": "توصيل للبيت",
+  "deliveryAddress": "عنوان التوصيل",
+  "deliveryAddressPlaceholder": "المنطقة، الشارع، رقم العمارة، علامة مميزة...",
+  "codNoteDelivery": "الدفع كاش عند التوصيل."
 }

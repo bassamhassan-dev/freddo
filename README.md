@@ -1,6 +1,10 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprints 29-31: chat identity
+MERN monorepo (MongoDB, Express, React, Node). Sprint 32: fulfillment
+choice at checkout - pickup (default) or delivery with a required,
+server-validated address; admin sees type + address on the order card,
+customer sees it on the confirmation and order list; cash stays the only
+payment. Sprints 29-31: chat identity
 (senderName snapshots, initials avatars both sides) plus the sender-echo fix
 (client listened for 'chat:new' while the server emits 'chat:message' - no
 live event ever landed); checkout fixes (first size pre-selected, stale cart

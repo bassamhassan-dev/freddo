@@ -76,7 +76,12 @@ async function priceLine(requested) {
   };
 }
 
-export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode, redeemPoints }) {
+export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode, redeemPoints, fulfillmentType, deliveryAddress }) {
+  const fulfillment = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
+  const address = typeof deliveryAddress === 'string' ? deliveryAddress.trim().slice(0, 300) : '';
+  if (fulfillment === 'delivery' && address.length < 5) {
+    throw badRequest('ADDRESS_REQUIRED', 'اكتب عنوان التوصيل', 'Enter the delivery address');
+  }
   if (typeof phone !== 'string' || !/^\+?[0-9\s-]{7,16}$/.test(phone.trim())) {
     throw badRequest('INVALID_PHONE', 'اكتب رقم موبايل صحيح', 'Enter a valid phone number');
   }
@@ -125,6 +130,8 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey, c
     total: subtotal - discount - loyaltyDiscount,
     couponCode: coupon ? coupon.code : undefined,
     customer: { name: user.name, phone: phone.trim() },
+    fulfillmentType: fulfillment,
+    deliveryAddress: fulfillment === 'delivery' ? address : undefined,
     notes: typeof notes === 'string' ? notes.trim().slice(0, 500) : '',
     idempotencyKey: idempotencyKey ? String(idempotencyKey) : undefined,
     statusHistory: [{ from: 'none', to: 'pending', by: user._id }],

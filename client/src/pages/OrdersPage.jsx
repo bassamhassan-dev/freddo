@@ -41,7 +41,9 @@ export default function OrdersPage({ lang }) {
             </div>
             <div className="text-end">
               <p className="font-extrabold text-accent">{formatPrice(lang, order.total)}</p>
-              <p className="text-xs font-bold text-secondary">{t(lang, `status_${order.status}`)}</p>
+              <p className="text-xs font-bold text-secondary">
+                {t(lang, `status_${order.status}`)} · {t(lang, `fulfillment_${order.fulfillmentType || 'pickup'}`)}
+              </p>
             </div>
           </Link>
         ))}

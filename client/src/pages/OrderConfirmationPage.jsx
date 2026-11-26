@@ -83,7 +83,11 @@ export default function OrderConfirmationPage({ lang }) {
           <span className="font-bold text-foreground">{t(lang, 'total')}</span>
           <span className="font-extrabold text-accent">{formatPrice(lang, order.total)}</span>
         </div>
-        <p className="text-xs text-muted-foreground">{t(lang, 'codNote')}</p>
+        <p className="text-xs text-muted-foreground">
+          {t(lang, `fulfillment_${order.fulfillmentType || 'pickup'}`)}
+          {order.fulfillmentType === 'delivery' && order.deliveryAddress ? ` · ${order.deliveryAddress}` : ''}
+          {' · '}{t(lang, order.fulfillmentType === 'delivery' ? 'codNoteDelivery' : 'codNote')}
+        </p>
       </div>
 
       {error && <p className="mt-3 text-center text-sm font-semibold text-red-400">{error}</p>}

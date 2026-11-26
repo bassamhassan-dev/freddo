@@ -351,5 +351,11 @@
   "admin.accounts.adjust": "Adjust points",
   "admin.accounts.adjustPoints": "± points",
   "admin.accounts.adjustReason": "Reason (goes on the ledger)",
-  "admin.accounts.adjustApply": "Apply"
+  "admin.accounts.adjustApply": "Apply",
+  "fulfillment": "Fulfillment",
+  "fulfillment_pickup": "Pickup from the café",
+  "fulfillment_delivery": "Delivery",
+  "deliveryAddress": "Delivery address",
+  "deliveryAddressPlaceholder": "Area, street, building, landmark...",
+  "codNoteDelivery": "Cash on delivery."
 }

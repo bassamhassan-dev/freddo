@@ -65,6 +65,10 @@ export default function CheckoutPage({ lang }) {
   const total = subtotal - (coupon?.discount || 0) - loyaltyDiscount;
   const navigate = useNavigate();
   const [phone, setPhone] = useState(() => user?.phone || '');
+  // Fulfillment (Sprint 32): pickup from the cafe or delivery with an
+  // address. Cash either way; delivery zones/fees are an open follow-up.
+  const [fulfillment, setFulfillment] = useState('pickup');
+  const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -98,7 +102,7 @@ export default function CheckoutPage({ lang }) {
     setBusy(true);
     setError(null);
     try {
-      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey, couponCode: coupon?.code, redeemPoints: redeem && canRedeem });
+      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey, couponCode: coupon?.code, redeemPoints: redeem && canRedeem, fulfillmentType: fulfillment, deliveryAddress: fulfillment === 'delivery' ? address : undefined });
       clear();
       setIdempotencyKey(crypto.randomUUID());
       navigate(`/orders/${order._id}`, { replace: true, state: { placed: true } });
@@ -149,10 +153,40 @@ export default function CheckoutPage({ lang }) {
           <span className="font-extrabold text-accent">{t(lang, 'total')}</span>
           <span className="font-extrabold text-accent">{formatPrice(lang, total)}</span>
         </div>
-        <p className="text-xs text-muted-foreground">{t(lang, 'codNote')}</p>
+        <p className="text-xs text-muted-foreground">{t(lang, fulfillment === 'delivery' ? 'codNoteDelivery' : 'codNote')}</p>
       </div>
 
       <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+        <fieldset>
+
+            <legend className="mb-1.5 text-sm font-bold text-secondary">{t(lang, 'fulfillment')}</legend>
+            <div className="flex gap-2">
+              {['pickup', 'delivery'].map((f) => (
+                <button
+                  key={f}
+                  type="button"
+                  onClick={() => setFulfillment(f)}
+                  className={`flex-1 rounded-xl border px-3 py-2 text-sm font-bold transition ${
+                    fulfillment === f
+                      ? 'border-[#ffb21a] bg-[#241a10] text-[#ffb21a]'
+                      : 'border-border bg-background text-secondary'
+                  }`}
+                >
+                  {t(lang, `fulfillment_${f}`)}
+                </button>
+              ))}
+            </div>
+            {fulfillment === 'delivery' && (
+              <textarea
+                required
+                rows={2}
+                className="mt-2 w-full rounded-xl border border-border bg-background p-2 px-3 text-sm text-foreground"
+                placeholder={t(lang, 'deliveryAddressPlaceholder')}
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              />
+            )}
+        </fieldset>
         <label className="flex flex-col gap-1 text-sm font-semibold text-secondary">
           {t(lang, 'phone')}
           <input

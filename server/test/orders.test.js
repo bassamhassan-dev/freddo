@@ -138,6 +138,42 @@ test('no-variant item orders with no coupon, and empty-string coupon is ignored'
   assert.equal(emptyCoupon.body.data.order.total, 40);
 });
 
+// Sprint 32: the customer chooses pickup or delivery; delivery requires an
+// address and snapshots it on the order.
+test('fulfillment: pickup by default, delivery needs and keeps an address', async () => {
+  const { token } = await makeCustomer('fulfill@example.com');
+
+  const pickup = await api('/', {
+    method: 'POST',
+    token,
+    body: { phone: '01012345678', lines: [{ slug: 'spanish-latte', qty: 1, variantId: mediumId }] },
+  });
+  assert.equal(pickup.status, 201);
+  assert.equal(pickup.body.data.order.fulfillmentType, 'pickup');
+
+  const noAddress = await api('/', {
+    method: 'POST',
+    token,
+    body: { phone: '01012345678', lines: [{ slug: 'spanish-latte', qty: 1, variantId: mediumId }], fulfillmentType: 'delivery' },
+  });
+  assert.equal(noAddress.status, 400);
+  assert.equal(noAddress.body.error.code, 'ADDRESS_REQUIRED');
+
+  const delivery = await api('/', {
+    method: 'POST',
+    token,
+    body: {
+      phone: '01012345678',
+      lines: [{ slug: 'spanish-latte', qty: 1, variantId: mediumId }],
+      fulfillmentType: 'delivery',
+      deliveryAddress: 'الواسطى، شارع الجيش، عمارة 12',
+    },
+  });
+  assert.equal(delivery.status, 201);
+  assert.equal(delivery.body.data.order.fulfillmentType, 'delivery');
+  assert.equal(delivery.body.data.order.deliveryAddress, 'الواسطى، شارع الجيش، عمارة 12');
+});
+
 test('create rejects unavailable items and bad variants with clear codes', async () => {
   const { token } = await makeCustomer('b@example.com');
   await MenuItem.create(sampleItem({ slug: 'gone', isAvailable: false }));

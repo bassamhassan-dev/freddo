@@ -88,9 +88,11 @@ const orderSchema = new mongoose.Schema(
       name: { type: String, required: true },
       phone: { type: String, required: true },
     },
-    // Fulfillment is pickup-only for now: delivery zones/fees are open
-    // decision #1 in the requirements doc, so v1 does not guess them.
-    fulfillmentType: { type: String, enum: ['pickup'], default: 'pickup' },
+    // Fulfillment (Sprint 32, Bassam's decision): pickup from the cafe or
+    // delivery. Delivery requires an address snapshot (validated in the
+    // service); zones/fees stay an open follow-up - cash only either way.
+    fulfillmentType: { type: String, enum: ['pickup', 'delivery'], default: 'pickup' },
+    deliveryAddress: { type: String, trim: true, maxlength: 300 },
     notes: { type: String, trim: true, maxlength: 500 },
     // Client-supplied idempotency key (doc 9.4): a retried POST with the
     // same key returns the original order instead of creating a duplicate.
