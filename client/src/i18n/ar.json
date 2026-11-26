@@ -344,5 +344,7 @@
   "admin.menu.drink": "مشروب",
   "marquee.title": "شريط الإعلانات (تحت الهيرو)",
   "marquee.add": "ضيف جملة",
-  "chat.team": "فريق فريدو"
+  "chat.team": "فريق فريدو",
+  "navMenuOpen": "القايمة",
+  "navMenuClose": "اقفل القايمة"
 }

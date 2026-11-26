@@ -344,5 +344,7 @@
   "admin.menu.drink": "Drink",
   "marquee.title": "Announcement bar (below the hero)",
   "marquee.add": "Add phrase",
-  "chat.team": "Freddo team"
+  "chat.team": "Freddo team",
+  "navMenuOpen": "Menu",
+  "navMenuClose": "Close menu"
 }
