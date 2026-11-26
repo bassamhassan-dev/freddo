@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, cartSubtotal } from '@/store/cart.js';
 import { apiCreateOrder } from '@/api/orders.js';
 import { apiValidateCoupon } from '@/api/coupons.js';
+import { apiMyLoyalty } from '@/api/loyalty.js';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -16,9 +17,22 @@ export default function CheckoutPage({ lang }) {
   // Applied coupon: { code, discount }. The server recomputes everything at
   // submit; this is only the live preview (doc 13.3).
   const [coupon, setCoupon] = useState(null);
+  // Loyalty redemption (100 points = one free drink, drinks only). Balance
+  // comes from the server; the comped amount preview mirrors the server
+  // rule (cheapest drink unit). The server re-decides everything at submit.
+  const [loyaltyBalance, setLoyaltyBalance] = useState(0);
+  const [redeem, setRedeem] = useState(false);
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState(null);
-  const total = subtotal - (coupon?.discount || 0);
+
+  useEffect(() => {
+    apiMyLoyalty().then(({ balance }) => setLoyaltyBalance(balance || 0)).catch(() => {});
+  }, []);
+  const drinkUnitPrices = lines.filter((l) => l.isDrink).map((l) => l.unitPrice);
+  const freeDrinkValue = drinkUnitPrices.length > 0 ? Math.min(...drinkUnitPrices) : 0;
+  const canRedeem = loyaltyBalance >= 100 && freeDrinkValue > 0;
+  const loyaltyDiscount = redeem && canRedeem ? freeDrinkValue : 0;
+  const total = subtotal - (coupon?.discount || 0) - loyaltyDiscount;
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
@@ -54,7 +68,7 @@ export default function CheckoutPage({ lang }) {
     setBusy(true);
     setError(null);
     try {
-      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey, couponCode: coupon?.code });
+      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey, couponCode: coupon?.code, redeemPoints: redeem && canRedeem });
       clear();
       setIdempotencyKey(crypto.randomUUID());
       navigate(`/orders/${order._id}`, { replace: true, state: { placed: true } });
@@ -87,6 +101,18 @@ export default function CheckoutPage({ lang }) {
           <div className="flex items-center justify-between text-sm">
             <span className="text-primary">{t(lang, 'discount')} ({coupon.code})</span>
             <span className="text-primary">-{formatPrice(lang, coupon.discount)}</span>
+          </div>
+        )}
+        {canRedeem && (
+          <label className="flex items-center gap-2 rounded-xl border border-border bg-background/40 px-3 py-2 text-sm text-foreground">
+            <input type="checkbox" checked={redeem} onChange={(e) => setRedeem(e.target.checked)} />
+            {t(lang, 'redeemFreeDrink')} ({loyaltyBalance} {t(lang, 'pointsUnit')})
+          </label>
+        )}
+        {loyaltyDiscount > 0 && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-primary">{t(lang, 'freeDrinkDiscount')}</span>
+            <span className="text-primary">-{formatPrice(lang, loyaltyDiscount)}</span>
           </div>
         )}
         <div className="flex items-center justify-between">

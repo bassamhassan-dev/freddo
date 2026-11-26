@@ -23,6 +23,7 @@ const orderItemSchema = new mongoose.Schema(
       },
     ],
     notes: { type: String, trim: true, maxlength: 300 },
+    isDrink: { type: Boolean, default: false },
     unitPrice: { type: Number, required: true, min: 0 },
     qty: { type: Number, required: true, min: 1, max: 20 },
     lineTotal: { type: Number, required: true, min: 0 },
@@ -73,6 +74,10 @@ const orderSchema = new mongoose.Schema(
     discount: { type: Number, default: 0, min: 0 },
     // The coupon code that produced the discount, frozen with the order.
     couponCode: { type: String, uppercase: true, trim: true },
+    // Loyalty redemption (100 points = one free drink, doc 14): the comped
+    // amount, frozen with the order. > 0 means this order spent points and
+    // a cancellation must refund them.
+    loyaltyDiscount: { type: Number, default: 0, min: 0 },
     total: { type: Number, required: true, min: 0 },
     paymentMethod: { type: String, enum: ['cod'], default: 'cod' }, // COD only in v1 (doc 9.3)
     paymentStatus: { type: String, enum: ['pending', 'paid'], default: 'pending' },

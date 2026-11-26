@@ -54,6 +54,20 @@ export const listMenu = catchAsync(async (req, res) => {
 
 // PATCH /api/admin/menu/:id/availability { isAvailable } - the one v1
 // catalog mutation: taking an item off the board (and back).
+// PATCH /api/admin/menu/:id/drink-flag { isDrink } - marks an item as a
+// drink for the loyalty free-drink redemption (100 points comp drinks only).
+export const setDrinkFlag = catchAsync(async (req, res) => {
+  const { isDrink } = req.body || {};
+  if (typeof isDrink !== 'boolean') {
+    throw new AppError(400, 'VALIDATION_ERROR', 'ابعت isDrink true أو false', 'Send isDrink as true or false');
+  }
+  const item = await MenuItem.findByIdAndUpdate(req.params.id, { isDrink }, { new: true });
+  if (!item) {
+    throw new AppError(404, 'ITEM_NOT_FOUND', 'الصنف ده مش موجود', 'This item does not exist');
+  }
+  res.json({ success: true, data: { item: item.toPublicJSON() } });
+});
+
 export const setAvailability = catchAsync(async (req, res) => {
   const { isAvailable } = req.body || {};
   if (typeof isAvailable !== 'boolean') {

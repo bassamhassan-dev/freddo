@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 
-// The append-only ledger (doc 14.1). The unique (order, 'earn') pair is the
-// idempotency key: an order can award points exactly once, even if the
-// award path somehow runs twice.
+// The append-only ledger (doc 14.1). The unique (order, type) pair is the
+// idempotency key: an order can earn, redeem and be refunded exactly once
+// each, even if any of those paths somehow runs twice.
 const loyaltyTransactionSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
@@ -17,7 +17,7 @@ const loyaltyTransactionSchema = new mongoose.Schema(
 
 loyaltyTransactionSchema.index(
   { order: 1, type: 1 },
-  { unique: true, partialFilterExpression: { order: { $exists: true }, type: 'earn' } }
+  { unique: true, partialFilterExpression: { order: { $exists: true }, type: { $in: ['earn', 'redeem', 'refund'] } } }
 );
 
 const LoyaltyTransaction = mongoose.model('LoyaltyTransaction', loyaltyTransactionSchema);

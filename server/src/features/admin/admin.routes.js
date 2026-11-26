@@ -41,6 +41,7 @@ router.patch('/accounts/:id/status', controller.setAccountStatus);
 router.patch('/accounts/:id/role', controller.setAccountRole);
 router.get('/menu', controller.listMenu);
 router.patch('/menu/:id/availability', controller.setAvailability);
+router.patch('/menu/:id/drink-flag', controller.setDrinkFlag);
 router.patch('/menu/:id/image', controller.setMenuImage);
 router.put('/menu/:id/recipe', controller.setMenuRecipe);
 

@@ -336,5 +336,10 @@
   "chat.sendImage": "Send a photo",
   "chat.adminEmpty": "No conversations yet",
   "chat.adminPick": "Pick a conversation to view it",
-  "admin.tabs.chat": "Chats"
+  "admin.tabs.chat": "Chats",
+  "redeemFreeDrink": "Redeem 100 points for a free drink",
+  "pointsUnit": "pts",
+  "freeDrinkDiscount": "Free drink (loyalty)",
+  "admin.accounts.points": "Points",
+  "admin.menu.drink": "Drink"
 }

@@ -67,8 +67,12 @@ describe('CheckoutPage', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /اطلب/ }));
 
-    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
-    const [url, options] = fetch.mock.calls[0];
+    // Mount also loads the loyalty balance (GET /api/loyalty/mine), so find
+    // the order POST among the calls instead of counting all fetches.
+    await waitFor(() =>
+      expect(fetch.mock.calls.some(([u, o]) => String(u).includes('/api/orders') && o?.method === 'POST')).toBe(true)
+    );
+    const [url, options] = fetch.mock.calls.find(([u, o]) => String(u).includes('/api/orders') && o?.method === 'POST');
     expect(String(url)).toContain('/api/orders');
     const sent = JSON.parse(options.body);
     expect(sent.lines).toEqual([{ slug: 'spanish-latte', variantId: 'v1', addOnIds: ['a1'], qty: 2, notes: '' }]);

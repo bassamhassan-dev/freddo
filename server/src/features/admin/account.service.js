@@ -3,6 +3,7 @@ import User from '../auth/user.model.js';
 import RefreshToken from '../auth/refreshToken.model.js';
 import { AppError } from '../../utils/AppError.js';
 import { ROLES } from '../../utils/roles.js';
+import LoyaltyAccount from '../loyalty/loyaltyAccount.model.js';
 
 // Admin account management (requirements doc 3.7). Privileged accounts are
 // created here, never through public registration.
@@ -39,8 +40,11 @@ export async function listAccounts({ role, status, search, page = 1 } = {}) {
     overview[row._id.role][row._id.isActive ? 'active' : 'disabled'] = row.count;
   }
 
+  const loyaltyRows = await LoyaltyAccount.find({ user: { $in: users.map((u) => u._id) } }).lean();
+  const balanceByUser = new Map(loyaltyRows.map((row) => [String(row.user), row.balance]));
+
   return {
-    accounts: users.map((u) => u.toAdminJSON()),
+    accounts: users.map((u) => ({ ...u.toAdminJSON(), loyaltyBalance: balanceByUser.get(String(u._id)) || 0 })),
     total,
     page: pageNumber,
     pages: Math.max(1, Math.ceil(total / PAGE_SIZE)),

@@ -2,10 +2,10 @@ import { request } from './client.js';
 
 // Order endpoints. The client sends slugs/ids/quantities only - the server
 // re-prices everything (doc 8.5), so there is no price field here at all.
-export async function apiCreateOrder({ phone, notes, lines, idempotencyKey }) {
+export async function apiCreateOrder({ phone, notes, lines, idempotencyKey, couponCode, redeemPoints }) {
   const { data } = await request('/api/orders', {
     method: 'POST',
-    body: { phone, notes, lines, idempotencyKey },
+    body: { phone, notes, lines, idempotencyKey, couponCode, redeemPoints },
   });
   return data;
 }

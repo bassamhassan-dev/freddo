@@ -88,6 +88,7 @@ export default function ItemDetailPage({ lang }) {
       notes: notes.trim(),
       qty,
       unitPrice,
+      isDrink: item.isDrink === true,
     });
     navigate('/cart');
   };

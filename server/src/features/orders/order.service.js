@@ -3,7 +3,7 @@ import Order, { ORDER_TRANSITIONS } from './order.model.js';
 import MenuItem from '../menu/menuItem.model.js';
 import * as couponService from '../coupons/coupon.service.js';
 import { AppError } from '../../utils/AppError.js';
-import { awardForCompletedOrder } from '../loyalty/loyalty.service.js';
+import { awardForCompletedOrder, loyaltyDiscountFor, redeemForOrder, refundForCancelledOrder } from '../loyalty/loyalty.service.js';
 
 // The order business rules. The single most important one (doc 8.5/9.4):
 // the client sends only slugs, ids and quantities - NEVER prices. Every
@@ -66,6 +66,7 @@ async function priceLine(requested) {
     product: product._id,
     name: product.name,
     image: product.images?.[0]?.url,
+    isDrink: product.isDrink === true,
     variantLabel,
     addOns,
     notes: typeof notes === 'string' ? notes.trim().slice(0, 300) : '',
@@ -75,7 +76,7 @@ async function priceLine(requested) {
   };
 }
 
-export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode }) {
+export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode, redeemPoints }) {
   if (typeof phone !== 'string' || !/^\+?[0-9\s-]{7,16}$/.test(phone.trim())) {
     throw badRequest('INVALID_PHONE', 'اكتب رقم موبايل صحيح', 'Enter a valid phone number');
   }
@@ -103,13 +104,25 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey, c
     discount = result.discount;
   }
 
+  // Loyalty redemption: the client asks with redeemPoints, the server
+  // decides what it is worth - one free drink (cheapest drink unit), and
+  // only if the cart actually has a drink.
+  let loyaltyDiscount = 0;
+  if (redeemPoints) {
+    loyaltyDiscount = loyaltyDiscountFor(items);
+    if (loyaltyDiscount === 0) {
+      throw badRequest('NO_ELIGIBLE_DRINK', 'المشروب المجاني بيتحط على مشروب بس - مفيش مشروبات في السلة', 'The free drink applies to drinks only - there are no drinks in the cart');
+    }
+  }
+
   const build = () => ({
     orderNumber: makeOrderNumber(),
     user: user._id,
     items,
     subtotal,
     discount,
-    total: subtotal - discount,
+    loyaltyDiscount,
+    total: subtotal - discount - loyaltyDiscount,
     couponCode: coupon ? coupon.code : undefined,
     customer: { name: user.name, phone: phone.trim() },
     notes: typeof notes === 'string' ? notes.trim().slice(0, 500) : '',
@@ -119,6 +132,16 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey, c
 
   try {
     const order = await Order.create(build());
+    if (loyaltyDiscount > 0) {
+      try {
+        await redeemForOrder(user._id, order);
+      } catch (err) {
+        // Points could not be spent (balance race): the order must not
+        // stand with a discount nobody paid for.
+        await Order.deleteOne({ _id: order._id });
+        throw err;
+      }
+    }
     if (coupon) {
       // The use is claimed after the order exists. A claim can only fail
       // in a razor-thin race (limit hit between validation and here); the
@@ -190,5 +213,6 @@ export async function applyTransition(order, nextStatus, actorId) {
   if (nextStatus === 'cancelled') order.cancelledAt = new Date();
   await order.save();
   if (nextStatus === 'completed') await awardForCompletedOrder(order);
+  if (nextStatus === 'cancelled') await refundForCancelledOrder(order);
   return order;
 }

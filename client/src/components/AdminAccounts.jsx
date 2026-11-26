@@ -144,6 +144,9 @@ export default function AdminAccounts({ lang }) {
               <div className="mt-1 flex gap-2">
                 <Badge className="text-xs">{t(lang, `role_${account.role}`)}</Badge>
                 <Badge className="text-xs">{account.isActive ? t(lang, 'activeCount') : t(lang, 'disabledCount')}</Badge>
+                {account.role === 'customer' && (
+                  <Badge className="text-xs">{t(lang, 'admin.accounts.points')}: {account.loyaltyBalance || 0}</Badge>
+                )}
                 {account.lastLoginAt && (
                   <span className="text-xs text-muted-foreground">
                     {t(lang, 'lastLogin')}: {new Date(account.lastLoginAt).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-EG')}

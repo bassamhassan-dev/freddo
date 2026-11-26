@@ -20,6 +20,10 @@ const variantSchema = new mongoose.Schema(
     label: { type: localizedString(), required: true },
     price: { type: Number, required: true, min: 0 },
     isAvailable: { type: Boolean, default: true },
+    // Loyalty redemption (doc 14, Bassam's rule): 100 points comp one free
+    // DRINK, never food. This flag is the catalog's eligibility marker -
+    // admin-controlled, enforced server-side at checkout.
+    isDrink: { type: Boolean, default: false },
   },
   { _id: true }
 );
@@ -30,6 +34,10 @@ const addOnSchema = new mongoose.Schema(
     name: { type: localizedString(), required: true },
     price: { type: Number, required: true, min: 0 },
     isAvailable: { type: Boolean, default: true },
+    // Loyalty redemption (doc 14, Bassam's rule): 100 points comp one free
+    // DRINK, never food. This flag is the catalog's eligibility marker -
+    // admin-controlled, enforced server-side at checkout.
+    isDrink: { type: Boolean, default: false },
   },
   { _id: true }
 );
@@ -104,6 +112,10 @@ const menuItemSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
     isBestSeller: { type: Boolean, default: false },
     isAvailable: { type: Boolean, default: true },
+    // Loyalty redemption (doc 14, Bassam's rule): 100 points comp one free
+    // DRINK, never food. This flag is the catalog's eligibility marker -
+    // admin-controlled, enforced server-side at checkout.
+    isDrink: { type: Boolean, default: false },
     // Optional: food items may not have a preparation recipe at all.
     recipe: { type: recipeSchema },
     sortOrder: { type: Number, default: 0 },
@@ -133,6 +145,7 @@ menuItemSchema.methods.toPublicJSON = function toPublicJSON() {
     basePrice: this.basePrice,
     variants: this.variants,
     addOns: this.addOns,
+    isDrink: this.isDrink,
     isFeatured: this.isFeatured,
     isBestSeller: this.isBestSeller,
     rating: this.rating,

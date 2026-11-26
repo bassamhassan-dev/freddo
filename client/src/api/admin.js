@@ -40,6 +40,14 @@ export async function apiSetAvailability(id, isAvailable) {
   return data;
 }
 
+export async function apiSetDrinkFlag(id, isDrink) {
+  const { data } = await request(`/api/admin/menu/${id}/drink-flag`, {
+    method: 'PATCH',
+    body: { isDrink },
+  });
+  return data;
+}
+
 export async function apiAdminAccounts({ role, status, search } = {}) {
   const params = new URLSearchParams();
   if (role) params.set('role', role);

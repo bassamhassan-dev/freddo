@@ -336,5 +336,10 @@
   "chat.sendImage": "ابعت صورة",
   "chat.adminEmpty": "مفيش محادثات لسه",
   "chat.adminPick": "اختار محادثة عشان تشوفها",
-  "admin.tabs.chat": "المحادثات"
+  "admin.tabs.chat": "المحادثات",
+  "redeemFreeDrink": "استبدل 100 نقطة بمشروب مجاني",
+  "pointsUnit": "نقطة",
+  "freeDrinkDiscount": "مشروب مجاني (الولاء)",
+  "admin.accounts.points": "النقاط",
+  "admin.menu.drink": "مشروب"
 }

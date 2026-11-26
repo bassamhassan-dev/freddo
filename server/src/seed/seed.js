@@ -463,10 +463,15 @@ async function seed() {
     await Table.updateOne({ number: table.number }, { $set: table }, { upsert: true });
   }
 
+  // Drink categories drive the loyalty free-drink flag (100 points = one
+  // free drink, never food). Seeded here so a re-seed repairs the flag;
+  // the admin can toggle it per item afterwards.
+  const DRINK_CATEGORIES = new Set(['hot-coffee', 'iced-coffee', 'specialty-drinks', 'tea']);
   for (const item of items) {
     // Images are seeded separately and only when the item has none, so an
     // image the admin replaced through Cloudinary survives a re-seed.
     const { slug } = item;
+    item.isDrink = DRINK_CATEGORIES.has(item.category?.slug);
     await MenuItem.updateOne({ slug }, { $set: item }, { upsert: true });
     await MenuItem.updateOne(
       { slug, $or: [{ images: { $exists: false } }, { images: { $size: 0 } }] },

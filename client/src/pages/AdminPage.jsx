@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability } from '@/api/admin.js';
+import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability, apiSetDrinkFlag } from '@/api/admin.js';
 import AdminAccounts from '@/components/AdminAccounts.jsx';
 import AdminReviews from '@/components/AdminReviews.jsx';
 import AdminCoupons from '@/components/AdminCoupons.jsx';
@@ -59,6 +59,10 @@ export default function AdminPage({ lang }) {
     loadOrders();
   };
 
+  const toggleDrink = async (id, isDrink) => {
+    await apiSetDrinkFlag(id, isDrink);
+    await loadMenu();
+  };
   const toggle = async (id, isAvailable) => {
     await apiSetAvailability(id, isAvailable);
     loadMenu();
@@ -175,6 +179,9 @@ export default function AdminPage({ lang }) {
                 <div className="flex items-center gap-2">
                   <AdminMenuImage lang={lang} item={item} onSaved={loadMenu} />
                   <AdminRecipeEditor lang={lang} item={item} onSaved={loadMenu} />
+                  <Button size="sm" variant={item.isDrink ? 'default' : 'ghost'} onClick={() => toggleDrink(item._id, !item.isDrink)} title={t(lang, 'admin.menu.drink')}>
+                    {t(lang, 'admin.menu.drink')}
+                  </Button>
                   <Button size="sm" variant={item.isAvailable ? 'default' : 'ghost'} onClick={() => toggle(item._id, !item.isAvailable)}>
                     {item.isAvailable ? t(lang, 'available') : t(lang, 'unavailable')}
                   </Button>

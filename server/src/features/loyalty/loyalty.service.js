@@ -82,3 +82,74 @@ export async function adjust(userId, points, description) {
     description: String(description || '').trim().slice(0, 200),
   });
 }
+
+// Redemption (doc 14, Bassam's decision): 100 points = one free drink at
+// checkout. DRINK ONLY, enforced server-side from the item's isDrink flag -
+// a cheaper dessert in the cart is never the comped line. Documented
+// defaults, flagged for confirmation: one redemption per order, and the
+// comped unit is the cheapest drink unit as ordered (size and add-ons
+// included in its price).
+export const REDEEM_POINTS = 100;
+
+export function loyaltyDiscountFor(items) {
+  const drinkPrices = items.filter((i) => i.isDrink).map((i) => i.unitPrice);
+  if (drinkPrices.length === 0) return 0;
+  return Math.min(...drinkPrices);
+}
+
+// Spends the points after the order exists. The (order, 'redeem') unique
+// index makes a double-spend for the same order impossible; the balance
+// guard makes spending below zero impossible.
+export async function redeemForOrder(userId, order) {
+  const account = await LoyaltyAccount.findOneAndUpdate(
+    { user: userId, balance: { $gte: REDEEM_POINTS } },
+    { $inc: { balance: -REDEEM_POINTS } },
+    { new: true }
+  );
+  if (!account) {
+    throw new AppError(400, 'INSUFFICIENT_POINTS', 'رصيد النقاط مش كفاية (محتاج 100 نقطة)', 'Not enough points (100 required)');
+  }
+  try {
+    return await LoyaltyTransaction.create({
+      user: userId,
+      type: 'redeem',
+      points: -REDEEM_POINTS,
+      balanceAfter: account.balance,
+      order: order._id,
+      description: `Free drink - order ${order.orderNumber}`,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      await LoyaltyAccount.updateOne({ user: userId }, { $inc: { balance: REDEEM_POINTS } });
+      return null;
+    }
+    throw err;
+  }
+}
+
+// A cancelled order that spent points gives them back, exactly once (the
+// (order, 'refund') unique index is the guard).
+export async function refundForCancelledOrder(order) {
+  if (!order.user || !(order.loyaltyDiscount > 0)) return null;
+  const account = await LoyaltyAccount.findOneAndUpdate(
+    { user: order.user },
+    { $inc: { balance: REDEEM_POINTS }, $setOnInsert: { user: order.user } },
+    { new: true, upsert: true }
+  );
+  try {
+    return await LoyaltyTransaction.create({
+      user: order.user,
+      type: 'refund',
+      points: REDEEM_POINTS,
+      balanceAfter: account.balance,
+      order: order._id,
+      description: `Refund - cancelled order ${order.orderNumber}`,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      await LoyaltyAccount.updateOne({ user: order.user }, { $inc: { balance: -REDEEM_POINTS } });
+      return null;
+    }
+    throw err;
+  }
+}
