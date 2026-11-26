@@ -27,7 +27,8 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
   `docs/WALKTHROUGH-SPRINT14.md`, one per sprint).
-  `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
+  `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
+  (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
   behind each).
 
