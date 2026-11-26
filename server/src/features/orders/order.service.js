@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import Order, { ORDER_TRANSITIONS } from './order.model.js';
 import MenuItem from '../menu/menuItem.model.js';
+import * as couponService from '../coupons/coupon.service.js';
 import { AppError } from '../../utils/AppError.js';
 
 // The order business rules. The single most important one (doc 8.5/9.4):
@@ -73,7 +74,7 @@ async function priceLine(requested) {
   };
 }
 
-export async function createOrder(user, { phone, notes, lines, idempotencyKey }) {
+export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode }) {
   if (typeof phone !== 'string' || !/^\+?[0-9\s-]{7,16}$/.test(phone.trim())) {
     throw badRequest('INVALID_PHONE', 'اكتب رقم موبايل صحيح', 'Enter a valid phone number');
   }
@@ -91,13 +92,24 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey })
   const items = await Promise.all(lines.map(priceLine));
   const subtotal = items.reduce((sum, item) => sum + item.lineTotal, 0);
 
+  // Coupon (doc 13.3): validated and priced here, server-side, against the
+  // freshly computed subtotal. The client's discount amount is never read.
+  let coupon = null;
+  let discount = 0;
+  if (couponCode) {
+    const result = await couponService.validateCouponForUser(couponCode, user, subtotal);
+    coupon = result.coupon;
+    discount = result.discount;
+  }
+
   const build = () => ({
     orderNumber: makeOrderNumber(),
     user: user._id,
     items,
     subtotal,
-    discount: 0,
-    total: subtotal,
+    discount,
+    total: subtotal - discount,
+    couponCode: coupon ? coupon.code : undefined,
     customer: { name: user.name, phone: phone.trim() },
     notes: typeof notes === 'string' ? notes.trim().slice(0, 500) : '',
     idempotencyKey: idempotencyKey ? String(idempotencyKey) : undefined,
@@ -106,6 +118,18 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey })
 
   try {
     const order = await Order.create(build());
+    if (coupon) {
+      // The use is claimed after the order exists. A claim can only fail
+      // in a razor-thin race (limit hit between validation and here); the
+      // order then stands with its discount honored and the claim error is
+      // swallowed - a failed coupon write must never orphan a valid order.
+      // Documented lean choice in CONVENTIONS.md.
+      try {
+        await couponService.recordUsage(coupon, user._id, order._id, discount);
+      } catch {
+        // see comment above
+      }
+    }
     return { order, replayed: false };
   } catch (err) {
     if (err.code === 11000 && err.message.includes('orderNumber')) {

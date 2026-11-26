@@ -121,5 +121,20 @@
   "hideReview": "Hide",
   "restoreReview": "Restore",
   "hiddenBadge": "Hidden",
-  "cafeTarget": "The cafe"
+  "cafeTarget": "The cafe",
+  "discount": "Discount",
+  "couponPlaceholder": "Coupon code",
+  "applyCoupon": "Apply",
+  "removeCoupon": "Remove",
+  "adminCouponsTab": "Coupons",
+  "createCoupon": "Create coupon",
+  "couponCode": "Code",
+  "percentageType": "Percentage %",
+  "fixedType": "Fixed amount",
+  "couponValue": "Value",
+  "minOrder": "Minimum order",
+  "perUserLimit": "Per-customer limit",
+  "searchCoupons": "Search by code",
+  "usedCount": "Used",
+  "egp": "EGP"
 }

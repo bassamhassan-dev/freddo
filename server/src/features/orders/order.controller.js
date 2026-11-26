@@ -6,13 +6,14 @@ import { sendSuccess } from '../../utils/apiResponse.js';
 // slugs/ids/qty only; pricing is computed server-side from the catalog.
 // The Idempotency-Key header (or body field) makes retries safe (doc 9.4).
 export const create = catchAsync(async (req, res) => {
-  const { phone, notes, lines, idempotencyKey } = req.body || {};
+  const { phone, notes, lines, idempotencyKey, couponCode } = req.body || {};
   const key = req.headers['idempotency-key'] || idempotencyKey;
   const { order, replayed } = await orderService.createOrder(req.user, {
     phone,
     notes,
     lines,
     idempotencyKey: key,
+    couponCode,
   });
   sendSuccess(res, replayed ? 200 : 201, { order });
 });

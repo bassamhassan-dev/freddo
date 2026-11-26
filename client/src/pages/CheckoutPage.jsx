@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, cartSubtotal } from '@/store/cart.js';
 import { apiCreateOrder } from '@/api/orders.js';
+import { apiValidateCoupon } from '@/api/coupons.js';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,12 @@ import { Button } from '@/components/ui/button';
 export default function CheckoutPage({ lang }) {
   const { lines, clear } = useCartStore();
   const subtotal = useCartStore(cartSubtotal);
+  // Applied coupon: { code, discount }. The server recomputes everything at
+  // submit; this is only the live preview (doc 13.3).
+  const [coupon, setCoupon] = useState(null);
+  const [couponInput, setCouponInput] = useState('');
+  const [couponError, setCouponError] = useState(null);
+  const total = subtotal - (coupon?.discount || 0);
   const navigate = useNavigate();
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
@@ -47,7 +54,7 @@ export default function CheckoutPage({ lang }) {
     setBusy(true);
     setError(null);
     try {
-      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey });
+      const { order } = await apiCreateOrder({ phone, notes, lines: payloadLines, idempotencyKey, couponCode: coupon?.code });
       clear();
       setIdempotencyKey(crypto.randomUUID());
       navigate(`/orders/${order._id}`, { replace: true, state: { placed: true } });
@@ -74,7 +81,15 @@ export default function CheckoutPage({ lang }) {
         ))}
         <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
           <span className="font-bold text-foreground">{t(lang, 'subtotal')}</span>
-          <span className="font-extrabold text-accent">{formatPrice(lang, subtotal)}</span>
+          <span className="font-bold text-foreground">{formatPrice(lang, subtotal)}</span>
+          {coupon && (
+            <>
+              <span className="text-sm text-primary">{t(lang, 'discount')} ({coupon.code})</span>
+              <span className="text-sm text-primary">-{formatPrice(lang, coupon.discount)}</span>
+            </>
+          )}
+          <span className="font-extrabold text-accent">{t(lang, 'total')}</span>
+          <span className="font-extrabold text-accent">{formatPrice(lang, total)}</span>
         </div>
         <p className="text-xs text-muted-foreground">{t(lang, 'codNote')}</p>
       </div>
@@ -103,8 +118,39 @@ export default function CheckoutPage({ lang }) {
           />
         </label>
         {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
-        <Button type="submit" disabled={busy}>
-          {busy ? t(lang, 'authWorking') : `${t(lang, 'placeOrder')} · ${formatPrice(lang, subtotal)}`}
+                  <div className="mb-4 flex gap-2">
+            <input
+              className="w-full rounded-xl border border-border bg-background p-3 text-foreground"
+              placeholder={t(lang, 'couponPlaceholder')}
+              dir="ltr"
+              value={couponInput}
+              onChange={(e) => setCouponInput(e.target.value)}
+            />
+            {coupon ? (
+              <Button type="button" variant="ghost" onClick={() => { setCoupon(null); setCouponInput(''); }}>
+                {t(lang, 'removeCoupon')}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={async () => {
+                  setCouponError(null);
+                  try {
+                    const applied = await apiValidateCoupon(couponInput, subtotal);
+                    setCoupon({ code: applied.code, discount: applied.discount });
+                  } catch (err) {
+                    setCouponError(err.message?.[lang] || t(lang, 'orderError'));
+                  }
+                }}
+              >
+                {t(lang, 'applyCoupon')}
+              </Button>
+            )}
+          </div>
+          {couponError && <p className="mb-2 text-sm text-destructive">{couponError}</p>}
+<Button type="submit" disabled={busy}>
+          {busy ? t(lang, 'authWorking') : `${t(lang, 'placeOrder')} · ${formatPrice(lang, total)}`}
         </Button>
       </form>
     </section>

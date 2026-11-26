@@ -70,7 +70,9 @@ const orderSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     items: { type: [orderItemSchema], validate: [(v) => v.length > 0, 'empty order'] },
     subtotal: { type: Number, required: true, min: 0 },
-    discount: { type: Number, default: 0, min: 0 }, // coupons land in their own sprint
+    discount: { type: Number, default: 0, min: 0 },
+    // The coupon code that produced the discount, frozen with the order.
+    couponCode: { type: String, uppercase: true, trim: true },
     total: { type: Number, required: true, min: 0 },
     paymentMethod: { type: String, enum: ['cod'], default: 'cod' }, // COD only in v1 (doc 9.3)
     paymentStatus: { type: String, enum: ['pending', 'paid'], default: 'pending' },

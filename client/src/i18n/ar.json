@@ -121,5 +121,20 @@
   "hideReview": "إخفاء",
   "restoreReview": "استرجاع",
   "hiddenBadge": "مخفي",
-  "cafeTarget": "الكافيه"
+  "cafeTarget": "الكافيه",
+  "discount": "خصم",
+  "couponPlaceholder": "كود الخصم",
+  "applyCoupon": "طبّق",
+  "removeCoupon": "شيل",
+  "adminCouponsTab": "الكوبونات",
+  "createCoupon": "إنشاء كوبون",
+  "couponCode": "الكود",
+  "percentageType": "نسبة %",
+  "fixedType": "مبلغ ثابت",
+  "couponValue": "القيمة",
+  "minOrder": "أقل قيمة طلب",
+  "perUserLimit": "حد لكل عميل",
+  "searchCoupons": "دوّر بالكود",
+  "usedCount": "مرات الاستخدام",
+  "egp": "ج.م"
 }
