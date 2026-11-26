@@ -341,5 +341,7 @@
   "pointsUnit": "pts",
   "freeDrinkDiscount": "Free drink (loyalty)",
   "admin.accounts.points": "Points",
-  "admin.menu.drink": "Drink"
+  "admin.menu.drink": "Drink",
+  "marquee.title": "Announcement bar (below the hero)",
+  "marquee.add": "Add phrase"
 }

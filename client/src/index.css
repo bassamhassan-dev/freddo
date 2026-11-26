@@ -99,3 +99,65 @@
 @media (prefers-reduced-motion: reduce) {
   [class*='freddo-ring'] { animation: none !important; }
 }
+
+/* Announcement marquee (Sprint 28) */
+.marquee-bar {
+  overflow: hidden;
+  border-block: 1px solid rgba(255, 178, 26, 0.25);
+  background: linear-gradient(90deg, rgba(255, 178, 26, 0.08), rgba(255, 178, 26, 0.03), rgba(255, 178, 26, 0.08));
+  padding-block: 0.55rem;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: freddo-marquee-ltr 28s linear infinite;
+}
+.marquee-half {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.marquee-phrase {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #f6e7cf;
+  text-shadow: 0 0 12px rgba(255, 178, 26, 0.35);
+}
+.marquee-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: #ffb21a;
+  margin-inline: 1.75rem;
+  box-shadow: 0 0 8px rgba(255, 178, 26, 0.8);
+}
+@keyframes freddo-marquee-ltr {
+  from { transform: translateX(0); }
+  to { transform: translateX(-25%); }
+}
+/* RTL: the track is right-anchored with copies extending left, so it
+   scrolls rightward by one copy width - never out of view. */
+[dir='rtl'] .marquee-track {
+  animation-name: freddo-marquee-rtl;
+}
+@keyframes freddo-marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(25%); }
+}
+/* Reduced motion: a calm static row, no duplicate needed. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    transform: none;
+    flex-wrap: wrap;
+    width: auto;
+    justify-content: center;
+  }
+  .marquee-half[aria-hidden='true'] {
+    display: none;
+  }
+}

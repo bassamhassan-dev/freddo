@@ -27,6 +27,7 @@ import { FeaturedSection, OffersSection, AboutSection, GallerySection, InfoStrip
 import { TestimonialsSection, LoyaltyTeaser } from '@/components/HomeExtras.jsx';
 import SiteFooter from '@/components/SiteFooter.jsx';
 import ChatWidget from '@/components/ChatWidget.jsx';
+import MarqueeBar from '@/components/MarqueeBar.jsx';
 import { useContentStore } from '@/store/content.js';
 
 // Sprint 21 polish: every route change replays a short fade-up on <main>,
@@ -89,6 +90,7 @@ export default function App() {
               element={
                 <>
                   <HeroSlider lang={lang} />
+                  <MarqueeBar lang={lang} />
                   <HomeBanners lang={lang} />
                   <FeaturedSection lang={lang} />
                   <MenuPage lang={lang} />

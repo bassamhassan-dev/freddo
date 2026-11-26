@@ -15,6 +15,7 @@ import loyaltyRouter from './features/loyalty/loyalty.routes.js';
 import chatRoutes from './features/chat/chat.routes.js';
 import bannerRouter from './features/banners/banner.routes.js';
 import contentRouter from './features/content/content.routes.js';
+import marqueeRouter from './features/marquee/marquee.routes.js';
 import uploadRouter from './features/uploads/upload.routes.js';
 import menuRouter from './features/menu/menu.routes.js';
 import { notFound } from './middleware/notFound.js';
@@ -48,6 +49,7 @@ app.use('/api/loyalty', loyaltyRouter);
 app.use('/api/chat', chatRoutes);
 app.use('/api/banners', bannerRouter);
 app.use('/api/content', contentRouter);
+app.use('/api/marquee', marqueeRouter);
 app.use('/api/admin/uploads', uploadRouter);
 app.use('/api/menu', menuRouter);
 

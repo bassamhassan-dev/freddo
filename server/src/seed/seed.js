@@ -6,6 +6,7 @@ import MenuItem from '../features/menu/menuItem.model.js';
 import Table from '../features/reservations/table.model.js';
 import Banner from '../features/banners/banner.model.js';
 import SiteContent from '../features/content/siteContent.model.js';
+import Marquee from '../features/marquee/marquee.model.js';
 import Coupon from '../features/coupons/coupon.model.js';
 import Order from '../features/orders/order.model.js';
 import User from '../features/auth/user.model.js';
@@ -479,6 +480,24 @@ async function seed() {
     );
     upserted += 1;
   }
+
+  // Default marquee phrases (Sprint 28): $setOnInsert, so the admin's
+  // edits survive a re-seed.
+  await Marquee.updateOne(
+    { singleton: 'main' },
+    {
+      $setOnInsert: {
+        isEnabled: true,
+        phrases: [
+          { ar: 'قهوتك.. على مزاجك', en: 'Your coffee.. your mood' },
+          { ar: 'اطلب أونلاين واستلم من الكاونتر', en: 'Order online, pick up at the counter' },
+          { ar: 'كود WELCOME10 على أول طلب', en: 'Code WELCOME10 on your first order' },
+          { ar: 'اجمع نقاطك.. 100 نقطة = مشروب فري', en: 'Collect points.. 100 points = a free drink' },
+        ],
+      },
+    },
+    { upsert: true }
+  );
 
   // Default social links so the footer icons show out of the box; the
   // admin replaces them with the real handles (URL keys, CMS).

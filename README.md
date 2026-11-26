@@ -1,6 +1,9 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 27: loyalty
+MERN monorepo (MongoDB, Express, React, Node). Sprint 28: admin-controlled
+announcement marquee below the hero - bilingual phrases with reorder and
+show/hide, singleton Marquee model, pure-CSS seamless loop (4-copy track,
+RTL-correct direction), reduced-motion static fallback. Sprint 27: loyalty
 close-out - 100 points = one free drink at checkout, drink-only enforced
 server-side via a new admin-controlled isDrink catalog flag, atomic
 point spend with ledger, cancel refunds exactly once, admin accounts
@@ -46,7 +49,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic: one per sprint,
-  `docs/WALKTHROUGH*.md`, currently up to Sprint 27).
+  `docs/WALKTHROUGH*.md`, currently up to Sprint 28).
 - `client/public/photos/` - the cafe's real photos (optimized JPEGs) used by
   the hero slider, banners, about and gallery sections; each slot is
   replaceable from the admin CMS.
