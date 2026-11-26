@@ -18,7 +18,10 @@ export default function ItemDetailPage({ lang }) {
 
   const [item, setItem] = useState(null);
   const [status, setStatus] = useState('loading'); // loading | ready | error
-  const [variantIdx, setVariantIdx] = useState(null); // null = base item
+  // null = base item, only possible when the item has no variants; an item
+  // WITH sizes always has one selected (default: the first), because the
+  // server requires a variant choice for them.
+  const [variantIdx, setVariantIdx] = useState(null);
   const [selectedAddOns, setSelectedAddOns] = useState(() => new Set());
   const [qty, setQty] = useState(1);
   const [notes, setNotes] = useState('');
@@ -28,6 +31,7 @@ export default function ItemDetailPage({ lang }) {
     getMenuItem(slug)
       .then((data) => {
         setItem(data.item);
+        if ((data.item.variants || []).length > 0) setVariantIdx(0);
         setStatus('ready');
       })
       .catch(() => setStatus('error'));

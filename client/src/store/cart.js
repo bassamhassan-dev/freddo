@@ -41,6 +41,14 @@ export const useCartStore = create(
         }));
       },
 
+      // Repair a stored line in place (e.g. a line saved before the item
+      // had sizes gets its missing variantId filled at checkout).
+      patchLine(key, patch) {
+        set((state) => ({
+          lines: state.lines.map((l) => (l.key === key ? { ...l, ...patch } : l)),
+        }));
+      },
+
       removeLine(key) {
         set((state) => ({ lines: state.lines.filter((l) => l.key !== key) }));
       },

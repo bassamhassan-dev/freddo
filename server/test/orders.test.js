@@ -109,6 +109,35 @@ test('create re-prices everything from the catalog (doc 8.5)', async () => {
   assert.equal(order.statusHistory.length, 1);
 });
 
+// Regression (Bassam's checkout bug): an item with NO size options must
+// order cleanly with no coupon code at all - coupon is never required,
+// and an empty-string couponCode from the client is ignored, not rejected.
+test('no-variant item orders with no coupon, and empty-string coupon is ignored', async () => {
+  const { token } = await makeCustomer('plain@example.com');
+  await MenuItem.create(sampleItem({ slug: 'croissant', variants: [], addOns: [], basePrice: 40 }));
+
+  const plain = await api('/', {
+    method: 'POST',
+    token,
+    body: { phone: '01012345678', lines: [{ slug: 'croissant', qty: 2 }] },
+  });
+  assert.equal(plain.status, 201);
+  assert.equal(plain.body.data.order.total, 80);
+
+  const emptyCoupon = await api('/', {
+    method: 'POST',
+    token,
+    body: {
+      phone: '01012345678',
+      lines: [{ slug: 'croissant', qty: 1 }],
+      couponCode: '',
+      redeemPoints: false,
+    },
+  });
+  assert.equal(emptyCoupon.status, 201);
+  assert.equal(emptyCoupon.body.data.order.total, 40);
+});
+
 test('create rejects unavailable items and bad variants with clear codes', async () => {
   const { token } = await makeCustomer('b@example.com');
   await MenuItem.create(sampleItem({ slug: 'gone', isAvailable: false }));

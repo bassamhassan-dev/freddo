@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, cartSubtotal } from '@/store/cart.js';
 import { apiCreateOrder } from '@/api/orders.js';
+import { getMenu } from '@/api/menu.js';
+import { useAuthStore } from '@/store/auth.js';
 import { apiValidateCoupon } from '@/api/coupons.js';
 import { apiMyLoyalty } from '@/api/loyalty.js';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
@@ -12,7 +14,8 @@ import { Button } from '@/components/ui/button';
 // needed is a phone and optional notes. The cart lines are sent as
 // slugs/ids/qty; the server re-prices every line from the catalog.
 export default function CheckoutPage({ lang }) {
-  const { lines, clear } = useCartStore();
+  const { lines, clear, patchLine } = useCartStore();
+  const user = useAuthStore((s) => s.user);
   const subtotal = useCartStore(cartSubtotal);
   // Applied coupon: { code, discount }. The server recomputes everything at
   // submit; this is only the live preview (doc 13.3).
@@ -28,13 +31,40 @@ export default function CheckoutPage({ lang }) {
   useEffect(() => {
     apiMyLoyalty().then(({ balance }) => setLoyaltyBalance(balance || 0)).catch(() => {});
   }, []);
+
+  // Repair stale cart lines: a line saved before an item had sizes carries
+  // no variantId, and the server (rightly) demands one - with nowhere in
+  // the cart to pick it. Re-check the live menu once and fill the first
+  // available size, so an old line can never block an order.
+  useEffect(() => {
+    if (lines.some((l) => !l.variantId)) {
+      getMenu()
+        .then((data) => {
+          const items = data.items || data.menu || [];
+          for (const line of lines) {
+            if (line.variantId) continue;
+            const item = items.find((i) => i.slug === line.slug);
+            const variant = (item?.variants || []).find((v) => v.isAvailable !== false);
+            if (variant) {
+              patchLine(line.key, {
+                variantId: String(variant._id),
+                variantLabel: variant.label,
+                unitPrice: variant.price + (line.addOns || []).reduce((sum, a) => sum + a.price, 0),
+              });
+            }
+          }
+        })
+        .catch(() => {});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const drinkUnitPrices = lines.filter((l) => l.isDrink).map((l) => l.unitPrice);
   const freeDrinkValue = drinkUnitPrices.length > 0 ? Math.min(...drinkUnitPrices) : 0;
   const canRedeem = loyaltyBalance >= 100 && freeDrinkValue > 0;
   const loyaltyDiscount = redeem && canRedeem ? freeDrinkValue : 0;
   const total = subtotal - (coupon?.discount || 0) - loyaltyDiscount;
   const navigate = useNavigate();
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(() => user?.phone || '');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
