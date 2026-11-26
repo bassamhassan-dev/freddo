@@ -13,6 +13,7 @@ import User from '../features/auth/user.model.js';
 
 import Category from '../features/catalog/category.model.js';
 import { ROLES } from '../utils/roles.js';
+import { assertSafeToSeed } from './seedGuard.js';
 import { categories as realCategories, realItems } from './realMenu.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
@@ -452,6 +453,7 @@ const items = [
 
 async function seed() {
   await connectDB();
+  await assertSafeToSeed();
   let upserted = 0;
   // Tables (doc 10.1): upserted by number like the menu items.
   const tables = [
