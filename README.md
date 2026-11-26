@@ -1,6 +1,11 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 19: menu
+MERN monorepo (MongoDB, Express, React, Node). Sprint 26: live
+customer-admin chat - Socket.IO rooms with JWT handshake auth (the one
+sanctioned new dependency, documented in the S26 walkthrough), REST
+fallbacks, unread counters both ways, image messages (gated on Cloudinary),
+admin conversation list. Sprint 25: barista search, admin recipe editor
+end to end, 4 secondary banners, bigger product cards. Sprint 19: menu
 images end to end (seeded SVGs, admin image swap). Sprint 18: visual
 identity - always-on homepage hero, glowing Freddo mark + steam animation
 on hero/login/register, register confirm-password. Sprint 17: OAuth sign-in
@@ -36,7 +41,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic: one per sprint,
-  `docs/WALKTHROUGH*.md`, currently up to Sprint 25).
+  `docs/WALKTHROUGH*.md`, currently up to Sprint 26).
 - `client/public/photos/` - the cafe's real photos (optimized JPEGs) used by
   the hero slider, banners, about and gallery sections; each slot is
   replaceable from the admin CMS.

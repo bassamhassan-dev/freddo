@@ -15,6 +15,7 @@ import AdminMenuImage from '@/components/AdminMenuImage.jsx';
 import AdminRecipeEditor from '@/components/AdminRecipeEditor.jsx';
 import AdminAnalytics from '@/components/AdminAnalytics.jsx';
 import AdminContent from '@/components/AdminContent.jsx';
+import AdminChat from '@/components/AdminChat.jsx';
 
 // What each status can move to. Display-only: the server validates every
 // transition again through the one shared machine (order.service).
@@ -97,6 +98,9 @@ export default function AdminPage({ lang }) {
         <Button size="sm" variant={tab === 'analytics' ? 'default' : 'ghost'} onClick={() => setTab('analytics')}>
           {t(lang, 'adminAnalyticsTab')}
         </Button>
+        <Button size="sm" variant={tab === 'chat' ? 'default' : 'ghost'} onClick={() => setTab('chat')}>
+          {t(lang, 'admin.tabs.chat')}
+        </Button>
         <Button size="sm" variant={tab === 'content' ? 'default' : 'ghost'} onClick={() => setTab('content')}>
           {t(lang, 'adminContentTab')}
         </Button>
@@ -107,6 +111,7 @@ export default function AdminPage({ lang }) {
       {tab === 'coupons' && <AdminCoupons lang={lang} />}
       {tab === 'reservations' && <AdminReservations lang={lang} />}
       {tab === 'messages' && <AdminContact lang={lang} />}
+      {tab === 'chat' && <AdminChat lang={lang} />}
       {tab === 'banners' && <AdminBanners lang={lang} />}
       {tab === 'analytics' && <AdminAnalytics lang={lang} />}
       {tab === 'content' && <AdminContent lang={lang} />}

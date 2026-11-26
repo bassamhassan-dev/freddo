@@ -1,6 +1,8 @@
 import 'dotenv/config';
+import { createServer } from 'node:http';
 import app from './app.js';
 import { connectDB } from './config/db.js';
+import { attachChatSocket } from './features/chat/chat.socket.js';
 
 const PORT = process.env.PORT || 5000;
 
@@ -16,7 +18,10 @@ async function start() {
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
+  // One HTTP server hosts both the REST API and the chat Socket.IO.
+  const server = createServer(app);
+  attachChatSocket(server);
+  server.listen(PORT, () => {
     console.log(`Freddo API listening on http://localhost:${PORT}`);
   });
 }

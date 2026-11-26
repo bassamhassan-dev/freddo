@@ -329,5 +329,12 @@
   "recipeNotesAr": "Notes in Arabic (optional)",
   "recipeNotesEn": "Notes in English (optional)",
   "recipeVisible": "Visible to baristas",
-  "recipeInvalid": "Complete the ingredients and steps in both languages - every Arabic step needs its English pair in the same order"
+  "recipeInvalid": "Complete the ingredients and steps in both languages - every Arabic step needs its English pair in the same order",
+  "chat.title": "Chat with us",
+  "chat.placeholder": "Type a message...",
+  "chat.send": "Send",
+  "chat.sendImage": "Send a photo",
+  "chat.adminEmpty": "No conversations yet",
+  "chat.adminPick": "Pick a conversation to view it",
+  "admin.tabs.chat": "Chats"
 }

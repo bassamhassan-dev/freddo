@@ -26,6 +26,7 @@ import HeroSlider from '@/components/HeroSlider.jsx';
 import { FeaturedSection, OffersSection, AboutSection, GallerySection, InfoStrip } from '@/components/HomeSections.jsx';
 import { TestimonialsSection, LoyaltyTeaser } from '@/components/HomeExtras.jsx';
 import SiteFooter from '@/components/SiteFooter.jsx';
+import ChatWidget from '@/components/ChatWidget.jsx';
 import { useContentStore } from '@/store/content.js';
 
 // Sprint 21 polish: every route change replays a short fade-up on <main>,
@@ -167,6 +168,7 @@ export default function App() {
           </Routes>
         </AnimatedMain>
         <SiteFooter lang={lang} />
+        <ChatWidget lang={lang} />
       </div>
     </BrowserRouter>
   );
