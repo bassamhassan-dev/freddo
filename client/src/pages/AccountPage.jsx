@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -25,6 +25,9 @@ export default function AccountPage({ lang }) {
         <p className="text-sm text-secondary">
           {t(lang, 'role')}: {t(lang, `role_${user?.role}`)}
         </p>
+        <Link to="/orders">
+          <Button variant="ghost" className="mt-2 w-full">{t(lang, 'myOrders')}</Button>
+        </Link>
         <Button variant="ghost" onClick={onLogout} className="mt-2">
           {t(lang, 'logout')}
         </Button>

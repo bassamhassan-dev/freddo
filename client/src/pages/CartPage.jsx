@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore, cartSubtotal } from '@/store/cart.js';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 // localStorage cannot change what anyone pays.
 export default function CartPage({ lang }) {
   const { lines, setQty, removeLine } = useCartStore();
+  const navigate = useNavigate();
   const subtotal = useCartStore(cartSubtotal);
 
   if (lines.length === 0) {
@@ -63,9 +64,9 @@ export default function CartPage({ lang }) {
           {formatPrice(lang, subtotal)}
         </span>
       </div>
-      {/* Checkout lands with the orders slice; the gate (doc 9.1) is ready to wire. */}
-      <Button disabled className="mt-4 w-full opacity-60">
-        {t(lang, 'checkoutSoon')}
+      {/* The gate (doc 9.1): guests are bounced to login and come back here. */}
+      <Button className="mt-4 w-full" onClick={() => navigate('/checkout')}>
+        {t(lang, 'checkout')}
       </Button>
     </section>
   );

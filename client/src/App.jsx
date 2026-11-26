@@ -7,6 +7,9 @@ import RequireAuth from '@/components/RequireAuth.jsx';
 import MenuPage from '@/components/MenuPage.jsx';
 import ItemDetailPage from '@/pages/ItemDetailPage.jsx';
 import CartPage from '@/pages/CartPage.jsx';
+import CheckoutPage from '@/pages/CheckoutPage.jsx';
+import OrdersPage from '@/pages/OrdersPage.jsx';
+import OrderConfirmationPage from '@/pages/OrderConfirmationPage.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
 import RegisterPage from '@/pages/RegisterPage.jsx';
 import AccountPage from '@/pages/AccountPage.jsx';
@@ -47,6 +50,30 @@ export default function App() {
             />
             <Route path="/item/:slug" element={<ItemDetailPage lang={lang} />} />
             <Route path="/cart" element={<CartPage lang={lang} />} />
+            <Route
+              path="/checkout"
+              element={
+                <RequireAuth lang={lang}>
+                  <CheckoutPage lang={lang} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <RequireAuth lang={lang}>
+                  <OrdersPage lang={lang} />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/orders/:id"
+              element={
+                <RequireAuth lang={lang}>
+                  <OrderConfirmationPage lang={lang} />
+                </RequireAuth>
+              }
+            />
             <Route path="/login" element={<LoginPage lang={lang} />} />
             <Route path="/register" element={<RegisterPage lang={lang} />} />
             <Route

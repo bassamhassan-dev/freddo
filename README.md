@@ -1,6 +1,8 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 3: guest cart -
+MERN monorepo (MongoDB, Express, React, Node). Sprint 4: orders -
+server-authoritative COD orders with snapshots, idempotency, cancellation,
+checkout + order history UI. Sprint 3: guest cart -
 item detail page (variants, add-ons, notes), browser-persisted cart with
 config-based line identity, cart page. Sprint 2: auth (JWT access+refresh
 rotation, unified login). Sprint 1.5: feature-based
@@ -15,7 +17,8 @@ shadcn frontend that renders the menu in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Arabic: `docs/WALKTHROUGH.md`,
   `docs/WALKTHROUGH-SPRINT1.md`, `docs/WALKTHROUGH-SPRINT2.md`,
-  `docs/WALKTHROUGH-SPRINT3.md`). `docs/CONVENTIONS.md` is the standing
+  `docs/WALKTHROUGH-SPRINT3.md`,
+  `docs/WALKTHROUGH-SPRINT4.md`). `docs/CONVENTIONS.md` is the standing
   blueprint every sprint follows (layering, error handling, response
   shape, naming, and the reasoning behind each).
 
@@ -104,6 +107,11 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/auth/refresh` - rotate the refresh cookie, get a new access token
 - `POST /api/auth/logout` - revoke the refresh session
 - `GET /api/auth/me` - current user (Bearer access token)
+- `POST /api/orders` - place a COD order (auth; ids+quantities only, the
+  server re-prices; `Idempotency-Key` header makes retries safe)
+- `GET /api/orders/mine` - the customer's orders
+- `GET /api/orders/:id` - one order (owner or admin)
+- `POST /api/orders/:id/cancel` - cancel while still pending
 
 Every response follows one shape (see `docs/CONVENTIONS.md`): success is
 `{ success: true, data: ... }`, error is

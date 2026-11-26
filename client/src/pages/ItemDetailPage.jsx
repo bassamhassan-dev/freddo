@@ -78,6 +78,10 @@ export default function ItemDetailPage({ lang }) {
       slug: item.slug,
       name: item.name,
       image: item.images?.[0]?.url || null,
+      // Ids are what the server re-prices from at checkout (doc 8.5);
+      // labels are display-only.
+      variantId: variant?._id || null,
+      addOnIds: addOns.map((a) => a._id),
       variantLabel: variant?.label || null,
       addOns: addOns.map((a) => ({ name: a.name, price: a.price })),
       notes: notes.trim(),
