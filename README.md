@@ -1,6 +1,8 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 12: loyalty points -
+MERN monorepo (MongoDB, Express, React, Node). Sprint 13: homepage
+banners - three admin-managed placements (main slider + two secondary),
+campaign windows, CTA validation. Sprint 12: loyalty points -
 earn on completed orders only, append-only ledger with per-order
 idempotency, admin adjustments, balance on the account page. Sprint 11:
 contact messages - public rate-limited form, admin inbox tab. Sprint 10:
@@ -21,7 +23,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT12.md`, one per sprint).
+  `docs/WALKTHROUGH-SPRINT13.md`, one per sprint).
   `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
   behind each).
@@ -123,6 +125,9 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
   `POST /api/reservations/:id/cancel` - book a table (auth)
 - `POST /api/contact` - public, rate-limited contact form
 - `GET /api/loyalty/mine` - the customer's points balance + recent ledger
+- `GET /api/banners?placement=main|secondary_left|secondary_right` -
+  active in-window banners (public); CRUD under `GET/POST /api/admin/banners`
+  and `PATCH/DELETE /api/admin/banners/:id` (admin)
 - `POST /api/loyalty/admin/adjust` - admin points correction (reason
   mandatory)
 - `GET /api/admin/...` - staff dashboards (orders, menu, accounts, reviews,

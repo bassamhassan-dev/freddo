@@ -20,6 +20,7 @@ import ReservationsPage from '@/pages/ReservationsPage.jsx';
 import ContactPage from '@/pages/ContactPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
+import HomeBanners from '@/components/HomeBanners.jsx';
 
 export default function App() {
   const [lang, setLang] = useState(DEFAULT_LANG);
@@ -49,6 +50,7 @@ export default function App() {
               element={
                 <>
                   <p className="mb-8 text-center text-lg font-semibold text-secondary">{t(lang, 'tagline')}</p>
+                  <HomeBanners lang={lang} />
                   <MenuPage lang={lang} />
                 </>
               }
