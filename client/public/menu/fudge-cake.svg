@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#2a1707"/><stop offset="60%" stop-color="#0b0806"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="160" fill="url(#bg)"/>
+  <path d="M55 95 h90 v35 h-90 z" fill="none" stroke="#ffb21a" stroke-width="6"/><path d="M55 95 q22 -18 45 0 q22 -18 45 0" fill="none" stroke="#ffd27a" stroke-width="5"/><circle cx="100" cy="70" r="7" fill="none" stroke="#ffb21a" stroke-width="5"/>
+  <text x="100" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="#f6e7cf">Fudge Cake</text>
+</svg>

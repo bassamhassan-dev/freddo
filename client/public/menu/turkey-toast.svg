@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#2a1707"/><stop offset="60%" stop-color="#0b0806"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="160" fill="url(#bg)"/>
+  <path d="M50 100 q50 -55 100 0 q-50 30 -100 0 z" fill="none" stroke="#ffb21a" stroke-width="6"/><path d="M75 82 q10 8 8 20 M100 74 q10 10 8 24 M125 82 q10 8 8 20" stroke="#ffd27a" stroke-width="4" fill="none"/>
+  <text x="100" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="#f6e7cf">Turkey Toast</text>
+</svg>

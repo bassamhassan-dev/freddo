@@ -5,6 +5,7 @@ import MenuItem from '../features/menu/menuItem.model.js';
 import User from '../features/auth/user.model.js';
 import Table from '../features/reservations/table.model.js';
 import Banner from '../features/banners/banner.model.js';
+import Coupon from '../features/coupons/coupon.model.js';
 import { ROLES } from '../utils/roles.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
@@ -220,6 +221,226 @@ const items = [
     sortOrder: 9,
     rating: { average: 4.2, count: 58 },
   },
+  {
+    slug: 'cafe-latte',
+    name: { ar: 'كافيه لاتيه', en: 'Café Latte' },
+    description: {
+      ar: 'إسبريسو ولبن مبخر بفوم خفيف، ناعم ومتزن.',
+      en: 'Espresso with steamed milk and light foam, smooth and balanced.',
+    },
+    category: hotCoffee,
+    basePrice: 65,
+    variants: sizes.map((v) => ({ ...v, price: 65 + v.price })),
+    addOns: coffeeAddOns,
+    isAvailable: true,
+    sortOrder: 3,
+    rating: { average: 4.6, count: 210 },
+  },
+  {
+    slug: 'flat-white',
+    name: { ar: 'فلات وايت', en: 'Flat White' },
+    description: {
+      ar: 'دبل إسبريسو مع لبن مايكروفوم، أقوى من اللاتيه وأخف من الكابتشينو.',
+      en: 'Double espresso with micro-foamed milk, stronger than a latte.',
+    },
+    category: hotCoffee,
+    basePrice: 70,
+    addOns: coffeeAddOns,
+    isAvailable: true,
+    sortOrder: 4,
+    rating: { average: 4.7, count: 96 },
+  },
+  {
+    slug: 'mocha',
+    name: { ar: 'موكا', en: 'Mocha' },
+    description: {
+      ar: 'إسبريسو وشوكولاتة بلجيكية ولبن مبخر، للي بيحب الحاجة الحلوة.',
+      en: 'Espresso, Belgian chocolate and steamed milk for sweet tooths.',
+    },
+    category: hotCoffee,
+    basePrice: 80,
+    variants: sizes.map((v) => ({ ...v, price: 80 + v.price })),
+    addOns: coffeeAddOns,
+    isBestSeller: true,
+    isAvailable: true,
+    sortOrder: 5,
+    rating: { average: 4.8, count: 154 },
+  },
+  {
+    slug: 'cortado',
+    name: { ar: 'كورتادو', en: 'Cortado' },
+    description: {
+      ar: 'إسبريسو ولبن دافي بنسبة واحد لواحد في كوب صغير.',
+      en: 'Equal parts espresso and warm milk in a small glass.',
+    },
+    category: hotCoffee,
+    basePrice: 55,
+    isAvailable: true,
+    sortOrder: 6,
+    rating: { average: 4.4, count: 41 },
+  },
+  {
+    slug: 'iced-americano',
+    name: { ar: 'آيسد أمريكانو', en: 'Iced Americano' },
+    description: {
+      ar: 'دبل إسبريسو على تلج ومية ساقعة، منعش وصافي.',
+      en: 'Double espresso over ice and cold water, crisp and clean.',
+    },
+    category: icedCoffee,
+    basePrice: 55,
+    variants: sizes.map((v) => ({ ...v, price: 55 + v.price })),
+    isAvailable: true,
+    sortOrder: 3,
+    rating: { average: 4.3, count: 88 },
+  },
+  {
+    slug: 'iced-mocha',
+    name: { ar: 'آيسد موكا', en: 'Iced Mocha' },
+    description: {
+      ar: 'موكا ساقعة مع كريمة مخفوقة ورشة كاكاو.',
+      en: 'Chilled mocha topped with whipped cream and cocoa dust.',
+    },
+    category: icedCoffee,
+    basePrice: 85,
+    addOns: coffeeAddOns,
+    isAvailable: true,
+    sortOrder: 4,
+    rating: { average: 4.6, count: 73 },
+  },
+  {
+    slug: 'caramel-frappe',
+    name: { ar: 'كراميل فرابيه', en: 'Caramel Frappe' },
+    description: {
+      ar: 'قهوة مثلجة مخفوقة بالكراميل والتلج، سميكة وحلوة.',
+      en: 'Blended iced coffee with caramel, thick and sweet.',
+    },
+    category: icedCoffee,
+    basePrice: 90,
+    isFeatured: true,
+    isAvailable: true,
+    sortOrder: 5,
+    rating: { average: 4.7, count: 129 },
+  },
+  {
+    slug: 'hot-chocolate',
+    name: { ar: 'هوت شوكليت', en: 'Hot Chocolate' },
+    description: {
+      ar: 'شوكولاتة سايحة باللبن، تقيلة ودافية.',
+      en: 'Melted chocolate with milk, rich and warming.',
+    },
+    category: specialty,
+    basePrice: 65,
+    isAvailable: true,
+    sortOrder: 4,
+    rating: { average: 4.5, count: 92 },
+  },
+  {
+    slug: 'mint-lemonade',
+    name: { ar: 'ليمون بالنعناع', en: 'Mint Lemonade' },
+    description: {
+      ar: 'ليمون طازة مع نعناع وسكر خفيف، تلج مجروش.',
+      en: 'Fresh lemon with mint over crushed ice.',
+    },
+    category: specialty,
+    basePrice: 45,
+    isBestSeller: true,
+    isAvailable: true,
+    sortOrder: 5,
+    rating: { average: 4.6, count: 187 },
+  },
+  {
+    slug: 'green-tea',
+    name: { ar: 'شاي أخضر', en: 'Green Tea' },
+    description: {
+      ar: 'شاي أخضر على البخار، خفيف ومهدي.',
+      en: 'Steamed green tea, light and calming.',
+    },
+    category: tea,
+    basePrice: 35,
+    isAvailable: true,
+    sortOrder: 1,
+    rating: { average: 4.2, count: 54 },
+  },
+  {
+    slug: 'chai-latte',
+    name: { ar: 'شاي لاتيه', en: 'Chai Latte' },
+    description: {
+      ar: 'شاي أسود بالبهارات واللبن المبخر وعسل.',
+      en: 'Spiced black tea with steamed milk and honey.',
+    },
+    category: tea,
+    basePrice: 55,
+    isAvailable: true,
+    sortOrder: 2,
+    rating: { average: 4.4, count: 63 },
+  },
+  {
+    slug: 'cheesecake-lotus',
+    name: { ar: 'تشيز كيك لوتس', en: 'Lotus Cheesecake' },
+    description: {
+      ar: 'تشيز كيك بارد بطبقة بسكويت لوتس وكريمة الكراميل.',
+      en: 'Chilled cheesecake with a Lotus biscuit layer and caramel cream.',
+    },
+    category: desserts,
+    basePrice: 95,
+    isFeatured: true,
+    isAvailable: true,
+    sortOrder: 2,
+    rating: { average: 4.9, count: 176 },
+  },
+  {
+    slug: 'fudge-cake',
+    name: { ar: 'فدج كيك', en: 'Fudge Cake' },
+    description: {
+      ar: 'كيك شوكولاتة ساخن بقلب سايح، بيتقدم مع سكر بودرة.',
+      en: 'Warm chocolate cake with a molten center.',
+    },
+    category: desserts,
+    basePrice: 85,
+    isAvailable: true,
+    sortOrder: 3,
+    rating: { average: 4.7, count: 118 },
+  },
+  {
+    slug: 'kunafa-nutella',
+    name: { ar: 'كنافة نوتيلا', en: 'Kunafa Nutella' },
+    description: {
+      ar: 'كنافة محشوة نوتيلا ومكسرات، بتتعمل طازة.',
+      en: 'Kunafa stuffed with Nutella and nuts, made fresh.',
+    },
+    category: desserts,
+    basePrice: 90,
+    isBestSeller: true,
+    isAvailable: true,
+    sortOrder: 4,
+    rating: { average: 4.8, count: 203 },
+  },
+  {
+    slug: 'turkey-toast',
+    name: { ar: 'توست تركي وجبنة', en: 'Turkey & Cheese Toast' },
+    description: {
+      ar: 'توست محمص بشرائح التركي والجبنة الشيدر.',
+      en: 'Toasted sandwich with turkey slices and cheddar.',
+    },
+    category: snacks,
+    basePrice: 65,
+    isAvailable: true,
+    sortOrder: 2,
+    rating: { average: 4.3, count: 45 },
+  },
+  {
+    slug: 'feteer-honey',
+    name: { ar: 'فطير مشلتت بالعسل', en: 'Feteer with Honey' },
+    description: {
+      ar: 'فطير مشلتت طازة بيتقدم مع عسل نحل وقشطة.',
+      en: 'Fresh layered pastry served with honey and cream.',
+    },
+    category: snacks,
+    basePrice: 75,
+    isAvailable: true,
+    sortOrder: 3,
+    rating: { average: 4.6, count: 84 },
+  },
 ];
 
 async function seed() {
@@ -259,6 +480,22 @@ async function seed() {
     { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/banners/book-secondary.svg', ctaLink: '/reservations', sortOrder: 0 },
     { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/banners/loyalty-secondary.svg', ctaLink: '/account', sortOrder: 0 },
   ];
+  // A welcome coupon so the checkout discount flow (Sprint 10) is visible
+  // on first run. Upserted by code; admin edits survive re-seeds.
+  await Coupon.updateOne(
+    { code: 'WELCOME10' },
+    { $setOnInsert: {
+      code: 'WELCOME10',
+      description: 'خصم ترحيبي ١٠٪ على أول طلب / 10% welcome discount',
+      discountType: 'percentage',
+      value: 10,
+      minOrderAmount: 100,
+      maxDiscountAmount: 50,
+      usageLimitPerUser: 1,
+    } },
+    { upsert: true }
+  );
+
   for (const banner of sampleBanners) {
     await Banner.updateOne(
       { placement: banner.placement, 'title.en': banner.title.en },
