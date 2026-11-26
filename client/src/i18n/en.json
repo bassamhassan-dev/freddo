@@ -346,5 +346,6 @@
   "marquee.add": "Add phrase",
   "chat.team": "Freddo team",
   "navMenuOpen": "Menu",
-  "navMenuClose": "Close menu"
+  "navMenuClose": "Close menu",
+  "oauthComingSoon": "Activates once the Google/Facebook app keys are set"
 }
