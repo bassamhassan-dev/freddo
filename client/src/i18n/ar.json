@@ -215,5 +215,14 @@
   "kpiDiscounts": "إجمالي الخصومات",
   "kpiLoyaltyEarned": "نقاط مكتسبة",
   "kpiTopProducts": "الأكثر مبيعًا",
-  "kpiOrdersByStatus": "الطلبات حسب الحالة"
+  "kpiOrdersByStatus": "الطلبات حسب الحالة",
+  "adminContentTab": "المحتوى",
+  "contentCmsHint": "عدّل نصوص الصفحة الرئيسية من هنا. فضّي الخانتين مع بعض عشان ترجع للنص الأصلي.",
+  "contentArPh": "النص بالعربي",
+  "contentEnPh": "النص بالإنجليزي",
+  "contentSaved": "اتحفظ ✓",
+  "contentKey_tagline": "الجملة الترحيبية",
+  "contentKey_menuTitle": "عنوان قسم المنيو",
+  "contentKey_menuSubtitle": "السطر تحت عنوان المنيو",
+  "contentKey_menuEmpty": "رسالة المنيو الفاضي"
 }

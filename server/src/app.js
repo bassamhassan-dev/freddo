@@ -13,6 +13,7 @@ import reservationRouter from './features/reservations/reservation.routes.js';
 import contactRouter from './features/contact/contact.routes.js';
 import loyaltyRouter from './features/loyalty/loyalty.routes.js';
 import bannerRouter from './features/banners/banner.routes.js';
+import contentRouter from './features/content/content.routes.js';
 import menuRouter from './features/menu/menu.routes.js';
 import { notFound } from './middleware/notFound.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
@@ -43,6 +44,7 @@ app.use('/api/reservations', reservationRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/loyalty', loyaltyRouter);
 app.use('/api/banners', bannerRouter);
+app.use('/api/content', contentRouter);
 app.use('/api/menu', menuRouter);
 
 app.get('/', (req, res) => {

@@ -1,6 +1,8 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 14: admin
+MERN monorepo (MongoDB, Express, React, Node). Sprint 15: admin content
+CMS - homepage copy (tagline, menu headings) is DB-backed overrides with
+i18n fallback, edited from a new admin tab. Sprint 14: admin
 analytics dashboard - revenue/AOV/status counts, top sellers, coupons and
 loyalty rollups, all aggregated server-side from real collections.
 Sprint 13: homepage
@@ -26,7 +28,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT14.md`, one per sprint).
+  `docs/WALKTHROUGH-SPRINT15.md`, one per sprint).
   `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
   (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
@@ -130,6 +132,8 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/contact` - public, rate-limited contact form
 - `GET /api/loyalty/mine` - the customer's points balance + recent ledger
 - `GET /api/admin/analytics?from&to` - the operational dashboard (admin)
+- `GET /api/content` - homepage copy overrides (public);
+  `GET /api/admin/content` + `PUT /api/admin/content/:key` (admin)
 - `GET /api/banners?placement=main|secondary_left|secondary_right` -
   active in-window banners (public); CRUD under `GET/POST /api/admin/banners`
   and `PATCH/DELETE /api/admin/banners/:id` (admin)

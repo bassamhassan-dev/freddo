@@ -21,6 +21,7 @@ import ContactPage from '@/pages/ContactPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 import HomeBanners from '@/components/HomeBanners.jsx';
+import { useContentStore, ct } from '@/store/content.js';
 
 export default function App() {
   const [lang, setLang] = useState(DEFAULT_LANG);
@@ -39,6 +40,9 @@ export default function App() {
     document.documentElement.dir = direction;
   }, [lang, direction]);
 
+  const { overrides, load } = useContentStore();
+  useEffect(() => { load(); }, [load]);
+
   return (
     <BrowserRouter>
       <div dir={direction} className="min-h-screen">
@@ -49,7 +53,7 @@ export default function App() {
               path="/"
               element={
                 <>
-                  <p className="mb-8 text-center text-lg font-semibold text-secondary">{t(lang, 'tagline')}</p>
+                  <p className="mb-8 text-center text-lg font-semibold text-secondary">{ct(overrides, lang, 'tagline', t)}</p>
                   <HomeBanners lang={lang} />
                   <MenuPage lang={lang} />
                 </>

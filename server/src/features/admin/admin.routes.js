@@ -6,6 +6,7 @@ import * as reservationController from '../reservations/reservation.controller.j
 import * as contactController from '../contact/contact.controller.js';
 import * as bannerController from '../banners/banner.controller.js';
 import * as analyticsController from '../analytics/analytics.controller.js';
+import * as contentController from '../content/content.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middleware.js';
 import { ROLES } from '../../utils/roles.js';
 
@@ -24,6 +25,8 @@ router.post('/banners', bannerController.adminCreate);
 router.patch('/banners/:id', bannerController.adminUpdate);
 router.delete('/banners/:id', bannerController.adminDelete);
 router.get('/analytics', analyticsController.dashboard);
+router.get('/content', contentController.adminList);
+router.put('/content/:key', contentController.adminPut);
 router.get('/reservations', reservationController.adminList);
 router.post('/reservations/:id/status', reservationController.adminSetStatus);
 router.get('/tables', controller.listTables);

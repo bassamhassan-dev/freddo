@@ -215,5 +215,14 @@
   "kpiDiscounts": "Total discounts",
   "kpiLoyaltyEarned": "Points earned",
   "kpiTopProducts": "Top sellers",
-  "kpiOrdersByStatus": "Orders by status"
+  "kpiOrdersByStatus": "Orders by status",
+  "adminContentTab": "Content",
+  "contentCmsHint": "Edit the homepage copy here. Clear both fields together to revert to the built-in text.",
+  "contentArPh": "Arabic text",
+  "contentEnPh": "English text",
+  "contentSaved": "Saved ✓",
+  "contentKey_tagline": "Welcome tagline",
+  "contentKey_menuTitle": "Menu section title",
+  "contentKey_menuSubtitle": "Line under the menu title",
+  "contentKey_menuEmpty": "Empty-menu message"
 }

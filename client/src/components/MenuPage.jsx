@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { getMenu } from '@/api/menu.js';
 import { t } from '@/i18n/index.js';
+import { useContentStore, ct } from '@/store/content.js';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import MenuItemCard from '@/components/MenuItemCard.jsx';
@@ -9,6 +10,7 @@ import MenuItemCard from '@/components/MenuItemCard.jsx';
 // on the client for instant switching (the list is small; the API's
 // ?category= filter exists for when it grows).
 export default function MenuPage({ lang }) {
+  const overrides = useContentStore((s) => s.overrides);
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState('loading'); // loading | ready | error
   const [activeCategory, setActiveCategory] = useState(null);
@@ -41,9 +43,9 @@ export default function MenuPage({ lang }) {
     <section className="mx-auto w-full max-w-5xl px-5 pb-16">
       <div className="mb-6 text-center">
         <h2 className="text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
-          {t(lang, 'menuTitle')}
+          {ct(overrides, lang, 'menuTitle', t)}
         </h2>
-        <p className="mt-1 text-secondary">{t(lang, 'menuSubtitle')}</p>
+        <p className="mt-1 text-secondary">{ct(overrides, lang, 'menuSubtitle', t)}</p>
       </div>
 
       {status === 'ready' && categories.length > 1 && (
@@ -86,7 +88,7 @@ export default function MenuPage({ lang }) {
       )}
 
       {status === 'ready' && visible.length === 0 && (
-        <p className="py-10 text-center text-muted-foreground">{t(lang, 'menuEmpty')}</p>
+        <p className="py-10 text-center text-muted-foreground">{ct(overrides, lang, 'menuEmpty', t)}</p>
       )}
 
       {status === 'ready' && visible.length > 0 && (
