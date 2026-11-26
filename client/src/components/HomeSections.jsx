@@ -24,7 +24,7 @@ export function FeaturedSection({ lang }) {
         {ct(overrides, lang, 'featuredTitle', t)}
       </h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => <MenuItemCard key={item._id} item={item} lang={lang} />)}
+        {items.map((item) => <MenuItemCard key={item.slug} item={item} lang={lang} />)}
       </div>
     </section>
   );
