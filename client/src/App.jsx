@@ -22,7 +22,7 @@ import ContactPage from '@/pages/ContactPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 import HomeBanners from '@/components/HomeBanners.jsx';
-import HeroSection from '@/components/HeroSection.jsx';
+import HeroSlider from '@/components/HeroSlider.jsx';
 import { useContentStore } from '@/store/content.js';
 
 // Sprint 21 polish: every route change replays a short fade-up on <main>,
@@ -62,7 +62,7 @@ export default function App() {
               path="/"
               element={
                 <>
-                  <HeroSection lang={lang} />
+                  <HeroSlider lang={lang} />
                   <HomeBanners lang={lang} />
                   <MenuPage lang={lang} />
                 </>

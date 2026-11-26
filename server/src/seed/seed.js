@@ -479,7 +479,8 @@ async function seed() {
   // them like any banner (Sprint 13/16).
   const sampleBanners = [
     { placement: 'main', title: { ar: 'عرض الأسبوع', en: 'Deal of the week' }, description: { ar: 'خصم ٢٥٪ على السبانش لاتيه', en: '25% off Spanish Latte' }, imageUrl: '/banners/offer-main.svg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/item/spanish-latte', sortOrder: 0 },
-    { placement: 'main', title: { ar: 'وصل جديد', en: 'Just landed' }, description: { ar: 'تسوية فريدو الخاصة', en: 'The Freddo house roast' }, imageUrl: '/banners/new-roast-main.svg', sortOrder: 1 },
+    { placement: 'main', title: { ar: 'وصل جديد', en: 'Just landed' }, description: { ar: 'تسوية فريدو الخاصة، بن محمص طازة كل أسبوع', en: 'The Freddo house roast, freshly roasted every week' }, imageUrl: '/banners/new-roast-main.svg', sortOrder: 1 },
+    { placement: 'main', title: { ar: 'ليالي فريدو', en: 'Freddo nights' }, description: { ar: 'سهرتك أحلى مع قهوتنا', en: 'Better nights with our coffee' }, imageUrl: '/banners/night-main.svg', ctaText: { ar: 'احجز ترابيزتك', en: 'Book a table' }, ctaLink: '/reservations', sortOrder: 2 },
     { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/banners/book-secondary.svg', ctaLink: '/reservations', sortOrder: 0 },
     { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/banners/loyalty-secondary.svg', ctaLink: '/account', sortOrder: 0 },
   ];
