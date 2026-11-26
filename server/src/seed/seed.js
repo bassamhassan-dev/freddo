@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { connectDB } from '../config/db.js';
 import MenuItem from '../features/menu/menuItem.model.js';
 import User from '../features/auth/user.model.js';
+import Table from '../features/reservations/table.model.js';
 import { ROLES } from '../utils/roles.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
@@ -223,6 +224,19 @@ const items = [
 async function seed() {
   await connectDB();
   let upserted = 0;
+  // Tables (doc 10.1): upserted by number like the menu items.
+  const tables = [
+    { number: 'T1', capacity: 2, zone: 'indoor' },
+    { number: 'T2', capacity: 2, zone: 'indoor' },
+    { number: 'T3', capacity: 4, zone: 'indoor' },
+    { number: 'T4', capacity: 4, zone: 'outdoor' },
+    { number: 'T5', capacity: 6, zone: 'indoor' },
+    { number: 'T6', capacity: 8, zone: 'outdoor' },
+  ];
+  for (const table of tables) {
+    await Table.updateOne({ number: table.number }, { $set: table }, { upsert: true });
+  }
+
   for (const item of items) {
     await MenuItem.updateOne({ slug: item.slug }, { $set: item }, { upsert: true });
     upserted += 1;

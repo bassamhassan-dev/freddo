@@ -3,6 +3,7 @@ import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability } f
 import AdminAccounts from '@/components/AdminAccounts.jsx';
 import AdminReviews from '@/components/AdminReviews.jsx';
 import AdminCoupons from '@/components/AdminCoupons.jsx';
+import AdminReservations from '@/components/AdminReservations.jsx';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -78,12 +79,16 @@ export default function AdminPage({ lang }) {
         <Button size="sm" variant={tab === 'coupons' ? 'default' : 'ghost'} onClick={() => setTab('coupons')}>
           {t(lang, 'adminCouponsTab')}
         </Button>
+        <Button size="sm" variant={tab === 'reservations' ? 'default' : 'ghost'} onClick={() => setTab('reservations')}>
+          {t(lang, 'adminReservationsTab')}
+        </Button>
       </div>
 
       {tab === 'accounts' && <AdminAccounts lang={lang} />}
       {tab === 'reviews' && <AdminReviews lang={lang} />}
       {tab === 'coupons' && <AdminCoupons lang={lang} />}
-      {tab !== 'accounts' && tab !== 'reviews' && tab !== 'coupons' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
+      {tab === 'reservations' && <AdminReservations lang={lang} />}
+      {tab !== 'accounts' && tab !== 'reviews' && tab !== 'coupons' && tab !== 'reservations' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
 
       {tab === 'orders' && (
         <>

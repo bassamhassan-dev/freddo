@@ -2,6 +2,7 @@ import { Router } from 'express';
 import * as controller from './admin.controller.js';
 import * as reviewController from '../reviews/review.controller.js';
 import * as couponController from '../coupons/coupon.controller.js';
+import * as reservationController from '../reservations/reservation.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middleware.js';
 import { ROLES } from '../../utils/roles.js';
 
@@ -13,6 +14,9 @@ router.use(requireAuth, requireRole(ROLES.ADMIN));
 
 router.get('/orders', controller.listOrders);
 router.post('/orders/:id/status', controller.setOrderStatus);
+router.get('/reservations', reservationController.adminList);
+router.post('/reservations/:id/status', reservationController.adminSetStatus);
+router.get('/tables', controller.listTables);
 router.get('/coupons', couponController.adminList);
 router.post('/coupons', couponController.adminCreate);
 router.patch('/coupons/:id', couponController.adminUpdate);

@@ -24,9 +24,14 @@ export default function SiteHeader({ lang, onToggleLang }) {
           </Button>
         </Link>
         {status === 'authed' && user ? (
-          <Link to="/account">
-            <Button variant="ghost" size="sm">{user.name}</Button>
-          </Link>
+          <>
+            <Link to="/reservations" className="text-sm font-bold text-secondary transition hover:text-primary">
+              {t(lang, 'reservationsTitle')}
+            </Link>
+            <Link to="/account">
+              <Button variant="ghost" size="sm">{user.name}</Button>
+            </Link>
+          </>
         ) : (
           <Link to="/login">
             <Button variant="ghost" size="sm">{t(lang, 'login')}</Button>

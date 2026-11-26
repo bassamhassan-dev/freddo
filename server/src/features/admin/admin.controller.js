@@ -1,5 +1,6 @@
 import Order from '../orders/order.model.js';
 import MenuItem from '../menu/menuItem.model.js';
+import Table from '../reservations/table.model.js';
 import { applyTransition } from '../orders/order.service.js';
 import { ORDER_STATUSES } from '../orders/order.model.js';
 import { catchAsync } from '../../utils/catchAsync.js';
@@ -92,4 +93,11 @@ export const setAccountStatus = catchAsync(async (req, res) => {
 export const setAccountRole = catchAsync(async (req, res) => {
   const data = await accountService.changeAccountRole(req.user, req.params.id, req.body?.role);
   res.json({ success: true, data: { account: data } });
+});
+
+// GET /api/admin/tables - active tables for the reservation assignment
+// dropdown. Tables are seed-managed (documented lean call).
+export const listTables = catchAsync(async (req, res) => {
+  const tables = await Table.find({ isActive: true }).sort({ capacity: 1, number: 1 }).lean();
+  res.json({ success: true, data: { tables } });
 });
