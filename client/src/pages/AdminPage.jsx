@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability } from '@/api/admin.js';
+import AdminAccounts from '@/components/AdminAccounts.jsx';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -40,7 +41,7 @@ export default function AdminPage({ lang }) {
 
   useEffect(() => {
     if (tab === 'orders') loadOrders();
-    else loadMenu();
+    else if (tab === 'menu') loadMenu();
   }, [tab, loadOrders, loadMenu]);
 
   const move = async (id, to) => {
@@ -66,9 +67,13 @@ export default function AdminPage({ lang }) {
         <Button size="sm" variant={tab === 'menu' ? 'default' : 'ghost'} onClick={() => setTab('menu')}>
           {t(lang, 'adminMenuTab')}
         </Button>
+        <Button size="sm" variant={tab === 'accounts' ? 'default' : 'ghost'} onClick={() => setTab('accounts')}>
+          {t(lang, 'adminAccountsTab')}
+        </Button>
       </div>
 
-      {error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
+      {tab === 'accounts' && <AdminAccounts lang={lang} />}
+      {tab !== 'accounts' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
 
       {tab === 'orders' && (
         <>

@@ -5,6 +5,7 @@ import { ORDER_STATUSES } from '../orders/order.model.js';
 import { catchAsync } from '../../utils/catchAsync.js';
 import { sendSuccess } from '../../utils/apiResponse.js';
 import { AppError } from '../../utils/AppError.js';
+import * as accountService from './account.service.js';
 
 // The admin workspace API. Everything here sits behind requireRole('admin')
 // at the router level - these handlers assume the role was already checked.
@@ -65,4 +66,30 @@ export const setAvailability = catchAsync(async (req, res) => {
     throw new AppError(404, 'ITEM_NOT_FOUND', 'الصنف ده مش موجود', 'This item does not exist');
   }
   sendSuccess(res, 200, { item: item.toPublicJSON(), isAvailable: item.isAvailable });
+});
+
+// --- Account management (doc 3.7) ---
+
+export const listAccounts = catchAsync(async (req, res) => {
+  const data = await accountService.listAccounts(req.query);
+  res.json({ success: true, data });
+});
+
+export const createAccount = catchAsync(async (req, res) => {
+  const { name, email, phone, role } = req.body || {};
+  if (!name?.trim() || !email?.trim() || !role) {
+    throw new AppError(400, 'VALIDATION', 'الاسم والإيميل والدور مطلوبين', 'Name, email and role are required');
+  }
+  const data = await accountService.createStaffAccount({ name, email, phone, role });
+  res.status(201).json({ success: true, data });
+});
+
+export const setAccountStatus = catchAsync(async (req, res) => {
+  const data = await accountService.setAccountActive(req.user, req.params.id, req.body?.isActive);
+  res.json({ success: true, data: { account: data } });
+});
+
+export const setAccountRole = catchAsync(async (req, res) => {
+  const data = await accountService.changeAccountRole(req.user, req.params.id, req.body?.role);
+  res.json({ success: true, data: { account: data } });
 });

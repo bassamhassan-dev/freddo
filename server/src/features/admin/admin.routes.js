@@ -11,6 +11,10 @@ router.use(requireAuth, requireRole(ROLES.ADMIN));
 
 router.get('/orders', controller.listOrders);
 router.post('/orders/:id/status', controller.setOrderStatus);
+router.get('/accounts', controller.listAccounts);
+router.post('/accounts', controller.createAccount);
+router.patch('/accounts/:id/status', controller.setAccountStatus);
+router.patch('/accounts/:id/role', controller.setAccountRole);
 router.get('/menu', controller.listMenu);
 router.patch('/menu/:id/availability', controller.setAvailability);
 

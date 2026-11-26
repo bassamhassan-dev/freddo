@@ -24,3 +24,28 @@ export async function apiSetAvailability(id, isAvailable) {
   });
   return data;
 }
+
+export async function apiAdminAccounts({ role, status, search } = {}) {
+  const params = new URLSearchParams();
+  if (role) params.set('role', role);
+  if (status) params.set('status', status);
+  if (search) params.set('search', search);
+  const query = params.toString() ? `?${params}` : '';
+  const { data } = await request(`/api/admin/accounts${query}`);
+  return data;
+}
+
+export async function apiCreateAccount(body) {
+  const { data } = await request('/api/admin/accounts', { method: 'POST', body });
+  return data;
+}
+
+export async function apiSetAccountStatus(id, isActive) {
+  const { data } = await request(`/api/admin/accounts/${id}/status`, { method: 'PATCH', body: { isActive } });
+  return data;
+}
+
+export async function apiSetAccountRole(id, role) {
+  const { data } = await request(`/api/admin/accounts/${id}/role`, { method: 'PATCH', body: { role } });
+  return data;
+}

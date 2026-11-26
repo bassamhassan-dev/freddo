@@ -91,5 +91,19 @@
   "noRecipe": "مفيش وصفة متاحة للصنف ده.",
   "ingredients": "المكوّنات",
   "steps": "الخطوات",
-  "close": "قفل"
+  "close": "قفل",
+  "adminAccountsTab": "الحسابات",
+  "createStaff": "إنشاء حساب موظف",
+  "createAccount": "إنشاء",
+  "namePlaceholder": "الاسم",
+  "emailPlaceholder": "الإيميل",
+  "phoneOptional": "التليفون (اختياري)",
+  "tempPasswordNote": "الباسورد المؤقت ده بيظهر مرة واحدة بس. ابعته للموظف، وهو يغيّره بعد أول دخول.",
+  "allRoles": "الكل",
+  "searchAccounts": "دوّر بالاسم أو الإيميل",
+  "activeCount": "شغال",
+  "disabledCount": "موقوف",
+  "activate": "تشغيل",
+  "deactivate": "إيقاف",
+  "lastLogin": "آخر دخول"
 }

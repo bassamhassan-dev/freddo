@@ -91,5 +91,19 @@
   "noRecipe": "No recipe available for this item.",
   "ingredients": "Ingredients",
   "steps": "Steps",
-  "close": "Close"
+  "close": "Close",
+  "adminAccountsTab": "Accounts",
+  "createStaff": "Create staff account",
+  "createAccount": "Create",
+  "namePlaceholder": "Name",
+  "emailPlaceholder": "Email",
+  "phoneOptional": "Phone (optional)",
+  "tempPasswordNote": "This temporary password is shown once. Send it to the staff member; they change it after first login.",
+  "allRoles": "All",
+  "searchAccounts": "Search by name or email",
+  "activeCount": "active",
+  "disabledCount": "disabled",
+  "activate": "Activate",
+  "deactivate": "Deactivate",
+  "lastLogin": "Last login"
 }

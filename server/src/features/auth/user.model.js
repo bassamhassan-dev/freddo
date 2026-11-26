@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema(
     // every query result unless explicitly requested - no accidental leaks.
     passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: ALL_ROLES, default: ROLES.CUSTOMER },
+    // Optional contact phone, set when an admin creates a staff account.
+    phone: { type: String, trim: true },
     // Disabled accounts exist but cannot log in (doc 3.3).
     isActive: { type: Boolean, default: true },
     lastLoginAt: { type: Date },
@@ -47,6 +49,21 @@ userSchema.methods.toPublicJSON = function toPublicJSON() {
     name: this.name,
     email: this.email,
     role: this.role,
+  };
+};
+
+// The admin account view: everything the management table needs (doc 3.7).
+// Still picked field by field - passwordHash never appears here.
+userSchema.methods.toAdminJSON = function toAdminJSON() {
+  return {
+    id: this._id,
+    name: this.name,
+    email: this.email,
+    phone: this.phone,
+    role: this.role,
+    isActive: this.isActive,
+    lastLoginAt: this.lastLoginAt,
+    createdAt: this.createdAt,
   };
 };
 
