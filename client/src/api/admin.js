@@ -27,6 +27,11 @@ export async function apiSetMenuImage(id, url) {
   return data;
 }
 
+export async function apiSaveRecipe(id, recipe) {
+  const { data } = await request(`/api/admin/menu/${id}/recipe`, { method: 'PUT', body: recipe });
+  return data;
+}
+
 export async function apiSetAvailability(id, isAvailable) {
   const { data } = await request(`/api/admin/menu/${id}/availability`, {
     method: 'PATCH',

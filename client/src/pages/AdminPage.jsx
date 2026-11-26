@@ -12,6 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import AdminBanners from '@/components/AdminBanners.jsx';
 import AdminMenuImage from '@/components/AdminMenuImage.jsx';
+import AdminRecipeEditor from '@/components/AdminRecipeEditor.jsx';
 import AdminAnalytics from '@/components/AdminAnalytics.jsx';
 import AdminContent from '@/components/AdminContent.jsx';
 
@@ -168,6 +169,7 @@ export default function AdminPage({ lang }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <AdminMenuImage lang={lang} item={item} onSaved={loadMenu} />
+                  <AdminRecipeEditor lang={lang} item={item} onSaved={loadMenu} />
                   <Button size="sm" variant={item.isAvailable ? 'default' : 'ghost'} onClick={() => toggle(item._id, !item.isAvailable)}>
                     {item.isAvailable ? t(lang, 'available') : t(lang, 'unavailable')}
                   </Button>

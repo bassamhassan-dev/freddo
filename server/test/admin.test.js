@@ -219,3 +219,55 @@ test('admin swaps a menu item image: validation, 404, role enforcement', async (
   const saved = await MenuItem.findById(item._id);
   assert.equal(saved.images[0].url, '/menu/mocha.svg');
 });
+
+test('admin writes a recipe and the barista reads it back', async () => {
+  const admin = await makeUser('a9@example.com', ROLES.ADMIN);
+  const barista = await makeUser('b9@example.com', ROLES.BARISTA);
+  const item = await MenuItem.create({
+    slug: 'mocha',
+    name: { ar: 'موكا', en: 'Mocha' },
+    description: { ar: 'وصف', en: 'desc' },
+    category: { slug: 'hot-coffee', name: { ar: 'قهوة', en: 'Coffee' } },
+    basePrice: 70,
+  });
+
+  const put = await api(`/menu/${item._id}/recipe`, {
+    method: 'PUT',
+    token: admin.token,
+    body: {
+      ingredients: [
+        { name: { ar: 'إسبريسو', en: 'Espresso' }, quantity: 2, unit: 'shot' },
+        { name: { ar: 'شوكولاتة', en: 'Chocolate' }, quantity: 30, unit: 'g' },
+      ],
+      steps: [{ ar: 'سيّح الشوكولاتة.', en: 'Melt the chocolate.' }],
+      notes: { ar: 'ملاحظة', en: 'note' },
+    },
+  });
+  assert.equal(put.status, 200);
+  assert.equal(put.body.data.item.recipe.ingredients.length, 2);
+  assert.equal(put.body.data.item.recipe.isVisible, true);
+
+  // The barista workspace serves exactly what the admin wrote.
+  const recipe = await fetch(`${baseUrl}/api/barista/items/mocha/recipe`, {
+    headers: { authorization: `Bearer ${barista.token}` },
+  });
+  const recipeBody = await recipe.json();
+  assert.equal(recipe.status, 200);
+  assert.equal(recipeBody.data.recipe.ingredients[1].name.en, 'Chocolate');
+
+  // Validation: a step without its pair language is rejected.
+  const bad = await api(`/menu/${item._id}/recipe`, {
+    method: 'PUT',
+    token: admin.token,
+    body: {
+      ingredients: [{ name: { ar: 'حليب', en: 'Milk' }, quantity: 1, unit: 'ml' }],
+      steps: [{ ar: 'اسكب.' }],
+    },
+  });
+  assert.equal(bad.status, 400);
+
+  // The public menu must never leak the recipe.
+  const pub = await fetch(`${baseUrl}/api/menu/mocha`);
+  const pubBody = await pub.json();
+  assert.equal(pubBody.data.item.recipe, undefined);
+});

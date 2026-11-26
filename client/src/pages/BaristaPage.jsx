@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 // so cards and touch targets stay big.
 export default function BaristaPage({ lang }) {
   const [items, setItems] = useState(null);
+  const [query, setQuery] = useState('');
   const [error, setError] = useState(null);
   const [openSlug, setOpenSlug] = useState(null);
   const [recipe, setRecipe] = useState(null);
@@ -36,8 +37,14 @@ export default function BaristaPage({ lang }) {
     setRecipe(null);
   };
 
+  // Sprint 25: counter-tablet search - filter cards by name in either
+  // language before grouping, so a barista finds a drink in seconds.
+  const needle = query.trim().toLowerCase();
+  const visibleItems = (items || []).filter(
+    (item) => !needle || item.name.ar.includes(query.trim()) || item.name.en.toLowerCase().includes(needle)
+  );
   const categories = [];
-  for (const item of items || []) {
+  for (const item of visibleItems) {
     let group = categories.find((c) => c.slug === item.category.slug);
     if (!group) {
       group = { slug: item.category.slug, name: item.category.name, items: [] };
@@ -48,9 +55,17 @@ export default function BaristaPage({ lang }) {
 
   return (
     <section className="mx-auto w-full max-w-4xl px-5 pb-16">
-      <h2 className="mb-6 text-center text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
+      <h2 className="mb-4 text-center text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
         {t(lang, 'baristaWorkspace')}
       </h2>
+
+      <input
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder={t(lang, 'baristaSearch')}
+        className="mb-6 w-full rounded-xl border border-border bg-card px-4 py-3 text-foreground outline-none focus:border-primary"
+      />
 
       {error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
       {!items && !error && <Skeleton className="h-64 w-full rounded-2xl" />}

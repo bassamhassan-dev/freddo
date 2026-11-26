@@ -25,7 +25,7 @@ export default function MenuItemCard({ item, lang }) {
           <img
             src={item.images[0].url}
             alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
-            className="h-40 w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105"
+            className="h-52 w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105"
             loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />

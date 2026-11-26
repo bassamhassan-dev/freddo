@@ -70,6 +70,43 @@ export const setAvailability = catchAsync(async (req, res) => {
   sendSuccess(res, 200, { item: item.toPublicJSON(), isAvailable: item.isAvailable });
 });
 
+// PUT /api/admin/menu/:id/recipe - write the internal recipe the barista
+// sees (doc 7.2/7.4): bilingual ingredients, steps and optional notes, plus
+// the visibility toggle. Replaces the whole recipe in one shot.
+export const setMenuRecipe = catchAsync(async (req, res) => {
+  const body = req.body || {};
+  const fail = () => {
+    throw new AppError(400, 'VALIDATION_ERROR', 'بيانات الوصفة مش مكتملة', 'Invalid recipe payload');
+  };
+  if (!Array.isArray(body.ingredients) || !body.ingredients.length || body.ingredients.length > 30) fail();
+  if (!Array.isArray(body.steps) || !body.steps.length || body.steps.length > 30) fail();
+  for (const ing of body.ingredients) {
+    if (!ing?.name?.ar?.trim() || !ing?.name?.en?.trim()) fail();
+    if (typeof ing.quantity !== 'number' || !(ing.quantity > 0)) fail();
+    if (typeof ing.unit !== 'string' || !ing.unit.trim() || ing.unit.length > 20) fail();
+  }
+  for (const step of body.steps) {
+    if (!step?.ar?.trim() || !step?.en?.trim()) fail();
+  }
+  const recipe = {
+    ingredients: body.ingredients.map((ing) => ({
+      name: { ar: ing.name.ar.trim(), en: ing.name.en.trim() },
+      quantity: ing.quantity,
+      unit: ing.unit.trim(),
+    })),
+    steps: body.steps.map((step) => ({ ar: step.ar.trim(), en: step.en.trim() })),
+    isVisible: body.isVisible !== false, // default: visible to baristas
+  };
+  if (body.notes?.ar?.trim() && body.notes?.en?.trim()) {
+    recipe.notes = { ar: body.notes.ar.trim(), en: body.notes.en.trim() };
+  }
+  const item = await MenuItem.findByIdAndUpdate(req.params.id, { recipe }, { new: true });
+  if (!item) {
+    throw new AppError(404, 'ITEM_NOT_FOUND', 'الصنف ده مش موجود', 'This item does not exist');
+  }
+  sendSuccess(res, 200, { item });
+});
+
 // --- Account management (doc 3.7) ---
 
 export const listAccounts = catchAsync(async (req, res) => {

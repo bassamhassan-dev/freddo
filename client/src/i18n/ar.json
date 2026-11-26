@@ -317,5 +317,17 @@
   "contentKey_loyaltyBody": "نص شريط الولاء",
   "contentKey_loyaltyCta": "زر شريط الولاء",
   "contentKey_sectionReviews": "إظهار سكشن آراء الضيوف",
-  "contentKey_sectionLoyalty": "إظهار شريط الولاء"
+  "contentKey_sectionLoyalty": "إظهار شريط الولاء",
+  "baristaSearch": "دوّر على صنف...",
+  "recipeEdit": "الوصفة",
+  "recipeNameAr": "المكوّن بالعربي",
+  "recipeNameEn": "المكوّن بالإنجليزي",
+  "recipeUnit": "الوحدة",
+  "recipeAddIngredient": "ضيف مكوّن",
+  "recipeStepsAr": "الخطوات بالعربي (سطر لكل خطوة)",
+  "recipeStepsEn": "الخطوات بالإنجليزي (سطر لكل خطوة)",
+  "recipeNotesAr": "ملاحظات بالعربي (اختياري)",
+  "recipeNotesEn": "ملاحظات بالإنجليزي (اختياري)",
+  "recipeVisible": "ظاهرة للباريستا",
+  "recipeInvalid": "كمّل المكوّنات والخطوات باللغتين - كل خطوة عربي لازم ليها إنجليزي بنفس الترتيب"
 }

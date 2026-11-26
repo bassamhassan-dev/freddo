@@ -317,5 +317,17 @@
   "contentKey_loyaltyBody": "Loyalty band body",
   "contentKey_loyaltyCta": "Loyalty band button",
   "contentKey_sectionReviews": "Show the testimonials section",
-  "contentKey_sectionLoyalty": "Show the loyalty band"
+  "contentKey_sectionLoyalty": "Show the loyalty band",
+  "baristaSearch": "Search for an item...",
+  "recipeEdit": "Recipe",
+  "recipeNameAr": "Ingredient (Arabic)",
+  "recipeNameEn": "Ingredient (English)",
+  "recipeUnit": "Unit",
+  "recipeAddIngredient": "Add ingredient",
+  "recipeStepsAr": "Steps in Arabic (one per line)",
+  "recipeStepsEn": "Steps in English (one per line)",
+  "recipeNotesAr": "Notes in Arabic (optional)",
+  "recipeNotesEn": "Notes in English (optional)",
+  "recipeVisible": "Visible to baristas",
+  "recipeInvalid": "Complete the ingredients and steps in both languages - every Arabic step needs its English pair in the same order"
 }

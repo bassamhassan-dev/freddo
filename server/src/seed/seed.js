@@ -5,6 +5,7 @@ import MenuItem from '../features/menu/menuItem.model.js';
 
 import Table from '../features/reservations/table.model.js';
 import Banner from '../features/banners/banner.model.js';
+import SiteContent from '../features/content/siteContent.model.js';
 import Coupon from '../features/coupons/coupon.model.js';
 import Order from '../features/orders/order.model.js';
 import User from '../features/auth/user.model.js';
@@ -474,16 +475,33 @@ async function seed() {
     upserted += 1;
   }
 
+  // Default social links so the footer icons show out of the box; the
+  // admin replaces them with the real handles (URL keys, CMS).
+  const defaultSocials = [
+    { key: 'socialFacebook', url: 'https://www.facebook.com/freddo.cafe' },
+    { key: 'socialInstagram', url: 'https://www.instagram.com/freddo.cafe' },
+    { key: 'socialTiktok', url: 'https://www.tiktok.com/@freddo.cafe' },
+  ];
+  for (const social of defaultSocials) {
+    await SiteContent.updateOne(
+      { key: social.key },
+      { $setOnInsert: { key: social.key, value: { ar: social.url, en: social.url } } },
+      { upsert: true }
+    );
+  }
+
   // Sample homepage banners so the slider/secondary slots are visible on a
   // fresh setup. Upserted by English title; the admin can edit or delete
   // them like any banner (Sprint 13/16).
   const sampleBanners = [
-    { placement: 'main', title: { ar: 'قهوتك.. على مزاجك', en: 'Your Coffee.. Your Mood' }, description: { ar: 'فريدو - الواسطى، بني سويف', en: 'Freddo - El Wasta, Beni Suef' }, imageUrl: '/photos/hero-storefront.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/menu', sortOrder: 0 },
-    { placement: 'main', title: { ar: 'قهوة كويسة.. مزاج كويس', en: 'Good Coffee Good Mood' }, description: { ar: 'تسوية فريدو الخاصة، بن محمص طازة', en: 'The Freddo house roast, freshly roasted' }, imageUrl: '/photos/hero-counter.jpg', ctaText: { ar: 'اتفضل على المنيو', en: 'See the menu' }, ctaLink: '/menu', sortOrder: 1 },
-    { placement: 'main', title: { ar: 'مشروبك المفضل مستنيك', en: 'Your favorite drink is waiting' }, description: { ar: 'جرب توقيعات فريدو', en: 'Try the Freddo signatures' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/menu', sortOrder: 2 },
+    { placement: 'main', title: { ar: 'قهوتك.. على مزاجك', en: 'Your Coffee.. Your Mood' }, description: { ar: 'فريدو - الواسطى، بني سويف', en: 'Freddo - El Wasta, Beni Suef' }, imageUrl: '/photos/hero-storefront.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/#menu', sortOrder: 0 },
+    { placement: 'main', title: { ar: 'قهوة كويسة.. مزاج كويس', en: 'Good Coffee Good Mood' }, description: { ar: 'تسوية فريدو الخاصة، بن محمص طازة', en: 'The Freddo house roast, freshly roasted' }, imageUrl: '/photos/hero-counter.jpg', ctaText: { ar: 'اتفضل على المنيو', en: 'See the menu' }, ctaLink: '/#menu', sortOrder: 1 },
+    { placement: 'main', title: { ar: 'مشروبك المفضل مستنيك', en: 'Your favorite drink is waiting' }, description: { ar: 'جرب توقيعات فريدو', en: 'Try the Freddo signatures' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/#menu', sortOrder: 2 },
     { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/photos/photo-pink-room.jpg', ctaLink: '/reservations', sortOrder: 0 },
+    { placement: 'secondary_left', title: { ar: 'حلويات فريدو', en: 'Freddo desserts' }, description: { ar: 'بسبوسة وتشيز كيك لوتس وغيرهم كتير', en: 'Basbousa, Lotus cheesecake and more' }, imageUrl: '/photos/photo-flower-ceiling.jpg', ctaText: { ar: 'اتفضل على المنيو', en: 'See the menu' }, ctaLink: '/#menu', sortOrder: 1 },
     { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/photos/photo-grey-seating.jpg', ctaLink: '/account', sortOrder: 0 },
-    { placement: 'offers', title: { ar: 'خصم الترحيب', en: 'Welcome deal' }, description: { ar: 'كود WELCOME10 على أول طلب', en: 'Code WELCOME10 on your first order' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب بخصم', en: 'Order with the deal' }, ctaLink: '/menu', sortOrder: 0 },
+    { placement: 'secondary_right', title: { ar: 'اطلب من مكانك', en: 'Order from anywhere' }, description: { ar: 'اطلب أونلاين واستلم من الكاونتر', en: 'Order online and pick up at the counter' }, imageUrl: '/photos/hero-counter.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/#menu', sortOrder: 1 },
+    { placement: 'offers', title: { ar: 'خصم الترحيب', en: 'Welcome deal' }, description: { ar: 'كود WELCOME10 على أول طلب', en: 'Code WELCOME10 on your first order' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب بخصم', en: 'Order with the deal' }, ctaLink: '/#menu', sortOrder: 0 },
     { placement: 'offers', title: { ar: 'عرض الويكند', en: 'Weekend vibes' }, description: { ar: 'اجمع صحابك عندنا', en: 'Bring your crew over' }, imageUrl: '/photos/photo-pink-seating.jpg', ctaText: { ar: 'احجز مكانك', en: 'Book your spot' }, ctaLink: '/reservations', sortOrder: 1 },
   ];
   // A welcome coupon so the checkout discount flow (Sprint 10) is visible
