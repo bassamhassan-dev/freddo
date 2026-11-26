@@ -4,6 +4,7 @@ import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import ChatAvatar from './ChatAvatar.jsx';
 
 // Account management tab (doc 3.7): overview totals, search/filter, create
 // staff accounts, activate/deactivate and role changes. Every action is
@@ -156,7 +157,9 @@ export default function AdminAccounts({ lang }) {
       <div className="flex flex-col gap-2">
         {(data?.accounts || []).map((account) => (
           <div key={account.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-card p-3">
-            <div>
+            <div className="flex items-start gap-3">
+              <ChatAvatar name={account.name} src={account.avatarUrl} />
+              <div>
               <span className="font-bold text-foreground">{account.name}</span>
               <span className="ms-2 text-xs text-muted-foreground" dir="ltr">{account.email}</span>
               <div className="mt-1 flex gap-2">
@@ -170,6 +173,7 @@ export default function AdminAccounts({ lang }) {
                     {t(lang, 'lastLogin')}: {new Date(account.lastLoginAt).toLocaleDateString(lang === 'ar' ? 'ar-EG' : 'en-EG')}
                   </span>
                 )}
+              </div>
               </div>
             </div>
             <div className="flex items-center gap-2">

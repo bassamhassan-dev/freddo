@@ -25,6 +25,7 @@ const messageSchema = new mongoose.Schema(
     // shows who said what without a populate per message, and a later
     // rename never rewrites chat history (Sprint 29).
     senderName: { type: String, trim: true, maxlength: 80 },
+    senderAvatar: { type: String, trim: true, maxlength: 2000 },
     kind: { type: String, enum: ['text', 'image'], default: 'text' },
     text: { type: String, trim: true, maxlength: 2000 },
     imageUrl: { type: String, trim: true, maxlength: 2000 },
@@ -38,6 +39,7 @@ messageSchema.methods.toPublicJSON = function toPublicJSON() {
     conversationId: this.conversation,
     senderRole: this.senderRole,
     senderName: this.senderName,
+    senderAvatar: this.senderAvatar,
     kind: this.kind,
     text: this.text,
     imageUrl: this.imageUrl,

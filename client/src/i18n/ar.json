@@ -364,5 +364,10 @@
   "verifyEmailBad": "اللينك ده مش صالح أو خلص. سجل دخول واطلب لينك جديد من صفحة التشيك آوت.",
   "emailVerifyNotice": "لازم تأكد إيميلك قبل ما تطلب. بعطنا لينك على إيميلك لو ماوصلكش، دوس الزرار ده.",
   "resendVerification": "ابعت لينك التأكيد تاني",
-  "resendVerificationSent": "اتبعت! بص على إيميلك (والسبام)."
+  "resendVerificationSent": "اتبعت! بص على إيميلك (والسبام).",
+  "changePhoto": "غيّر الصورة",
+  "profileName": "الاسم",
+  "profilePhone": "رقم الموبايل",
+  "saveProfile": "احفظ التعديلات",
+  "profileSaved": "اتحفظ"
 }

@@ -158,7 +158,7 @@ export default function AdminChat({ lang }) {
                 const own = m.senderRole === 'admin';
                 return (
                   <div key={m.id} className="flex items-end gap-1.5">
-                    {!own && <ChatAvatar name={m.senderName || activeConv?.customer?.name} size="sm" />}
+                    {!own && <ChatAvatar name={m.senderName || activeConv?.customer?.name} src={m.senderAvatar} size="sm" />}
                     <div className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${own ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
                       {m.kind === 'image' ? (
                         <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
@@ -166,7 +166,7 @@ export default function AdminChat({ lang }) {
                         m.text
                       )}
                     </div>
-                    {own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} variant="amber" size="sm" />}
+                    {own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} src={m.senderAvatar} variant="amber" size="sm" />}
                   </div>
                 );
               })}

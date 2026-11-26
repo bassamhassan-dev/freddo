@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ALL_ROLES, default: ROLES.CUSTOMER },
     // Optional contact phone, set when an admin creates a staff account.
     phone: { type: String, trim: true },
+    // Profile picture (Sprint 34): Cloudinary URL + id for cleanup on replace.
+    avatarUrl: { type: String, trim: true },
+    avatarPublicId: { type: String, select: false },
     // Email verification (Sprint 33): a customer can browse right after
     // registering, but ordering is blocked until the link in the
     // verification email is clicked. The token is stored as a sha256 hash
@@ -66,6 +69,7 @@ userSchema.methods.toPublicJSON = function toPublicJSON() {
     role: this.role,
     phone: this.phone,
     emailVerified: Boolean(this.emailVerifiedAt),
+    avatarUrl: this.avatarUrl,
   };
 };
 
@@ -78,6 +82,7 @@ userSchema.methods.toAdminJSON = function toAdminJSON() {
     email: this.email,
     phone: this.phone,
     role: this.role,
+    avatarUrl: this.avatarUrl,
     isActive: this.isActive,
     lastLoginAt: this.lastLoginAt,
     createdAt: this.createdAt,

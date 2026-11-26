@@ -2,6 +2,8 @@ import * as authService from './auth.service.js';
 import { catchAsync } from '../../utils/catchAsync.js';
 import { sendSuccess } from '../../utils/apiResponse.js';
 import { AppError } from '../../utils/AppError.js';
+import User from './user.model.js';
+import { isCloudinaryConfigured, uploadImage, deleteImage } from '../uploads/cloudinary.service.js';
 
 // The refresh token travels only in an HttpOnly cookie (JS can never read
 // it, so XSS cannot steal it). SameSite=Lax blocks cross-site sending,
@@ -87,4 +89,45 @@ export const logout = catchAsync(async (req, res) => {
 // GET /api/auth/me - who am I, from the access token.
 export const me = catchAsync(async (req, res) => {
   sendSuccess(res, 200, { user: req.user.toPublicJSON() });
+});
+
+// PATCH /api/auth/me - the customer edits their own name and phone. Fields
+// are picked one by one; role/email can never be changed from here.
+export const updateMe = catchAsync(async (req, res) => {
+  const { name, phone } = req.body || {};
+  const user = await User.findById(req.user._id);
+  if (name !== undefined) {
+    if (typeof name !== 'string' || name.trim().length < 2 || name.trim().length > 80) {
+      throw new AppError(400, 'VALIDATION_ERROR', 'الاسم لازم يكون حرفين على الأقل', 'Name must be at least 2 characters');
+    }
+    user.name = name.trim();
+  }
+  if (phone !== undefined) {
+    const p = typeof phone === 'string' ? phone.trim() : '';
+    if (p && !/^\+?[0-9\s-]{7,16}$/.test(p)) {
+      throw new AppError(400, 'INVALID_PHONE', 'اكتب رقم موبايل صحيح', 'Enter a valid phone number');
+    }
+    user.phone = p || undefined;
+  }
+  await user.save();
+  sendSuccess(res, 200, { user: user.toPublicJSON() });
+});
+
+// POST /api/auth/me/avatar - one image field "image" (multer in the route).
+export const uploadAvatar = catchAsync(async (req, res) => {
+  if (!isCloudinaryConfigured()) {
+    throw new AppError(503, 'CLOUDINARY_NOT_CONFIGURED', 'رفع الصور مش متظبط لسه', 'Image upload is not configured yet');
+  }
+  if (!req.file) throw new AppError(400, 'NO_FILE', 'مفيش صورة اتبعتت', 'No image was sent');
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(req.file.mimetype)) {
+    throw new AppError(400, 'INVALID_FILE_TYPE', 'نوع الصورة مش مسموح - JPG أو PNG أو WebP بس', 'Only JPG, PNG or WebP images are allowed');
+  }
+  const user = await User.findById(req.user._id).select('+avatarPublicId');
+  const { imageUrl, publicId } = await uploadImage(req.file.buffer, 'freddo-avatars');
+  const old = user.avatarPublicId;
+  user.avatarUrl = imageUrl;
+  user.avatarPublicId = publicId;
+  await user.save();
+  if (old) await deleteImage(old).catch(() => {});
+  sendSuccess(res, 200, { user: user.toPublicJSON() });
 });

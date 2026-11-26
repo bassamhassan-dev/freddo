@@ -4,6 +4,8 @@ import { useAuthStore } from '@/store/auth.js';
 import { apiMyLoyalty } from '@/api/loyalty.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
+import { apiUpdateProfile, apiUploadAvatar } from '@/api/auth.js';
+import ChatAvatar from '@/components/ChatAvatar.jsx';
 
 // The customer's account home: who they are, and logout. Orders and
 // reservations join this page in their own sprints.
@@ -11,6 +13,42 @@ export default function AccountPage({ lang }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const [loyalty, setLoyalty] = useState(null);
+  const [name, setName] = useState(user?.name || '');
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [msg, setMsg] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  // Profile edits return the fresh public user; push it into the auth store
+  // so the header, chat and checkout pick it up without a reload.
+  const applyUser = (next) => useAuthStore.setState({ user: { ...user, ...next } });
+
+  const onSave = async (e) => {
+    e.preventDefault();
+    setBusy(true);
+    setMsg(null);
+    try {
+      const { user: next } = await apiUpdateProfile({ name, phone });
+      applyUser(next);
+      setMsg({ ok: true, text: t(lang, 'profileSaved') });
+    } catch (err) {
+      setMsg({ ok: false, text: err.message?.[lang] || t(lang, 'orderError') });
+    }
+    setBusy(false);
+  };
+
+  const onAvatar = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setBusy(true);
+    setMsg(null);
+    try {
+      const { user: next } = await apiUploadAvatar(file);
+      applyUser(next);
+    } catch (err) {
+      setMsg({ ok: false, text: err.message?.[lang] || t(lang, 'orderError') });
+    }
+    setBusy(false);
+  };
 
   useEffect(() => {
     apiMyLoyalty().then(setLoyalty).catch(() => setLoyalty(null));
@@ -27,8 +65,26 @@ export default function AccountPage({ lang }) {
         {t(lang, 'accountTitle')}
       </h2>
       <div className="flex flex-col gap-3 rounded-2xl border border-border bg-card p-6">
-        <p className="text-lg font-bold text-foreground">{user?.name}</p>
-        <p className="text-sm text-secondary">{user?.email}</p>
+        <div className="flex items-center gap-4">
+          <ChatAvatar name={user?.name} src={user?.avatarUrl} variant="amber" />
+          <label className="cursor-pointer text-sm font-semibold text-accent underline">
+            {t(lang, 'changePhoto')}
+            <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" onChange={onAvatar} disabled={busy} />
+          </label>
+        </div>
+        <p className="text-sm text-secondary" dir="ltr">{user?.email}</p>
+        <form className="flex flex-col gap-2" onSubmit={onSave}>
+          <label className="flex flex-col gap-1 text-sm text-secondary">
+            {t(lang, 'profileName')}
+            <input className="rounded-xl border border-border bg-background p-2 text-foreground" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={80} required />
+          </label>
+          <label className="flex flex-col gap-1 text-sm text-secondary">
+            {t(lang, 'profilePhone')}
+            <input className="rounded-xl border border-border bg-background p-2 text-foreground" dir="ltr" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          </label>
+          <Button type="submit" disabled={busy}>{t(lang, 'saveProfile')}</Button>
+          {msg && <p className={`text-sm font-semibold ${msg.ok ? 'text-accent' : 'text-red-400'}`}>{msg.text}</p>}
+        </form>
         <p className="text-sm text-secondary">
           {t(lang, 'role')}: {t(lang, `role_${user?.role}`)}
         </p>

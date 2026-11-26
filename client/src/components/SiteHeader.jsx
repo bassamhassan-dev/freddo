@@ -5,6 +5,7 @@ import { useAuthStore } from '@/store/auth.js';
 import { useCartStore, cartCount } from '@/store/cart.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
+import ChatAvatar from './ChatAvatar.jsx';
 
 // The header shared by every page. On the homepage it renders as an
 // overlay (transparent, melting into the full-screen hero below it);
@@ -89,7 +90,7 @@ export default function SiteHeader({ lang, onToggleLang, overlay = false }) {
           <span className="hidden items-center gap-2 md:flex">
             {status === 'authed' && user ? (
               <Link to="/account">
-                <Button variant="ghost" size="sm">{user.name}</Button>
+                <Button variant="ghost" size="sm" className="gap-2"><ChatAvatar name={user.name} src={user.avatarUrl} variant="amber" size="sm" />{user.name}</Button>
               </Link>
             ) : (
               <Link to="/login">
@@ -146,7 +147,7 @@ export default function SiteHeader({ lang, onToggleLang, overlay = false }) {
             <div className="mt-auto flex flex-col gap-2 border-t border-amber-900/40 pt-4">
               {status === 'authed' && user ? (
                 <Link to="/account">
-                  <Button variant="ghost" className="w-full justify-start">{user.name}</Button>
+                  <Button variant="ghost" className="w-full justify-start gap-2"><ChatAvatar name={user.name} src={user.avatarUrl} variant="amber" size="sm" />{user.name}</Button>
                 </Link>
               ) : (
                 <Link to="/login">

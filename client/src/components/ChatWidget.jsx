@@ -109,7 +109,7 @@ export default function ChatWidget({ lang }) {
       {open && (
         <div className="flex h-96 w-80 max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-amber-900/40 bg-[#120d08] shadow-2xl">
           <div className="flex items-center gap-2 border-b border-amber-900/40 bg-[#1a130b] px-4 py-3">
-            <ChatAvatar name={user?.name} variant="amber" />
+            <ChatAvatar name={user?.name} src={user?.avatarUrl} variant="amber" />
             <div className="min-w-0">
               <p className="text-sm font-semibold text-[#f6e7cf]">{t(lang, 'chat.title')}</p>
               <p className="truncate text-xs text-[#a89880]">{user?.name}</p>
@@ -120,7 +120,7 @@ export default function ChatWidget({ lang }) {
               const own = m.senderRole === 'customer';
               return (
                 <div key={m.id} className="flex items-end gap-1.5">
-                  {!own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} size="sm" />}
+                  {!own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} src={m.senderAvatar} size="sm" />}
                   <div className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${own ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
                     {m.kind === 'image' ? (
                       <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
@@ -128,7 +128,7 @@ export default function ChatWidget({ lang }) {
                       m.text
                     )}
                   </div>
-                  {own && <ChatAvatar name={m.senderName || user?.name} variant="amber" size="sm" />}
+                  {own && <ChatAvatar name={m.senderName || user?.name} src={m.senderAvatar || user?.avatarUrl} variant="amber" size="sm" />}
                 </div>
               );
             })}

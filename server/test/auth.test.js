@@ -182,3 +182,23 @@ test('password hash is never exposed through any endpoint', async () => {
   const me = await api('/me', { token: reg.body.data.accessToken });
   assert.equal(me.body.data.user.passwordHash, undefined);
 });
+
+test('PATCH /me edits name and phone only; bad phone is rejected; avatar needs cloudinary', async () => {
+  await User.deleteMany({});
+  const reg = await api('/register', { method: 'POST', body: customer });
+  const token = reg.body.data.accessToken;
+  const ok = await api('/me', { method: 'PATCH', token, body: { name: 'New Name', phone: '01012345678', role: 'admin', email: 'x@y.com' } });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.body.data.user.name, 'New Name');
+  assert.equal(ok.body.data.user.phone, '01012345678');
+  assert.equal(ok.body.data.user.role, 'customer');
+  assert.equal(ok.body.data.user.email, 'bassam@example.com');
+  const bad = await api('/me', { method: 'PATCH', token, body: { phone: 'abc' } });
+  assert.equal(bad.status, 400);
+  const noAuth = await api('/me', { method: 'PATCH', body: { name: 'Zed' } });
+  assert.equal(noAuth.status, 401);
+  const fd = new FormData();
+  fd.append('image', new Blob([Buffer.from('x')], { type: 'image/png' }), 'a.png');
+  const res = await fetch(`${baseUrl}/api/auth/me/avatar`, { method: 'POST', headers: { authorization: `Bearer ${token}` }, body: fd });
+  assert.equal(res.status, 503);
+});

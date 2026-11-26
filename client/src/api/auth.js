@@ -27,6 +27,18 @@ export async function apiResendVerification() {
   return data;
 }
 
+export async function apiUpdateProfile({ name, phone }) {
+  const { data } = await request('/api/auth/me', { method: 'PATCH', body: { name, phone } });
+  return data;
+}
+
+export async function apiUploadAvatar(file) {
+  const fd = new FormData();
+  fd.append('image', file);
+  const { data } = await request('/api/auth/me/avatar', { method: 'POST', body: fd });
+  return data;
+}
+
 export async function apiLogout() {
   await request('/api/auth/logout', { method: 'POST' });
 }

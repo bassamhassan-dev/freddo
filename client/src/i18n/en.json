@@ -364,5 +364,10 @@
   "verifyEmailBad": "This link is invalid or expired. Log in and request a new one from checkout.",
   "emailVerifyNotice": "You need to confirm your email before ordering. We sent you a link - hit the button if it never arrived.",
   "resendVerification": "Resend confirmation link",
-  "resendVerificationSent": "Sent! Check your inbox (and spam)."
+  "resendVerificationSent": "Sent! Check your inbox (and spam).",
+  "changePhoto": "Change photo",
+  "profileName": "Name",
+  "profilePhone": "Phone",
+  "saveProfile": "Save changes",
+  "profileSaved": "Saved"
 }

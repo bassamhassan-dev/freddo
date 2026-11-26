@@ -2,6 +2,7 @@ import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import * as controller from './auth.controller.js';
 import * as oauthController from './oauth.controller.js';
+import { upload } from '../uploads/upload.controller.js';
 import { requireAuth } from './auth.middleware.js';
 
 // Login/register are the classic brute-force targets, so they get a rate
@@ -34,6 +35,8 @@ router.post('/login', authLimiter, controller.login);
 router.post('/refresh', controller.refresh);
 router.post('/logout', controller.logout);
 router.get('/me', requireAuth, controller.me);
+router.patch('/me', requireAuth, controller.updateMe);
+router.post('/me/avatar', requireAuth, upload.single('image'), controller.uploadAvatar);
 
 router.get('/oauth/providers', oauthController.providers);
 router.get('/oauth/:provider', oauthController.start);
