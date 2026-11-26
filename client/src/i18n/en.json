@@ -343,5 +343,6 @@
   "admin.accounts.points": "Points",
   "admin.menu.drink": "Drink",
   "marquee.title": "Announcement bar (below the hero)",
-  "marquee.add": "Add phrase"
+  "marquee.add": "Add phrase",
+  "chat.team": "Freddo team"
 }

@@ -76,7 +76,7 @@ export function attachChatSocket(httpServer) {
           conversationId = socket.data.conversationId;
           senderRole = 'customer';
         }
-        const message = await chatService.appendMessage(conversationId, socket.user._id, senderRole, body || {});
+        const message = await chatService.appendMessage(conversationId, socket.user._id, senderRole, body || {}, socket.user.name);
         broadcastMessage(conversationId, message.toPublicJSON());
         ack?.({ ok: true, message: message.toPublicJSON() });
       } catch (err) {

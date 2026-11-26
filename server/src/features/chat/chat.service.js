@@ -20,7 +20,7 @@ export async function getOrCreateConversation(customerId) {
 
 // senderRole decides which unread counter moves: a customer message is
 // unread for the admin team and vice versa.
-export async function appendMessage(conversationId, sender, senderRole, body) {
+export async function appendMessage(conversationId, sender, senderRole, body, senderName) {
   const kind = body.imageUrl ? 'image' : 'text';
   if (kind === 'text' && !String(body.text || '').trim()) {
     throw new AppError(400, 'VALIDATION', 'الرسالة فاضية', 'The message is empty');
@@ -29,6 +29,7 @@ export async function appendMessage(conversationId, sender, senderRole, body) {
     conversation: conversationId,
     sender,
     senderRole,
+    senderName: typeof senderName === 'string' ? senderName.slice(0, 80) : undefined,
     kind,
     text: kind === 'text' ? String(body.text).trim() : undefined,
     imageUrl: kind === 'image' ? String(body.imageUrl) : undefined,

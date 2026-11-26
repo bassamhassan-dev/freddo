@@ -119,11 +119,14 @@ test('socket round trip: customer message reaches the admins room live', async (
   const payload = await received;
   assert.equal(payload.message.text, 'الأوردر بتاعي اتأخر');
   assert.equal(payload.message.senderRole, 'customer');
+  assert.equal(payload.message.senderName, customer.user.name); // S29 identity snapshot
+  assert.equal(ack.message.senderName, customer.user.name);
   assert.ok(payload.conversationId);
 
   // Persisted too - the next REST history read sees the socket message.
   const history = await api('/mine', { token: customer.token });
   assert.equal(history.body.data.messages.length, 1);
+  assert.equal(history.body.data.messages[0].senderName, customer.user.name);
 
   adminSocket.close();
   customerSocket.close();

@@ -4,6 +4,7 @@ import { getAccessToken } from '@/api/client.js';
 import { getChatSocket } from '@/api/chatSocket.js';
 import { getMyChat, sendMyMessage, markMyChatRead, uploadChatImage } from '@/api/chat.js';
 import { t } from '@/i18n/index.js';
+import ChatAvatar from './ChatAvatar.jsx';
 
 // Floating customer <-> admin chat (Sprint 26). Visible only to signed-in
 // customers. Socket.IO carries messages live; REST is the fallback when the
@@ -21,6 +22,12 @@ export default function ChatWidget({ lang }) {
 
   const isCustomer = status === 'authed' && user?.role === 'customer';
   const convId = conversation?.id;
+
+  // Deduped local append: used by the live broadcast AND by the send ack /
+  // REST response, so the sender's own message always appears immediately.
+  const appendLocal = useCallback((msg) => {
+    setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
+  }, []);
 
   const load = useCallback(async () => {
     const { data } = await getMyChat();
@@ -40,13 +47,17 @@ export default function ChatWidget({ lang }) {
     if (!token) return;
     const socket = getChatSocket(token);
     socketRef.current = socket;
-    const onNew = (msg) => {
-      setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
-      if (!open) setConversation((c) => (c ? { ...c, unreadForCustomer: (c.unreadForCustomer || 0) + 1 } : c));
+    // Server broadcasts 'chat:message' with { conversationId, message }.
+    const onNew = (payload) => {
+      const msg = payload?.message || payload;
+      if (!msg?.id) return;
+      appendLocal(msg);
+      if (!open && msg.senderRole !== 'customer')
+        setConversation((c) => (c ? { ...c, unreadForCustomer: (c.unreadForCustomer || 0) + 1 } : c));
     };
-    socket.on('chat:new', onNew);
-    return () => socket.off('chat:new', onNew);
-  }, [isCustomer, open]);
+    socket.on('chat:message', onNew);
+    return () => socket.off('chat:message', onNew);
+  }, [isCustomer, open, appendLocal]);
 
   useEffect(() => {
     if (!open || !convId) return;
@@ -65,10 +76,11 @@ export default function ChatWidget({ lang }) {
     try {
       const socket = socketRef.current;
       if (socket?.connected) {
-        await socket.emitWithAck('chat:send', body);
+        const ack = await socket.emitWithAck('chat:send', body);
+        if (ack?.message) appendLocal(ack.message);
       } else {
         const { data } = await sendMyMessage(body);
-        setMessages((prev) => (prev.some((m) => m.id === data.message.id) ? prev : [...prev, data.message]));
+        appendLocal(data.message);
       }
       setDraft('');
     } catch {
@@ -96,19 +108,30 @@ export default function ChatWidget({ lang }) {
     <div className="fixed bottom-4 end-4 z-50 flex flex-col items-end gap-3">
       {open && (
         <div className="flex h-96 w-80 max-w-[calc(100vw-2rem)] flex-col overflow-hidden rounded-2xl border border-amber-900/40 bg-[#120d08] shadow-2xl">
-          <div className="border-b border-amber-900/40 bg-[#1a130b] px-4 py-3 text-sm font-semibold text-[#f6e7cf]">
-            {t(lang, 'chat.title')}
+          <div className="flex items-center gap-2 border-b border-amber-900/40 bg-[#1a130b] px-4 py-3">
+            <ChatAvatar name={user?.name} variant="amber" />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-[#f6e7cf]">{t(lang, 'chat.title')}</p>
+              <p className="truncate text-xs text-[#a89880]">{user?.name}</p>
+            </div>
           </div>
           <div className="flex-1 space-y-2 overflow-y-auto p-3">
-            {messages.map((m) => (
-              <div key={m.id} className={`max-w-[80%] rounded-xl px-3 py-2 text-sm ${m.senderRole === 'customer' ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
-                {m.kind === 'image' ? (
-                  <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
-                ) : (
-                  m.text
-                )}
-              </div>
-            ))}
+            {messages.map((m) => {
+              const own = m.senderRole === 'customer';
+              return (
+                <div key={m.id} className="flex items-end gap-1.5">
+                  {!own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} size="sm" />}
+                  <div className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${own ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
+                    {m.kind === 'image' ? (
+                      <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
+                    ) : (
+                      m.text
+                    )}
+                  </div>
+                  {own && <ChatAvatar name={m.senderName || user?.name} variant="amber" size="sm" />}
+                </div>
+              );
+            })}
             <div ref={bottomRef} />
           </div>
           <form

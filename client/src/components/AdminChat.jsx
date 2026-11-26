@@ -9,6 +9,7 @@ import {
   uploadChatImage,
 } from '@/api/chat.js';
 import { t } from '@/i18n/index.js';
+import ChatAvatar from './ChatAvatar.jsx';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
@@ -26,6 +27,13 @@ export default function AdminChat({ lang }) {
   const socketRef = useRef(null);
   const activeRef = useRef(null);
   activeRef.current = active;
+  const activeConv = conversations.find((c) => String(c.id) === String(active));
+
+  // Deduped local append so a sent message shows immediately on every path
+  // (socket ack, live broadcast, REST fallback).
+  const appendLocal = useCallback((msg) => {
+    setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
+  }, []);
 
   const loadList = useCallback(async () => {
     const { data } = await adminListChats();
@@ -38,19 +46,22 @@ export default function AdminChat({ lang }) {
     if (!token) return;
     const socket = getChatSocket(token);
     socketRef.current = socket;
-    const onNew = (msg) => {
-      if (msg.conversation === activeRef.current) {
-        setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
+    // Server broadcasts 'chat:message' with { conversationId, message }.
+    const onNew = (payload) => {
+      const msg = payload?.message || payload;
+      if (!msg?.id) return;
+      if (String(payload?.conversationId || msg.conversationId) === String(activeRef.current)) {
+        appendLocal(msg);
       }
       loadList().catch(() => {});
     };
-    socket.on('chat:new', onNew);
+    socket.on('chat:message', onNew);
     const interval = setInterval(() => loadList().catch(() => {}), 30000);
     return () => {
-      socket.off('chat:new', onNew);
+      socket.off('chat:message', onNew);
       clearInterval(interval);
     };
-  }, [loadList]);
+  }, [loadList, appendLocal]);
 
   useEffect(() => {
     if (!active) return;
@@ -72,10 +83,11 @@ export default function AdminChat({ lang }) {
     try {
       const socket = socketRef.current;
       if (socket?.connected) {
-        await socket.emitWithAck('chat:send', { ...body, conversationId: active });
+        const ack = await socket.emitWithAck('chat:send', { ...body, conversationId: active });
+        if (ack?.message) appendLocal(ack.message);
       } else {
         const { data } = await adminSendMessage(active, body);
-        setMessages((prev) => (prev.some((m) => m.id === data.message.id) ? prev : [...prev, data.message]));
+        appendLocal(data.message);
       }
       setDraft('');
     } catch {
@@ -114,9 +126,12 @@ export default function AdminChat({ lang }) {
                 : 'border-amber-900/30 bg-[#120d08] text-[#cbb894]'
             }`}
           >
-            <span className="min-w-0">
-              <span className="block truncate font-semibold">{c.customer?.name || c.customer?.email}</span>
-              <span className="block truncate text-xs opacity-70">{c.lastMessagePreview || '—'}</span>
+            <span className="flex min-w-0 items-center gap-2">
+              <ChatAvatar name={c.customer?.name || c.customer?.email} size="sm" />
+              <span className="min-w-0">
+                <span className="block truncate font-semibold">{c.customer?.name || c.customer?.email}</span>
+                <span className="block truncate text-xs opacity-70">{c.lastMessagePreview || '—'}</span>
+              </span>
             </span>
             {c.unreadForAdmin > 0 && <Badge>{c.unreadForAdmin}</Badge>}
           </button>
@@ -129,16 +144,32 @@ export default function AdminChat({ lang }) {
           </div>
         ) : (
           <>
+            <div className="flex items-center gap-2 border-b border-amber-900/40 bg-[#1a130b] px-4 py-2.5">
+              <ChatAvatar name={activeConv?.customer?.name || activeConv?.customer?.email} size="sm" />
+              <div className="min-w-0">
+                <p className="truncate text-sm font-semibold text-[#f6e7cf]">{activeConv?.customer?.name || activeConv?.customer?.email}</p>
+                {activeConv?.customer?.name && (
+                  <p className="truncate text-xs text-[#a89880]">{activeConv?.customer?.email}</p>
+                )}
+              </div>
+            </div>
             <div className="flex-1 space-y-2 overflow-y-auto p-3">
-              {messages.map((m) => (
-                <div key={m.id} className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${m.senderRole === 'admin' ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
-                  {m.kind === 'image' ? (
-                    <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
-                  ) : (
-                    m.text
-                  )}
-                </div>
-              ))}
+              {messages.map((m) => {
+                const own = m.senderRole === 'admin';
+                return (
+                  <div key={m.id} className="flex items-end gap-1.5">
+                    {!own && <ChatAvatar name={m.senderName || activeConv?.customer?.name} size="sm" />}
+                    <div className={`max-w-[75%] rounded-xl px-3 py-2 text-sm ${own ? 'ms-auto bg-[#ffb21a] text-black' : 'bg-[#241a10] text-[#f6e7cf]'}`}>
+                      {m.kind === 'image' ? (
+                        <img src={m.imageUrl} alt="" className="max-h-40 rounded-lg" />
+                      ) : (
+                        m.text
+                      )}
+                    </div>
+                    {own && <ChatAvatar name={m.senderName || t(lang, 'chat.team')} variant="amber" size="sm" />}
+                  </div>
+                );
+              })}
               <div ref={bottomRef} />
             </div>
             <form
@@ -150,7 +181,7 @@ export default function AdminChat({ lang }) {
             >
               {uploadsOn && (
                 <label className="cursor-pointer px-1 text-lg" title={t(lang, 'chat.sendImage')}>
-                  📷
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#f6e7cf]"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
                   <input type="file" accept="image/*" className="hidden" onChange={onPickImage} />
                 </label>
               )}

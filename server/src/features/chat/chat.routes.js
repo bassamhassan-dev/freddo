@@ -50,7 +50,7 @@ router.get(
     sendSuccess(res, 200, {
       conversation: { id: conversation._id, unreadForCustomer: conversation.unreadForCustomer },
       messages: messages.map((m) => ({
-        id: m._id, senderRole: m.senderRole, kind: m.kind, text: m.text, imageUrl: m.imageUrl, createdAt: m.createdAt,
+        id: m._id, senderRole: m.senderRole, senderName: m.senderName, kind: m.kind, text: m.text, imageUrl: m.imageUrl, createdAt: m.createdAt,
       })),
     });
   })
@@ -62,7 +62,7 @@ router.post(
   requireAuth,
   catchAsync(async (req, res) => {
     const conversation = await chatService.getOrCreateConversation(req.user._id);
-    const message = await chatService.appendMessage(conversation._id, req.user._id, 'customer', req.body || {});
+    const message = await chatService.appendMessage(conversation._id, req.user._id, 'customer', req.body || {}, req.user.name);
     broadcastMessage(conversation._id, message.toPublicJSON());
     sendSuccess(res, 201, { message: message.toPublicJSON() });
   })
@@ -106,7 +106,7 @@ router.get(
     const messages = await chatService.listMessages(req.params.id, req.query);
     sendSuccess(res, 200, {
       messages: messages.map((m) => ({
-        id: m._id, senderRole: m.senderRole, kind: m.kind, text: m.text, imageUrl: m.imageUrl, createdAt: m.createdAt,
+        id: m._id, senderRole: m.senderRole, senderName: m.senderName, kind: m.kind, text: m.text, imageUrl: m.imageUrl, createdAt: m.createdAt,
       })),
     });
   })
@@ -118,7 +118,7 @@ router.post(
   requireRole(ROLES.ADMIN),
   catchAsync(async (req, res) => {
     await loadAdminConversation(req);
-    const message = await chatService.appendMessage(req.params.id, req.user._id, 'admin', req.body || {});
+    const message = await chatService.appendMessage(req.params.id, req.user._id, 'admin', req.body || {}, req.user.name);
     broadcastMessage(req.params.id, message.toPublicJSON());
     sendSuccess(res, 201, { message: message.toPublicJSON() });
   })

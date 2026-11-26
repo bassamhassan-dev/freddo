@@ -21,6 +21,10 @@ const messageSchema = new mongoose.Schema(
     conversation: { type: mongoose.Schema.Types.ObjectId, ref: 'ChatConversation', required: true, index: true },
     sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     senderRole: { type: String, enum: ['customer', 'admin'], required: true },
+    // Snapshot of the sender's display name at send time: the admin thread
+    // shows who said what without a populate per message, and a later
+    // rename never rewrites chat history (Sprint 29).
+    senderName: { type: String, trim: true, maxlength: 80 },
     kind: { type: String, enum: ['text', 'image'], default: 'text' },
     text: { type: String, trim: true, maxlength: 2000 },
     imageUrl: { type: String, trim: true, maxlength: 2000 },
@@ -33,6 +37,7 @@ messageSchema.methods.toPublicJSON = function toPublicJSON() {
     id: this._id,
     conversationId: this.conversation,
     senderRole: this.senderRole,
+    senderName: this.senderName,
     kind: this.kind,
     text: this.text,
     imageUrl: this.imageUrl,
