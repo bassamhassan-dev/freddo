@@ -347,5 +347,9 @@
   "chat.team": "فريق فريدو",
   "navMenuOpen": "القايمة",
   "navMenuClose": "اقفل القايمة",
-  "oauthComingSoon": "هتشتغل أول ما مفاتيح جوجل وفيسبوك تتظبط"
+  "oauthComingSoon": "هتشتغل أول ما مفاتيح جوجل وفيسبوك تتظبط",
+  "admin.accounts.adjust": "تعديل النقاط",
+  "admin.accounts.adjustPoints": "± نقاط",
+  "admin.accounts.adjustReason": "السبب (بيسجل في الكشف)",
+  "admin.accounts.adjustApply": "طبّق"
 }

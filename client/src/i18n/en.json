@@ -347,5 +347,9 @@
   "chat.team": "Freddo team",
   "navMenuOpen": "Menu",
   "navMenuClose": "Close menu",
-  "oauthComingSoon": "Activates once the Google/Facebook app keys are set"
+  "oauthComingSoon": "Activates once the Google/Facebook app keys are set",
+  "admin.accounts.adjust": "Adjust points",
+  "admin.accounts.adjustPoints": "± points",
+  "admin.accounts.adjustReason": "Reason (goes on the ledger)",
+  "admin.accounts.adjustApply": "Apply"
 }

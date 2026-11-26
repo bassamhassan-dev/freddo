@@ -72,3 +72,12 @@ export async function apiSetAccountRole(id, role) {
   const { data } = await request(`/api/admin/accounts/${id}/role`, { method: 'PATCH', body: { role } });
   return data;
 }
+
+// Manual loyalty points adjustment (doc 14): the ledger requires a reason.
+export async function apiAdminAdjustPoints(userId, points, description) {
+  const { data } = await request('/api/loyalty/admin/adjust', {
+    method: 'POST',
+    body: { userId, points, description },
+  });
+  return data;
+}

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { apiAdminAccounts, apiCreateAccount, apiSetAccountStatus, apiSetAccountRole } from '@/api/admin.js';
+import { apiAdminAccounts, apiCreateAccount, apiSetAccountStatus, apiSetAccountRole, apiAdminAdjustPoints } from '@/api/admin.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -17,6 +17,11 @@ export default function AdminAccounts({ lang }) {
   const [error, setError] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', role: 'barista' });
   const [created, setCreated] = useState(null); // { account, temporaryPassword }
+  // Loyalty adjust (Sprint 30): the endpoint existed without a UI; the
+  // ledger requires a reason, so the mini form asks for one.
+  const [adjustFor, setAdjustFor] = useState(null); // account id
+  const [adjustForm, setAdjustForm] = useState({ points: '', description: '' });
+  const [adjustMsg, setAdjustMsg] = useState(null);
   const [formError, setFormError] = useState(null);
 
   const load = useCallback(() => {
@@ -40,6 +45,19 @@ export default function AdminAccounts({ lang }) {
       load();
     } catch (err) {
       setFormError(err.message?.[lang] || t(lang, 'orderError'));
+    }
+  };
+
+  const submitAdjust = async (e) => {
+    e.preventDefault();
+    setAdjustMsg(null);
+    try {
+      await apiAdminAdjustPoints(adjustFor, Number(adjustForm.points), adjustForm.description.trim());
+      setAdjustFor(null);
+      setAdjustForm({ points: '', description: '' });
+      load();
+    } catch (err) {
+      setAdjustMsg(err.message?.[lang] || t(lang, 'orderError'));
     }
   };
 
@@ -164,10 +182,36 @@ export default function AdminAccounts({ lang }) {
                   <option key={role} value={role}>{t(lang, `role_${role}`)}</option>
                 ))}
               </select>
+              {account.role === 'customer' && (
+                <Button size="sm" variant="ghost" onClick={() => { setAdjustFor(adjustFor === account.id ? null : account.id); setAdjustMsg(null); }}>
+                  {t(lang, 'admin.accounts.adjust')}
+                </Button>
+              )}
               <Button size="sm" variant={account.isActive ? 'ghost' : 'default'} onClick={() => toggle(account)}>
                 {account.isActive ? t(lang, 'deactivate') : t(lang, 'activate')}
               </Button>
             </div>
+            {adjustFor === account.id && (
+              <form className="flex w-full flex-wrap items-center gap-2 border-t border-border/40 pt-2" onSubmit={submitAdjust}>
+                <input
+                  type="number"
+                  required
+                  className="w-28 rounded-xl border border-border bg-background p-1.5 px-3 text-sm text-foreground"
+                  placeholder={t(lang, 'admin.accounts.adjustPoints')}
+                  value={adjustForm.points}
+                  onChange={(e) => setAdjustForm((f) => ({ ...f, points: e.target.value }))}
+                />
+                <input
+                  required
+                  className="min-w-40 flex-1 rounded-xl border border-border bg-background p-1.5 px-3 text-sm text-foreground"
+                  placeholder={t(lang, 'admin.accounts.adjustReason')}
+                  value={adjustForm.description}
+                  onChange={(e) => setAdjustForm((f) => ({ ...f, description: e.target.value }))}
+                />
+                <Button type="submit" size="sm">{t(lang, 'admin.accounts.adjustApply')}</Button>
+                {adjustMsg && <span className="text-xs text-red-400">{adjustMsg}</span>}
+              </form>
+            )}
           </div>
         ))}
       </div>

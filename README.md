@@ -1,6 +1,15 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 28: admin-controlled
+MERN monorepo (MongoDB, Express, React, Node). Sprints 29-31: chat identity
+(senderName snapshots, initials avatars both sides) plus the sender-echo fix
+(client listened for 'chat:new' while the server emits 'chat:message' - no
+live event ever landed); checkout fixes (first size pre-selected, stale cart
+lines repaired against the live menu, phone prefill - coupon was never
+required); one-row mobile header with a color-coded nav drawer (portaled -
+backdrop-blur traps fixed overlays); Google/Facebook login buttons always
+visible, disabled-with-note until env keys land. Sprint 30 also closed the
+loyalty-adjust gap (endpoint had no UI) and ran a full admin-control audit
+(see the walkthrough). Sprint 28: admin-controlled
 announcement marquee below the hero - bilingual phrases with reorder and
 show/hide, singleton Marquee model, pure-CSS seamless loop (4-copy track,
 RTL-correct direction), reduced-motion static fallback. Sprint 27: loyalty
@@ -49,7 +58,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic: one per sprint,
-  `docs/WALKTHROUGH*.md`, currently up to Sprint 28).
+  `docs/WALKTHROUGH*.md`, currently up to Sprint 31).
 - `client/public/photos/` - the cafe's real photos (optimized JPEGs) used by
   the hero slider, banners, about and gallery sections; each slot is
   replaceable from the admin CMS.
