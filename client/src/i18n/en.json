@@ -39,5 +39,21 @@
   "baristaWorkspace": "Barista workspace",
   "workspaceComingSoon": "This area is being built right now, it lands in the next sprint.",
   "pageNotFound": "This page does not exist.",
-  "backHome": "Back to the menu"
+  "backHome": "Back to the menu",
+  "cartTitle": "Cart",
+  "cartEmpty": "The cart is empty, let's fix that.",
+  "cartIcon": "Cart",
+  "chooseSize": "Choose a size",
+  "chooseAddOns": "Add-ons",
+  "quantity": "Quantity",
+  "notes": "Notes",
+  "notesPlaceholder": "extra sugar, no milk...",
+  "addToCart": "Add to cart",
+  "subtotal": "Subtotal",
+  "remove": "Remove",
+  "increase": "Increase",
+  "decrease": "Decrease",
+  "baseItem": "Regular",
+  "itemError": "This item is not available right now.",
+  "checkoutSoon": "Checkout arrives in the next sprint"
 }

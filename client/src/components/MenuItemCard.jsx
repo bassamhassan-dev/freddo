@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { t } from '@/i18n/index.js';
@@ -18,6 +19,7 @@ export default function MenuItemCard({ item, lang }) {
 
   return (
     <Card className="flex h-full flex-col transition-colors hover:border-primary/60">
+      <Link to={`/item/${item.slug}`} className="flex h-full flex-col" aria-label={item.name[lang]}>
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle>{item.name[lang]}</CardTitle>
@@ -35,6 +37,7 @@ export default function MenuItemCard({ item, lang }) {
         {item.isBestSeller && <Badge>{t(lang, 'bestSeller')}</Badge>}
         {item.isFeatured && <Badge variant="accent">{t(lang, 'featured')}</Badge>}
       </CardFooter>
+      </Link>
     </Card>
   );
 }

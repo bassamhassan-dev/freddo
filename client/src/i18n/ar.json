@@ -39,5 +39,21 @@
   "baristaWorkspace": "منطقة الباريستا",
   "workspaceComingSoon": "المنطقة دي بتتبني دلوقتي، هتجهز في السبرينت الجاي.",
   "pageNotFound": "الصفحة دي مش موجودة.",
-  "backHome": "ارجع للمنيو"
+  "backHome": "ارجع للمنيو",
+  "cartTitle": "السلة",
+  "cartEmpty": "السلة فاضية، يلا نملاها.",
+  "cartIcon": "السلة",
+  "chooseSize": "اختار الحجم",
+  "chooseAddOns": "إضافات",
+  "quantity": "الكمية",
+  "notes": "ملاحظات",
+  "notesPlaceholder": "سكر زيادة، من غير لبن...",
+  "addToCart": "ضيف للسلة",
+  "subtotal": "المجموع",
+  "remove": "امسح",
+  "increase": "زود",
+  "decrease": "قلل",
+  "baseItem": "عادي",
+  "itemError": "الصنف ده مش متاح دلوقتي.",
+  "checkoutSoon": "إتمام الطلب بيجي في السبرينت الجاي"
 }

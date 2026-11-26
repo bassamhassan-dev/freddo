@@ -1,6 +1,9 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 1.5: feature-based
+MERN monorepo (MongoDB, Express, React, Node). Sprint 3: guest cart -
+item detail page (variants, add-ons, notes), browser-persisted cart with
+config-based line identity, cart page. Sprint 2: auth (JWT access+refresh
+rotation, unified login). Sprint 1.5: feature-based
 layering (routes - controllers - services - models), unified API response
 shape, AppError + catchAsync + global error handler. Sprint 1: MongoDB wired with
 Mongoose, first bilingual `MenuItem` model, public menu API, and a Tailwind +
@@ -11,7 +14,8 @@ shadcn frontend that renders the menu in Arabic (RTL) and English.
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Arabic: `docs/WALKTHROUGH.md`,
-  `docs/WALKTHROUGH-SPRINT1.md`). `docs/CONVENTIONS.md` is the standing
+  `docs/WALKTHROUGH-SPRINT1.md`, `docs/WALKTHROUGH-SPRINT2.md`,
+  `docs/WALKTHROUGH-SPRINT3.md`). `docs/CONVENTIONS.md` is the standing
   blueprint every sprint follows (layering, error handling, response
   shape, naming, and the reasoning behind each).
 

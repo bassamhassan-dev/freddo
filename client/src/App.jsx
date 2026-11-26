@@ -5,6 +5,8 @@ import { useAuthStore } from '@/store/auth.js';
 import SiteHeader from '@/components/SiteHeader.jsx';
 import RequireAuth from '@/components/RequireAuth.jsx';
 import MenuPage from '@/components/MenuPage.jsx';
+import ItemDetailPage from '@/pages/ItemDetailPage.jsx';
+import CartPage from '@/pages/CartPage.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
 import RegisterPage from '@/pages/RegisterPage.jsx';
 import AccountPage from '@/pages/AccountPage.jsx';
@@ -43,6 +45,8 @@ export default function App() {
                 </>
               }
             />
+            <Route path="/item/:slug" element={<ItemDetailPage lang={lang} />} />
+            <Route path="/cart" element={<CartPage lang={lang} />} />
             <Route path="/login" element={<LoginPage lang={lang} />} />
             <Route path="/register" element={<RegisterPage lang={lang} />} />
             <Route
