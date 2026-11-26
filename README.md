@@ -1,6 +1,9 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 15: admin content
+MERN monorepo (MongoDB, Express, React, Node). Sprint 16: Cloudinary
+image uploads for banners - admin file upload, old-asset cleanup on
+replace/delete, env-gated with the plain-URL path intact. Sprint 15: admin
+content
 CMS - homepage copy (tagline, menu headings) is DB-backed overrides with
 i18n fallback, edited from a new admin tab. Sprint 14: admin
 analytics dashboard - revenue/AOV/status counts, top sellers, coupons and
@@ -28,7 +31,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT15.md`, one per sprint).
+  `docs/WALKTHROUGH-SPRINT16.md`, one per sprint).
   `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
   (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
@@ -57,7 +60,13 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - **jsonwebtoken** - access/refresh JWT signing and verification.
 - **cookie-parser** - reads the HttpOnly refresh cookie.
 - **helmet** - the standard Express security headers, one line (doc 22).
-- **express-rate-limit** - brute-force protection on login/register.
+- **express-rate-limit** - brute-force protection on login/register and
+  the public contact form.
+- **cloudinary** - the official Cloudinary SDK. Media hosting is planned as
+  Cloudinary (doc 16): the DB stores URLs and public IDs, never binaries.
+  Entirely env-gated; absent credentials keep the plain-URL flow.
+- **multer** - parses multipart image uploads in memory. The uploaded file
+  never touches server disk; it streams straight to Cloudinary.
 
 **Client**
 - **React 18 + Vite** - the UI library and build tool. React is the R in
@@ -132,6 +141,9 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/contact` - public, rate-limited contact form
 - `GET /api/loyalty/mine` - the customer's points balance + recent ledger
 - `GET /api/admin/analytics?from&to` - the operational dashboard (admin)
+- `POST /api/admin/uploads` - image upload to Cloudinary (admin; 503
+  `CLOUDINARY_NOT_CONFIGURED` until the env vars are set);
+  `GET /api/admin/uploads/status` reports whether uploads are live
 - `GET /api/content` - homepage copy overrides (public);
   `GET /api/admin/content` + `PUT /api/admin/content/:key` (admin)
 - `GET /api/banners?placement=main|secondary_left|secondary_right` -

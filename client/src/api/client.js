@@ -22,13 +22,16 @@ export function setUnauthorizedHandler(fn) {
 }
 
 async function rawRequest(path, { method = 'GET', body, token } = {}) {
+  // FormData (image uploads) sets its own multipart boundary - never
+  // JSON-stringify it and never hand it a content-type.
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
   const headers = {};
-  if (body !== undefined) headers['content-type'] = 'application/json';
+  if (body !== undefined && !isForm) headers['content-type'] = 'application/json';
   if (token) headers.authorization = `Bearer ${token}`;
   const res = await fetch(`${API_URL}${path}`, {
     method,
     headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    body: body !== undefined ? (isForm ? body : JSON.stringify(body)) : undefined,
     credentials: 'include', // the refresh cookie rides along to /api/auth/*
   });
   if (res.status === 204) return { status: 204, data: null };

@@ -224,5 +224,6 @@
   "contentKey_tagline": "Welcome tagline",
   "contentKey_menuTitle": "Menu section title",
   "contentKey_menuSubtitle": "Line under the menu title",
-  "contentKey_menuEmpty": "Empty-menu message"
+  "contentKey_menuEmpty": "Empty-menu message",
+  "uploadingImage": "Uploading..."
 }

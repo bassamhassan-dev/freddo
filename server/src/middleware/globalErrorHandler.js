@@ -19,6 +19,10 @@ function normalize(err) {
       'The submitted data is invalid'
     );
   }
+  // Multer: a file over the upload size cap.
+  if (err.name === 'MulterError' && err.code === 'LIMIT_FILE_SIZE') {
+    return new AppError(400, 'FILE_TOO_LARGE', 'الصورة أكبر من 5 ميجا', 'The image is larger than 5MB');
+  }
   // Mongo: unique index violation (e.g. a slug that already exists).
   if (err.code === 11000) {
     return new AppError(409, 'DUPLICATE', 'ده موجود بالفعل', 'This already exists');

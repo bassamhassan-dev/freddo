@@ -2,6 +2,7 @@ import { catchAsync } from '../../utils/catchAsync.js';
 import { sendSuccess } from '../../utils/apiResponse.js';
 import { AppError } from '../../utils/AppError.js';
 import Banner from './banner.model.js';
+import { deleteImage } from '../uploads/cloudinary.service.js';
 
 const PLACEMENTS = ['main', 'secondary_left', 'secondary_right'];
 
@@ -64,13 +65,21 @@ export const adminUpdate = catchAsync(async (req, res) => {
   if (!banner) throw new AppError(404, 'NOT_FOUND', 'البانر ده مش موجود', 'Banner not found');
   const next = { ...banner.toObject(), ...req.body };
   validatePayload(next);
+  const oldImage = { url: banner.imageUrl, publicId: banner.cloudinaryPublicId };
   Object.assign(banner, req.body);
   await banner.save();
+  // Image lifecycle (doc 16): replacing an uploaded image deletes the old
+  // Cloudinary asset so orphans never pile up. Best-effort: a Cloudinary
+  // failure is logged, never a 500 on a content edit.
+  if (oldImage.publicId && req.body.imageUrl && req.body.imageUrl !== oldImage.url && oldImage.publicId !== banner.cloudinaryPublicId) {
+    deleteImage(oldImage.publicId).catch(() => {});
+  }
   sendSuccess(res, 200, { banner });
 });
 
 export const adminDelete = catchAsync(async (req, res) => {
   const banner = await Banner.findByIdAndDelete(req.params.id);
   if (!banner) throw new AppError(404, 'NOT_FOUND', 'البانر ده مش موجود', 'Banner not found');
+  if (banner.cloudinaryPublicId) deleteImage(banner.cloudinaryPublicId).catch(() => {});
   sendSuccess(res, 200, { deleted: true });
 });

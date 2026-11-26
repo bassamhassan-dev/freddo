@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiAdminBanners, apiCreateBanner, apiUpdateBanner, apiDeleteBanner } from '@/api/banners.js';
+import { apiUploadStatus, apiUploadImage } from '@/api/uploads.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button';
 const PLACEMENTS = ['main', 'secondary_left', 'secondary_right'];
 const empty = {
   placement: 'main',
+  cloudinaryPublicId: '',
   titleAr: '', titleEn: '',
   descAr: '', descEn: '',
   imageUrl: '', ctaAr: '', ctaEn: '', ctaLink: '',
@@ -19,6 +21,7 @@ const toBody = (f) => ({
   title: { ar: f.titleAr, en: f.titleEn },
   description: { ar: f.descAr, en: f.descEn },
   imageUrl: f.imageUrl,
+  cloudinaryPublicId: f.cloudinaryPublicId || undefined,
   ctaText: { ar: f.ctaAr, en: f.ctaEn },
   ctaLink: f.ctaLink || undefined,
   sortOrder: Number(f.sortOrder) || 0,
@@ -31,6 +34,29 @@ export default function AdminBanners({ lang }) {
   const [banners, setBanners] = useState(null);
   const [form, setForm] = useState(null); // null = list view
   const [error, setError] = useState(null);
+  const [canUpload, setCanUpload] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    apiUploadStatus().then((d) => setCanUpload(d.configured)).catch(() => {});
+  }, []);
+
+  // Upload to Cloudinary, then keep the returned URL + public id on the
+  // form exactly like a pasted URL - saving is the same path either way.
+  const pickFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    setError(null);
+    try {
+      const { imageUrl, publicId } = await apiUploadImage(file);
+      setForm((f) => ({ ...f, imageUrl, cloudinaryPublicId: publicId }));
+    } catch (err) {
+      setError(err?.message?.[lang] || true);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const load = () => apiAdminBanners().then((d) => setBanners(d.banners)).catch(() => setError(true));
   useEffect(() => { load(); }, []);
@@ -69,6 +95,13 @@ export default function AdminBanners({ lang }) {
           <input className={inputCls} placeholder={t(lang, 'bannerCtaAr')} value={form.ctaAr} onChange={set('ctaAr')} />
           <input className={inputCls} placeholder={t(lang, 'bannerCtaEn')} value={form.ctaEn} onChange={set('ctaEn')} />
         </div>
+        {canUpload && (
+          <label className="flex items-center gap-2 text-xs text-secondary">
+            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pickFile} disabled={uploading} />
+            {uploading && <span>{t(lang, 'uploadingImage')}</span>}
+          </label>
+        )}
+        {form.imageUrl && <img src={form.imageUrl} alt="" className="h-16 w-24 rounded-lg object-cover" />}
         <input className={inputCls} dir="ltr" placeholder={t(lang, 'bannerImageUrl')} value={form.imageUrl} onChange={set('imageUrl')} />
         <input className={inputCls} dir="ltr" placeholder={t(lang, 'bannerCtaLink')} value={form.ctaLink} onChange={set('ctaLink')} />
         <div className="grid grid-cols-2 gap-2">
@@ -127,6 +160,7 @@ export default function AdminBanners({ lang }) {
               titleAr: b.title.ar, titleEn: b.title.en,
               descAr: b.description?.ar || '', descEn: b.description?.en || '',
               imageUrl: b.imageUrl,
+              cloudinaryPublicId: b.cloudinaryPublicId || '',
               ctaAr: b.ctaText?.ar || '', ctaEn: b.ctaText?.en || '',
               ctaLink: b.ctaLink || '',
               sortOrder: b.sortOrder, active: b.active,

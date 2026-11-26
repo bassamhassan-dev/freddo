@@ -224,5 +224,6 @@
   "contentKey_tagline": "الجملة الترحيبية",
   "contentKey_menuTitle": "عنوان قسم المنيو",
   "contentKey_menuSubtitle": "السطر تحت عنوان المنيو",
-  "contentKey_menuEmpty": "رسالة المنيو الفاضي"
+  "contentKey_menuEmpty": "رسالة المنيو الفاضي",
+  "uploadingImage": "بيترفع..."
 }
