@@ -86,5 +86,10 @@
   "move_preparing": "ابدأ التجهيز",
   "move_ready": "جاهز",
   "move_completed": "اتسلّم",
-  "move_cancelled": "إلغاء"
+  "move_cancelled": "إلغاء",
+  "openRecipe": "الوصفة",
+  "noRecipe": "مفيش وصفة متاحة للصنف ده.",
+  "ingredients": "المكوّنات",
+  "steps": "الخطوات",
+  "close": "قفل"
 }

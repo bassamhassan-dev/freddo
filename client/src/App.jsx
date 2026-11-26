@@ -15,6 +15,7 @@ import RegisterPage from '@/pages/RegisterPage.jsx';
 import AccountPage from '@/pages/AccountPage.jsx';
 import WorkspaceStubPage from '@/pages/WorkspaceStubPage.jsx';
 import AdminPage from '@/pages/AdminPage.jsx';
+import BaristaPage from '@/pages/BaristaPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 
@@ -95,7 +96,14 @@ export default function App() {
                 </RequireRole>
               }
             />
-            <Route path="/barista" element={<WorkspaceStubPage lang={lang} titleKey="baristaWorkspace" />} />
+            <Route
+              path="/barista"
+              element={
+                <RequireRole lang={lang} role={['barista', 'admin']}>
+                  <BaristaPage lang={lang} />
+                </RequireRole>
+              }
+            />
             <Route path="*" element={<NotFoundPage lang={lang} />} />
           </Routes>
         </main>

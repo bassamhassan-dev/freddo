@@ -45,6 +45,35 @@ const imageSchema = new mongoose.Schema(
   { _id: false }
 );
 
+
+// Internal recipe (requirements doc 7.2): staff-only, never serialized by
+// toPublicJSON. Variant-specific quantities (doc 7.3) are deliberately not
+// a separate structure yet: the notes field carries per-size differences
+// ("double = 2 shots") until real usage justifies a formal shape. Ingredient
+// inventory tracking is out of scope per the doc.
+const ingredientSchema = new mongoose.Schema(
+  {
+    name: { type: localizedString(), required: true },
+    quantity: { type: Number, required: true, min: 0 },
+    // Free unit string kept intentionally small and consistent by seed
+    // data (ml, g, shot, piece, pump). A unit registry is overkill now.
+    unit: { type: String, required: true, trim: true },
+  },
+  { _id: false }
+);
+
+const recipeSchema = new mongoose.Schema(
+  {
+    // Admin can hide a recipe from baristas without deleting it (doc 7.4).
+    isVisible: { type: Boolean, default: true },
+    ingredients: { type: [ingredientSchema], default: [] },
+    // Ordered preparation steps.
+    steps: { type: [localizedString()], default: [] },
+    notes: localizedString(),
+  },
+  { _id: false }
+);
+
 const menuItemSchema = new mongoose.Schema(
   {
     // URL-safe unique identifier, used by the public detail endpoint
@@ -75,6 +104,8 @@ const menuItemSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
     isBestSeller: { type: Boolean, default: false },
     isAvailable: { type: Boolean, default: true },
+    // Optional: food items may not have a preparation recipe at all.
+    recipe: { type: recipeSchema },
     sortOrder: { type: Number, default: 0 },
     rating: {
       average: { type: Number, default: 0, min: 0, max: 5 },
@@ -105,6 +136,31 @@ menuItemSchema.methods.toPublicJSON = function toPublicJSON() {
     isFeatured: this.isFeatured,
     isBestSeller: this.isBestSeller,
     rating: this.rating,
+  };
+};
+
+
+// Barista card: everything the workspace grid needs, without the recipe
+// body. The recipe loads separately when a barista opens a card.
+menuItemSchema.methods.toBaristaCardJSON = function toBaristaCardJSON() {
+  return {
+    slug: this.slug,
+    name: this.name,
+    category: this.category,
+    images: this.images,
+    isAvailable: this.isAvailable,
+    hasVisibleRecipe: Boolean(this.recipe && this.recipe.isVisible),
+  };
+};
+
+// Full internal recipe for one item. Only reached through the barista
+// endpoints behind requireRole('barista', 'admin').
+menuItemSchema.methods.toRecipeJSON = function toRecipeJSON() {
+  return {
+    slug: this.slug,
+    name: this.name,
+    category: this.category,
+    recipe: this.recipe,
   };
 };
 

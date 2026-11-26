@@ -46,6 +46,17 @@ const items = [
     isAvailable: true,
     sortOrder: 1,
     rating: { average: 4.7, count: 132 },
+    recipe: {
+      ingredients: [
+        { name: { ar: 'بن فريدو المحمص', en: 'Freddo roast beans' }, quantity: 18, unit: 'g' },
+      ],
+      steps: [
+        { ar: 'اطحن البن طحن ناعم ووزن ١٨ جرام.', en: 'Grind fine and dose 18 g.' },
+        { ar: 'اضغط البن بشكل مستوي وثبّت البورتافلتر.', en: 'Tamp evenly and lock the portafilter.' },
+        { ar: 'استخلص ٢٥-٣٠ ثانية. السنجل شوت واحد والدبل شوتين.', en: 'Extract 25-30 s. Single is one shot, double is two.' },
+      ],
+      notes: { ar: 'الدبل بياخد شوتين - زوّد البن لـ ٣٦ جرام.', en: 'Double takes two shots - up the dose to 36 g.' },
+    },
   },
   {
     slug: 'spanish-latte',
@@ -63,6 +74,19 @@ const items = [
     isAvailable: true,
     sortOrder: 2,
     rating: { average: 4.9, count: 318 },
+    recipe: {
+      ingredients: [
+        { name: { ar: 'إسبريسو', en: 'Espresso' }, quantity: 2, unit: 'shot' },
+        { name: { ar: 'حليب', en: 'Milk' }, quantity: 100, unit: 'ml' },
+        { name: { ar: 'حليب مكثف محلى', en: 'Sweetened condensed milk' }, quantity: 30, unit: 'ml' },
+      ],
+      steps: [
+        { ar: 'حط الحليب المكثف في الكوب الأول.', en: 'Add the condensed milk to the cup first.' },
+        { ar: 'اسحب شوتين إسبريسو فوقه.', en: 'Pull two espresso shots over it.' },
+        { ar: 'بخّر الحليب واسكبه ببطء.', en: 'Steam the milk and pour slowly.' },
+      ],
+      notes: { ar: 'المقاس الوسط هو المعيار. الكبير: شوت إضافي و٥٠ مل حليب زيادة.', en: 'Medium is the standard. Large: one extra shot and 50 ml more milk.' },
+    },
   },
   {
     slug: 'cappuccino',

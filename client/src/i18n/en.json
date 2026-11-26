@@ -86,5 +86,10 @@
   "move_preparing": "Start preparing",
   "move_ready": "Ready",
   "move_completed": "Complete",
-  "move_cancelled": "Cancel"
+  "move_cancelled": "Cancel",
+  "openRecipe": "Recipe",
+  "noRecipe": "No recipe available for this item.",
+  "ingredients": "Ingredients",
+  "steps": "Steps",
+  "close": "Close"
 }
