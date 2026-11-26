@@ -82,12 +82,14 @@ export default function CheckoutPage({ lang }) {
         <div className="mt-2 flex items-center justify-between border-t border-border pt-2">
           <span className="font-bold text-foreground">{t(lang, 'subtotal')}</span>
           <span className="font-bold text-foreground">{formatPrice(lang, subtotal)}</span>
-          {coupon && (
-            <>
-              <span className="text-sm text-primary">{t(lang, 'discount')} ({coupon.code})</span>
-              <span className="text-sm text-primary">-{formatPrice(lang, coupon.discount)}</span>
-            </>
-          )}
+        </div>
+        {coupon && (
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-primary">{t(lang, 'discount')} ({coupon.code})</span>
+            <span className="text-primary">-{formatPrice(lang, coupon.discount)}</span>
+          </div>
+        )}
+        <div className="flex items-center justify-between">
           <span className="font-extrabold text-accent">{t(lang, 'total')}</span>
           <span className="font-extrabold text-accent">{formatPrice(lang, total)}</span>
         </div>
