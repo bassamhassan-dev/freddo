@@ -1,4 +1,5 @@
 import MenuItem from './menuItem.model.js';
+import Category from '../catalog/category.model.js';
 import { AppError } from '../../utils/AppError.js';
 
 // The menu's business logic lives here and only here. The service knows
@@ -16,6 +17,10 @@ export async function listAvailableItems({ category } = {}) {
   const filter = { isAvailable: true };
   if (category) filter['category.slug'] = category.toLowerCase();
   const items = await MenuItem.find(filter).sort({ sortOrder: 1, 'name.en': 1 });
+  // Admin-controlled category order (Sprint 35): stable sort, so items
+  // keep their own order inside each category. Unknown slugs go last.
+  const order = new Map((await Category.find({}, 'slug sortOrder').lean()).map((c) => [c.slug, c.sortOrder]));
+  items.sort((a, b) => (order.get(a.category.slug) ?? 1e9) - (order.get(b.category.slug) ?? 1e9));
   return items.map((item) => item.toPublicJSON());
 }
 

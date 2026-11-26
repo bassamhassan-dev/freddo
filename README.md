@@ -1,6 +1,6 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 34: profile editing (name, phone) and avatar upload (multer + Cloudinary, old asset cleaned), avatar shown in header, chat (senderAvatar snapshot) and admin accounts. Sprint 33: email verification gates ordering (hashed single-use 24h token) and order-confirmation emails via nodemailer SMTP, env-gated with a console/outbox dev fallback (SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, MAIL_FROM, CLIENT_URL). Sprint 32: fulfillment
+MERN monorepo (MongoDB, Express, React, Node). Sprint 35: admin menu CRUD (create/edit/delete items with variants, add-ons, image, flags) and category management (Category collection, rename syncs items, reorder drives public menu order, delete blocked while in use). Sprint 34: profile editing (name, phone) and avatar upload (multer + Cloudinary, old asset cleaned), avatar shown in header, chat (senderAvatar snapshot) and admin accounts. Sprint 33: email verification gates ordering (hashed single-use 24h token) and order-confirmation emails via nodemailer SMTP, env-gated with a console/outbox dev fallback (SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS, MAIL_FROM, CLIENT_URL). Sprint 32: fulfillment
 choice at checkout - pickup (default) or delivery with a required,
 server-validated address; admin sees type + address on the order card,
 customer sees it on the confirmation and order list; cash stays the only

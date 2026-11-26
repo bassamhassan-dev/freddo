@@ -8,6 +8,7 @@ import * as bannerController from '../banners/banner.controller.js';
 import * as analyticsController from '../analytics/analytics.controller.js';
 import * as contentController from '../content/content.controller.js';
 import * as marqueeController from '../marquee/marquee.controller.js';
+import * as catalogController from '../catalog/catalog.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middleware.js';
 import { ROLES } from '../../utils/roles.js';
 
@@ -46,5 +47,13 @@ router.patch('/menu/:id/availability', controller.setAvailability);
 router.patch('/menu/:id/drink-flag', controller.setDrinkFlag);
 router.patch('/menu/:id/image', controller.setMenuImage);
 router.put('/menu/:id/recipe', controller.setMenuRecipe);
+router.post('/menu', catalogController.createItem);
+router.put('/menu/:id', catalogController.updateItem);
+router.delete('/menu/:id', catalogController.deleteItem);
+router.get('/categories', catalogController.listCategories);
+router.post('/categories', catalogController.createCategory);
+router.patch('/categories/reorder', catalogController.reorderCategories);
+router.put('/categories/:id', catalogController.updateCategory);
+router.delete('/categories/:id', catalogController.deleteCategory);
 
 export default router;

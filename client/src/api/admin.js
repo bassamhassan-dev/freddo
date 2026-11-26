@@ -81,3 +81,37 @@ export async function apiAdminAdjustPoints(userId, points, description) {
   });
   return data;
 }
+
+// Sprint 35: menu item + category management.
+export async function apiAdminCategories() {
+  const { data } = await request('/api/admin/categories');
+  return data;
+}
+export async function apiCreateCategory(name) {
+  const { data } = await request('/api/admin/categories', { method: 'POST', body: { name } });
+  return data;
+}
+export async function apiUpdateCategory(id, name) {
+  const { data } = await request(`/api/admin/categories/${id}`, { method: 'PUT', body: { name } });
+  return data;
+}
+export async function apiReorderCategories(ids) {
+  const { data } = await request('/api/admin/categories/reorder', { method: 'PATCH', body: { ids } });
+  return data;
+}
+export async function apiDeleteCategory(id) {
+  const { data } = await request(`/api/admin/categories/${id}`, { method: 'DELETE' });
+  return data;
+}
+export async function apiCreateMenuItem(body) {
+  const { data } = await request('/api/admin/menu', { method: 'POST', body });
+  return data;
+}
+export async function apiUpdateMenuItem(id, body) {
+  const { data } = await request(`/api/admin/menu/${id}`, { method: 'PUT', body });
+  return data;
+}
+export async function apiDeleteMenuItem(id) {
+  const { data } = await request(`/api/admin/menu/${id}`, { method: 'DELETE' });
+  return data;
+}

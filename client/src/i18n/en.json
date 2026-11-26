@@ -369,5 +369,17 @@
   "profileName": "Name",
   "profilePhone": "Phone",
   "saveProfile": "Save changes",
-  "profileSaved": "Saved"
+  "profileSaved": "Saved",
+  "admin.categories.title": "Categories",
+  "admin.categories.nameAr": "Category name (Arabic)",
+  "admin.categories.nameEn": "Category name (English)",
+  "admin.categories.add": "Add category",
+  "admin.menu.add": "Add new item",
+  "admin.menu.edit": "Edit",
+  "admin.menu.delete": "Delete",
+  "admin.menu.cancel": "Cancel",
+  "admin.menu.price": "Price",
+  "admin.menu.variants": "Sizes",
+  "admin.menu.addOns": "Add-ons",
+  "admin.menu.confirmDelete": "Delete this item for good?"
 }

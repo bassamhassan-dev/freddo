@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability, apiSetDrinkFlag } from '@/api/admin.js';
+import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability, apiSetDrinkFlag, apiAdminCategories, apiDeleteMenuItem } from '@/api/admin.js';
 import AdminAccounts from '@/components/AdminAccounts.jsx';
 import AdminReviews from '@/components/AdminReviews.jsx';
 import AdminCoupons from '@/components/AdminCoupons.jsx';
@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import AdminBanners from '@/components/AdminBanners.jsx';
+import AdminCategories from '@/components/AdminCategories.jsx';
+import AdminMenuForm from '@/components/AdminMenuForm.jsx';
 import AdminMenuImage from '@/components/AdminMenuImage.jsx';
 import AdminRecipeEditor from '@/components/AdminRecipeEditor.jsx';
 import AdminAnalytics from '@/components/AdminAnalytics.jsx';
@@ -35,6 +37,8 @@ export default function AdminPage({ lang }) {
   const [orders, setOrders] = useState(null);
   const [menu, setMenu] = useState(null);
   const [error, setError] = useState(null);
+  const [cats, setCats] = useState([]);
+  const [form, setForm] = useState(null); // null | 'new' | item
 
   const loadOrders = useCallback(() => {
     setOrders(null);
@@ -49,7 +53,12 @@ export default function AdminPage({ lang }) {
       .catch(() => setError(true));
   }, []);
 
+  const loadCats = useCallback(() => {
+    apiAdminCategories().then((d) => setCats(d.categories)).catch(() => {});
+  }, []);
+
   useEffect(() => {
+    if (tab === 'menu') loadCats();
     if (tab === 'orders') loadOrders();
     else if (tab === 'menu') loadMenu();
   }, [tab, loadOrders, loadMenu]);
@@ -62,6 +71,12 @@ export default function AdminPage({ lang }) {
   const toggleDrink = async (id, isDrink) => {
     await apiSetDrinkFlag(id, isDrink);
     await loadMenu();
+  };
+  const removeItem = async (item) => {
+    if (!window.confirm(t(lang, 'admin.menu.confirmDelete'))) return;
+    await apiDeleteMenuItem(item._id);
+    loadMenu();
+    loadCats();
   };
   const toggle = async (id, isAvailable) => {
     await apiSetAvailability(id, isAvailable);
@@ -172,15 +187,23 @@ export default function AdminPage({ lang }) {
 
       {tab === 'menu' && (
         <>
+          <AdminCategories lang={lang} onChanged={() => { loadCats(); loadMenu(); }} />
+          {form ? (
+            <AdminMenuForm lang={lang} item={form === 'new' ? null : form} categories={cats} onCancel={() => setForm(null)} onDone={() => { setForm(null); loadMenu(); loadCats(); }} />
+          ) : (
+            <Button className="mb-4" onClick={() => setForm('new')} disabled={cats.length === 0}>{t(lang, 'admin.menu.add')}</Button>
+          )}
           {!menu && <Skeleton className="h-48 w-full rounded-2xl" />}
           <div className="flex flex-col gap-2">
             {(menu || []).map((item) => (
-              <div key={item._id} className="flex items-center justify-between gap-2 rounded-2xl border border-border bg-card p-3">
+              <div key={item._id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl border border-border bg-card p-3">
                 <div>
                   <span className="font-bold text-foreground">{item.name[lang]}</span>
                   <span className="ms-2 text-xs text-muted-foreground">{item.category.name[lang]}</span>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button size="sm" variant="ghost" onClick={() => { setForm(item); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>{t(lang, 'admin.menu.edit')}</Button>
+                  <Button size="sm" variant="ghost" onClick={() => removeItem(item)}>{t(lang, 'admin.menu.delete')}</Button>
                   <AdminMenuImage lang={lang} item={item} onSaved={loadMenu} />
                   <AdminRecipeEditor lang={lang} item={item} onSaved={loadMenu} />
                   <Button size="sm" variant={item.isDrink ? 'default' : 'ghost'} onClick={() => toggleDrink(item._id, !item.isDrink)} title={t(lang, 'admin.menu.drink')}>

@@ -369,5 +369,17 @@
   "profileName": "الاسم",
   "profilePhone": "رقم الموبايل",
   "saveProfile": "احفظ التعديلات",
-  "profileSaved": "اتحفظ"
+  "profileSaved": "اتحفظ",
+  "admin.categories.title": "الأقسام",
+  "admin.categories.nameAr": "اسم القسم بالعربي",
+  "admin.categories.nameEn": "Category name (English)",
+  "admin.categories.add": "ضيف قسم",
+  "admin.menu.add": "ضيف صنف جديد",
+  "admin.menu.edit": "تعديل",
+  "admin.menu.delete": "مسح",
+  "admin.menu.cancel": "إلغاء",
+  "admin.menu.price": "السعر",
+  "admin.menu.variants": "الأحجام",
+  "admin.menu.addOns": "الإضافات",
+  "admin.menu.confirmDelete": "متأكد إنك عايز تمسح الصنف ده؟"
 }
