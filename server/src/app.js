@@ -7,6 +7,7 @@ import authRouter from './features/auth/auth.routes.js';
 import orderRouter from './features/orders/order.routes.js';
 import adminRouter from './features/admin/admin.routes.js';
 import baristaRouter from './features/barista/barista.routes.js';
+import reviewRouter from './features/reviews/review.routes.js';
 import menuRouter from './features/menu/menu.routes.js';
 import { notFound } from './middleware/notFound.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
@@ -31,6 +32,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/orders', orderRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/barista', baristaRouter);
+app.use('/api/reviews', reviewRouter);
 app.use('/api/menu', menuRouter);
 
 app.get('/', (req, res) => {

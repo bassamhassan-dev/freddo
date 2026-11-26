@@ -1,3 +1,4 @@
+import ReviewsSection from '@/components/ReviewsSection.jsx';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getMenuItem } from '@/api/menu.js';
@@ -155,6 +156,7 @@ export default function ItemDetailPage({ lang }) {
       <Button onClick={onAdd} className="w-full">
         {t(lang, 'addToCart')} · {formatPrice(lang, unitPrice * qty)}
       </Button>
-    </section>
+          <ReviewsSection lang={lang} slug={slug} />
+</section>
   );
 }

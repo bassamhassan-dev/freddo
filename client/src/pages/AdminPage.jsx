@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { apiAdminOrders, apiSetOrderStatus, apiAdminMenu, apiSetAvailability } from '@/api/admin.js';
 import AdminAccounts from '@/components/AdminAccounts.jsx';
+import AdminReviews from '@/components/AdminReviews.jsx';
 import { formatPrice } from '@/components/MenuItemCard.jsx';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
@@ -70,10 +71,14 @@ export default function AdminPage({ lang }) {
         <Button size="sm" variant={tab === 'accounts' ? 'default' : 'ghost'} onClick={() => setTab('accounts')}>
           {t(lang, 'adminAccountsTab')}
         </Button>
+        <Button size="sm" variant={tab === 'reviews' ? 'default' : 'ghost'} onClick={() => setTab('reviews')}>
+          {t(lang, 'adminReviewsTab')}
+        </Button>
       </div>
 
       {tab === 'accounts' && <AdminAccounts lang={lang} />}
-      {tab !== 'accounts' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
+      {tab === 'reviews' && <AdminReviews lang={lang} />}
+      {tab !== 'accounts' && tab !== 'reviews' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
 
       {tab === 'orders' && (
         <>

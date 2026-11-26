@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as controller from './admin.controller.js';
+import * as reviewController from '../reviews/review.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middleware.js';
 import { ROLES } from '../../utils/roles.js';
 
@@ -11,6 +12,8 @@ router.use(requireAuth, requireRole(ROLES.ADMIN));
 
 router.get('/orders', controller.listOrders);
 router.post('/orders/:id/status', controller.setOrderStatus);
+router.get('/reviews', reviewController.adminListReviews);
+router.patch('/reviews/:id/visibility', reviewController.adminSetVisibility);
 router.get('/accounts', controller.listAccounts);
 router.post('/accounts', controller.createAccount);
 router.patch('/accounts/:id/status', controller.setAccountStatus);

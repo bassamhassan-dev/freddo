@@ -105,5 +105,21 @@
   "disabledCount": "موقوف",
   "activate": "تشغيل",
   "deactivate": "إيقاف",
-  "lastLogin": "آخر دخول"
+  "lastLogin": "آخر دخول",
+  "reviewsTitle": "التقييمات",
+  "reviewsCount": "تقييم",
+  "loginToReview": "سجّل دخول عشان تقيّم",
+  "reviewPlaceholder": "قول رأيك في الصنف ده...",
+  "submitReview": "انشر التقييم",
+  "reviewSaved": "اتنشر، شكراً!",
+  "verifiedPurchase": "مشتري موثّق",
+  "noReviews": "لسه مفيش تقييمات.",
+  "adminReviewsTab": "التقييمات",
+  "allReviews": "الكل",
+  "visibleOnly": "الظاهرة",
+  "hiddenOnly": "المخفية",
+  "hideReview": "إخفاء",
+  "restoreReview": "استرجاع",
+  "hiddenBadge": "مخفي",
+  "cafeTarget": "الكافيه"
 }

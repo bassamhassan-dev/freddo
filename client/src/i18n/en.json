@@ -105,5 +105,21 @@
   "disabledCount": "disabled",
   "activate": "Activate",
   "deactivate": "Deactivate",
-  "lastLogin": "Last login"
+  "lastLogin": "Last login",
+  "reviewsTitle": "Reviews",
+  "reviewsCount": "reviews",
+  "loginToReview": "Log in to leave a review",
+  "reviewPlaceholder": "Share your thoughts on this item...",
+  "submitReview": "Post review",
+  "reviewSaved": "Posted, thank you!",
+  "verifiedPurchase": "Verified purchase",
+  "noReviews": "No reviews yet.",
+  "adminReviewsTab": "Reviews",
+  "allReviews": "All",
+  "visibleOnly": "Visible",
+  "hiddenOnly": "Hidden",
+  "hideReview": "Hide",
+  "restoreReview": "Restore",
+  "hiddenBadge": "Hidden",
+  "cafeTarget": "The cafe"
 }
