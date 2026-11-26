@@ -120,7 +120,7 @@ export default function ItemDetailPage({ lang }) {
                 variant={variantIdx === i ? 'default' : 'ghost'}
                 onClick={() => setVariantIdx(i)}
               >
-                {variant.label[lang]} · {formatPrice(lang, variant.price)}
+                {variant.label[lang]} - {formatPrice(lang, variant.price)}
               </Button>
             ))}
           </div>
@@ -138,7 +138,7 @@ export default function ItemDetailPage({ lang }) {
                 variant={selectedAddOns.has(i) ? 'default' : 'ghost'}
                 onClick={() => toggleAddOn(i)}
               >
-                {addOn.name[lang]} · +{formatPrice(lang, addOn.price)}
+                {addOn.name[lang]} - +{formatPrice(lang, addOn.price)}
               </Button>
             ))}
           </div>
@@ -166,7 +166,7 @@ export default function ItemDetailPage({ lang }) {
       </label>
 
       <Button onClick={onAdd} className="w-full">
-        {t(lang, 'addToCart')} · {formatPrice(lang, unitPrice * qty)}
+        {t(lang, 'addToCart')} - {formatPrice(lang, unitPrice * qty)}
       </Button>
           <ReviewsSection lang={lang} slug={slug} />
 </section>

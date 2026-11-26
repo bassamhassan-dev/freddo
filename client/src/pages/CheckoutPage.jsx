@@ -266,7 +266,7 @@ export default function CheckoutPage({ lang }) {
           </div>
           {couponError && <p className="mb-2 text-sm text-destructive">{couponError}</p>}
 <Button type="submit" disabled={busy}>
-          {busy ? t(lang, 'authWorking') : `${t(lang, 'placeOrder')} · ${formatPrice(lang, total)}`}
+          {busy ? t(lang, 'authWorking') : `${t(lang, 'placeOrder')} - ${formatPrice(lang, total)}`}
         </Button>
       </form>
     </section>

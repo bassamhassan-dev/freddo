@@ -23,6 +23,14 @@ function normalize(err) {
   if (err.name === 'MulterError' && err.code === 'LIMIT_FILE_SIZE') {
     return new AppError(400, 'FILE_TOO_LARGE', 'الصورة أكبر من 5 ميجا', 'The image is larger than 5MB');
   }
+  // express.json(): a body over the limit or not valid JSON is the client's
+  // mistake, never a 500.
+  if (err.type === 'entity.too.large') {
+    return new AppError(413, 'PAYLOAD_TOO_LARGE', 'البيانات المبعوتة أكبر من المسموح', 'The request is too large');
+  }
+  if (err.type === 'entity.parse.failed') {
+    return new AppError(400, 'INVALID_JSON', 'البيانات المبعوتة مش JSON صحيح', 'The request body is not valid JSON');
+  }
   // Mongo: unique index violation (e.g. a slug that already exists).
   if (err.code === 11000) {
     return new AppError(409, 'DUPLICATE', 'ده موجود بالفعل', 'This already exists');

@@ -29,6 +29,7 @@ function badRequest(code, ar, en) {
 // or unavailable is an error with the item named, not a silently dropped
 // line.
 async function priceLine(requested) {
+  if (!requested || typeof requested !== 'object') throw badRequest('VALIDATION_ERROR', 'في صنف مش مظبوط في الطلب', 'An item in the order is malformed');
   const { slug, variantId, addOnIds = [], qty, notes } = requested;
   if (typeof slug !== 'string') throw badRequest('VALIDATION_ERROR', 'في صنف مش مظبوط في الطلب', 'An item in the order is malformed');
   const quantity = Number(qty);
@@ -223,6 +224,9 @@ export async function cancelMyOrder(orderId, user) {
 
 // The one place status moves: validates the transition, records history.
 export async function applyTransition(order, nextStatus, actorId) {
+  if (typeof nextStatus !== 'string' || !Object.hasOwn(ORDER_TRANSITIONS, nextStatus)) {
+    throw badRequest('VALIDATION_ERROR', 'الحالة الجديدة مش صحيحة', 'The new status is not valid');
+  }
   const allowed = ORDER_TRANSITIONS[order.status] || [];
   if (!allowed.includes(nextStatus)) {
     throw new AppError(409, 'INVALID_TRANSITION', `مينفعش الطلب يروح من ${order.status} لـ ${nextStatus}`, `The order cannot go from ${order.status} to ${nextStatus}`);
