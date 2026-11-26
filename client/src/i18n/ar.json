@@ -240,5 +240,9 @@
   "menuImageChange": "تغيير الصورة",
   "menuImageSave": "حفظ الصورة",
   "menuImageSaved": "اتحفظت الصورة",
-  "menuImageUrlPlaceholder": "رابط الصورة (https أو مسار داخلي)"
+  "menuImageUrlPlaceholder": "رابط الصورة (https أو مسار داخلي)",
+  "chartRevenueTitle": "الإيراد اليومي",
+  "chartStatusTitle": "الطلبات حسب الحالة",
+  "chartTopTitle": "أكتر الأصناف مبيعاً",
+  "chartEmpty": "مفيش بيانات في الفترة دي لسه"
 }

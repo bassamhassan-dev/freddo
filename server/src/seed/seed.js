@@ -2,10 +2,13 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import { connectDB } from '../config/db.js';
 import MenuItem from '../features/menu/menuItem.model.js';
-import User from '../features/auth/user.model.js';
+
 import Table from '../features/reservations/table.model.js';
 import Banner from '../features/banners/banner.model.js';
 import Coupon from '../features/coupons/coupon.model.js';
+import Order from '../features/orders/order.model.js';
+import User from '../features/auth/user.model.js';
+
 import { ROLES } from '../utils/roles.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
@@ -495,6 +498,46 @@ async function seed() {
     } },
     { upsert: true }
   );
+
+  // Demo customer + ~6 weeks of sample orders across every status, so the
+  // analytics dashboard (Sprint 22) has a real revenue series, status mix
+  // and top-sellers on first run. Upserted by order number, so re-seeds
+  // never duplicate. The pattern is deterministic (no RNG) for stable demos.
+  const demoEmail = 'demo.customer@freddo.cafe';
+  let demo = await User.findOne({ email: demoEmail });
+  if (!demo) {
+    const passwordHash = await User.hashPassword('demo12345');
+    demo = await User.create({ name: 'ضيف فريدو', email: demoEmail, passwordHash, role: 'customer' });
+  }
+  const orderableSlugs = items.filter((i) => i.isAvailable).map((i) => i.slug);
+  const orderableDocs = await MenuItem.find({ slug: { $in: orderableSlugs } }).select('_id slug name basePrice');
+  const statuses = ['completed', 'completed', 'completed', 'completed', 'preparing', 'ready', 'confirmed', 'pending', 'cancelled'];
+  let seq = 0;
+  for (let day = 45; day >= 0; day -= 1) {
+    const perDay = (day % 3) + (day % 7 === 0 ? 1 : 0); // 0..3 orders/day
+    for (let k = 0; k < perDay; k += 1) {
+      seq += 1;
+      const item = orderableDocs[(day + k) % orderableDocs.length];
+      const qty = ((day + k) % 2) + 1;
+      const lineTotal = item.basePrice * qty;
+      const createdAt = new Date(Date.now() - day * 86400000 - k * 3600000);
+      await Order.updateOne(
+        { orderNumber: `FR-SEED-${String(seq).padStart(4, '0')}` },
+        { $setOnInsert: {
+          orderNumber: `FR-SEED-${String(seq).padStart(4, '0')}`,
+          user: demo._id,
+          items: [{ product: item._id, name: item.name, unitPrice: item.basePrice, qty, lineTotal }],
+          subtotal: lineTotal,
+          total: lineTotal,
+          customer: { name: demo.name, phone: '01000000000' },
+          status: statuses[(day + k) % statuses.length],
+          createdAt,
+        } },
+        { upsert: true }
+      );
+    }
+  }
+  console.log(`Seed: ${seq} sample orders checked / طلبات تجريبية`);
 
   for (const banner of sampleBanners) {
     await Banner.updateOne(

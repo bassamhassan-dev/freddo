@@ -240,5 +240,9 @@
   "menuImageChange": "Change image",
   "menuImageSave": "Save image",
   "menuImageSaved": "Image saved",
-  "menuImageUrlPlaceholder": "Image URL (https or site-relative path)"
+  "menuImageUrlPlaceholder": "Image URL (https or site-relative path)",
+  "chartRevenueTitle": "Daily revenue",
+  "chartStatusTitle": "Orders by status",
+  "chartTopTitle": "Top sellers",
+  "chartEmpty": "No data in this range yet"
 }

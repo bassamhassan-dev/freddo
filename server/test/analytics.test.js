@@ -93,6 +93,11 @@ test('dashboard rolls up revenue, AOV, statuses and top products from real data'
   assert.equal(d.coupons.discountTotal, 10);
   assert.equal(d.loyalty.earned, 9);
   assert.equal(d.loyalty.activeCustomers, 1);
+  // Daily series: today carries all 3 orders, revenue from completed only.
+  const today = d.daily.find((x) => x.orders === 3);
+  assert.ok(today, 'daily series includes today');
+  assert.equal(today.revenue, 290);
+  assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(today.date));
 });
 
 test('the date range filters everything', async () => {

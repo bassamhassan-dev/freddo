@@ -67,6 +67,20 @@ export async function getDashboard({ from, to } = {}) {
     { $group: { _id: null, earned: { $sum: '$points' }, customers: { $addToSet: '$user' } } },
   ]);
 
+  // Daily series for the dashboard charts (doc 22): orders and completed
+  // revenue grouped by Cairo wall-clock day, zero-filled client-side.
+  const daily = await Order.aggregate([
+    { $match: range },
+    {
+      $group: {
+        _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt', timezone: 'Africa/Cairo' } },
+        orders: { $sum: 1 },
+        revenue: { $sum: { $cond: [{ $eq: ['$status', 'completed'] }, '$total', 0] } },
+      },
+    },
+    { $sort: { _id: 1 } },
+  ]);
+
   const newCustomers = await User.countDocuments({ ...range, role: 'customer' });
   const totalCustomers = await User.countDocuments({ role: 'customer' });
 
@@ -79,6 +93,7 @@ export async function getDashboard({ from, to } = {}) {
     revenue: orderAgg?.revenue || 0,
     averageOrderValue: orderAgg?.completedOrders ? Math.round(orderAgg.revenue / orderAgg.completedOrders) : 0,
     orders: orderAgg?.orders || 0,
+    daily: daily.map((d) => ({ date: d._id, orders: d.orders, revenue: d.revenue })),
     ordersByStatus: statusMap,
     cancelledOrders: orderAgg?.cancelled || 0,
     topProducts: topProducts.slice(0, 5),
