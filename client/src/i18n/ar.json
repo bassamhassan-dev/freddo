@@ -199,5 +199,21 @@
   "edit": "تعديل",
   "delete": "حذف",
   "loading": "بنحمّل...",
-  "genericError": "حصلت مشكلة، جرب تاني"
+  "genericError": "حصلت مشكلة، جرب تاني",
+  "adminAnalyticsTab": "الإحصائيات",
+  "range_7d": "٧ أيام",
+  "range_30d": "٣٠ يوم",
+  "range_month": "الشهر ده",
+  "range_prevMonth": "الشهر اللي فات",
+  "kpiRevenue": "الإيراد",
+  "kpiAov": "متوسط الطلب",
+  "kpiOrders": "الطلبات",
+  "kpiCancelled": "ملغي",
+  "kpiNewCustomers": "عملاء جداد",
+  "kpiReservations": "الحجوزات",
+  "kpiCouponUses": "استخدام الكوبونات",
+  "kpiDiscounts": "إجمالي الخصومات",
+  "kpiLoyaltyEarned": "نقاط مكتسبة",
+  "kpiTopProducts": "الأكثر مبيعًا",
+  "kpiOrdersByStatus": "الطلبات حسب الحالة"
 }

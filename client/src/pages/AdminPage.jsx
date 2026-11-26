@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import AdminBanners from '@/components/AdminBanners.jsx';
+import AdminAnalytics from '@/components/AdminAnalytics.jsx';
 
 // What each status can move to. Display-only: the server validates every
 // transition again through the one shared machine (order.service).
@@ -90,6 +91,9 @@ export default function AdminPage({ lang }) {
         <Button size="sm" variant={tab === 'banners' ? 'default' : 'ghost'} onClick={() => setTab('banners')}>
           {t(lang, 'adminBannersTab')}
         </Button>
+        <Button size="sm" variant={tab === 'analytics' ? 'default' : 'ghost'} onClick={() => setTab('analytics')}>
+          {t(lang, 'adminAnalyticsTab')}
+        </Button>
       </div>
 
       {tab === 'accounts' && <AdminAccounts lang={lang} />}
@@ -98,6 +102,7 @@ export default function AdminPage({ lang }) {
       {tab === 'reservations' && <AdminReservations lang={lang} />}
       {tab === 'messages' && <AdminContact lang={lang} />}
       {tab === 'banners' && <AdminBanners lang={lang} />}
+      {tab === 'analytics' && <AdminAnalytics lang={lang} />}
       {tab !== 'accounts' && tab !== 'reviews' && tab !== 'coupons' && tab !== 'reservations' && tab !== 'messages' && error && <p className="text-center text-secondary">{t(lang, 'orderError')}</p>}
 
       {tab === 'orders' && (

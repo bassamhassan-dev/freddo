@@ -199,5 +199,21 @@
   "edit": "Edit",
   "delete": "Delete",
   "loading": "Loading...",
-  "genericError": "Something went wrong, try again"
+  "genericError": "Something went wrong, try again",
+  "adminAnalyticsTab": "Analytics",
+  "range_7d": "7 days",
+  "range_30d": "30 days",
+  "range_month": "This month",
+  "range_prevMonth": "Last month",
+  "kpiRevenue": "Revenue",
+  "kpiAov": "Avg order",
+  "kpiOrders": "Orders",
+  "kpiCancelled": "Cancelled",
+  "kpiNewCustomers": "New customers",
+  "kpiReservations": "Reservations",
+  "kpiCouponUses": "Coupon uses",
+  "kpiDiscounts": "Total discounts",
+  "kpiLoyaltyEarned": "Points earned",
+  "kpiTopProducts": "Top sellers",
+  "kpiOrdersByStatus": "Orders by status"
 }

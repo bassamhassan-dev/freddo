@@ -5,6 +5,7 @@ import * as couponController from '../coupons/coupon.controller.js';
 import * as reservationController from '../reservations/reservation.controller.js';
 import * as contactController from '../contact/contact.controller.js';
 import * as bannerController from '../banners/banner.controller.js';
+import * as analyticsController from '../analytics/analytics.controller.js';
 import { requireAuth, requireRole } from '../auth/auth.middleware.js';
 import { ROLES } from '../../utils/roles.js';
 
@@ -22,6 +23,7 @@ router.get('/banners', bannerController.adminList);
 router.post('/banners', bannerController.adminCreate);
 router.patch('/banners/:id', bannerController.adminUpdate);
 router.delete('/banners/:id', bannerController.adminDelete);
+router.get('/analytics', analyticsController.dashboard);
 router.get('/reservations', reservationController.adminList);
 router.post('/reservations/:id/status', reservationController.adminSetStatus);
 router.get('/tables', controller.listTables);
