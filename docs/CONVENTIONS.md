@@ -185,3 +185,22 @@ app.use(globalErrorHandler);  // أي خطأ في أي حتة → رد واحد 
 - **العميل:** Vitest + Testing Library، والـ fetch بيتعمله mock.
 - **لازم يفضلوا خضر:** `npm test` في الـ server وفي الـ client قبل أي push.
 - **أي قاعدة بيزنس جديدة = اختبار جديد.** القاعدة من غير اختبار مالهاش وجود.
+
+---
+
+## 9. الحسابات والجلسات (Sprint 2)
+
+- أدوار المشروع 3 بس: `admin` / `customer` / `barista` — constants في
+  `utils/roles.js`، مفيش Role model (قسم 7: 3 قيم ثابتة مش محتاجة جدول).
+- access token قصير (15د) في ذاكرة المتصفح + refresh token (7 أيام) في
+  كوكي `HttpOnly` متقيدة بـ `/api/auth`. السبب الأمني كله مشروح في
+  `docs/WALKTHROUGH-SPRINT2.md`.
+- الـ refresh بينعمله **rotation** كل استخدام، وإعادة استخدام توكين قديم =
+  إلغاء كل الجلسات (reuse detection). التوكينز متخزّنة SHA-256 في MongoDB —
+  قرار متعمد بدل Redis (مخزن واحد، TTL index بيلمّع لوحده، ونقطة التبديل
+  ملف واحد لو احتجنا Redis بعدين).
+- التسجيل العام بيعمل `customer` بس. أي role جاية في الريكويست بتتجاهل:
+  الحقول بتتاخد بالاسم واحد واحد، ممنوع spread للـ body في أي create.
+- الصلاحيات بتتفرض في السيرفر (`requireAuth`/`requireRole`) على كل route
+  محمي. حماية الـ React routes شكل بس، مش أمان.
+- endpoints الحساسة (login/register) ورا rate limit.

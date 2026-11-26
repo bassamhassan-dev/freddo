@@ -2,6 +2,8 @@ import 'dotenv/config';
 import mongoose from 'mongoose';
 import { connectDB } from '../config/db.js';
 import MenuItem from '../features/menu/menuItem.model.js';
+import User from '../features/auth/user.model.js';
+import { ROLES } from '../utils/roles.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
 // Items are upserted by slug, so re-running the seed is safe and never
@@ -203,6 +205,30 @@ async function seed() {
   }
   const total = await MenuItem.countDocuments();
   console.log(`Seed done: ${upserted} items upserted, ${total} total in menuitems / تم تحميل المنيو`);
+
+  // First admin account (doc 3.7): created from the environment, never
+  // from committed values. Set ADMIN_EMAIL + ADMIN_PASSWORD (+ optional
+  // ADMIN_NAME) in server/.env and re-run the seed. The password is hashed
+  // like any other and only ever lives in your .env.
+  if (process.env.ADMIN_EMAIL && process.env.ADMIN_PASSWORD) {
+    const email = process.env.ADMIN_EMAIL.toLowerCase().trim();
+    const passwordHash = await User.hashPassword(process.env.ADMIN_PASSWORD);
+    await User.updateOne(
+      { email },
+      {
+        $set: {
+          name: process.env.ADMIN_NAME || 'Freddo Admin',
+          passwordHash,
+          role: ROLES.ADMIN,
+          isActive: true,
+        },
+      },
+      { upsert: true }
+    );
+    console.log(`Admin account ready: ${email} / حساب الأدمن جاهز`);
+  } else {
+    console.log('No ADMIN_EMAIL/ADMIN_PASSWORD in .env - skipped admin creation / مفيش بيانات أدمن في .env');
+  }
   await mongoose.disconnect();
 }
 

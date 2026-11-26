@@ -18,13 +18,23 @@ const sampleItems = [
   },
 ];
 
+// Route-aware mock: the menu answers with items, auth refresh answers 401
+// (no session), everything else keeps the old canned body.
 function mockMenuFetch(body, ok = true) {
-  return vi.fn(() =>
-    Promise.resolve({
+  return vi.fn((url) => {
+    if (String(url).includes('/api/auth/')) {
+      return Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => Promise.resolve({ success: false, error: { code: 'AUTH_INVALID_TOKEN' } }),
+      });
+    }
+    return Promise.resolve({
       ok,
+      status: ok ? 200 : 500,
       json: () => Promise.resolve(ok ? { success: true, data: body } : { success: false, error: { code: 'X' } }),
-    })
-  );
+    });
+  });
 }
 
 beforeEach(() => {

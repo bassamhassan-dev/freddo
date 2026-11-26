@@ -32,6 +32,13 @@ shadcn frontend that renders the menu in Arabic (RTL) and English.
 - **mongodb-memory-server** (dev) - a real MongoDB started in memory for
   tests. Tests hit a real database (catches real validation/query bugs)
   with zero credentials and zero setup.
+- **bcryptjs** - password hashing. Pure JavaScript, so installs identically
+  on every machine (no native builds), and explicitly approved by the
+  requirements doc. Cost factor 12.
+- **jsonwebtoken** - access/refresh JWT signing and verification.
+- **cookie-parser** - reads the HttpOnly refresh cookie.
+- **helmet** - the standard Express security headers, one line (doc 22).
+- **express-rate-limit** - brute-force protection on login/register.
 
 **Client**
 - **React 18 + Vite** - the UI library and build tool. React is the R in
@@ -45,6 +52,11 @@ shadcn frontend that renders the menu in Arabic (RTL) and English.
 - **Vitest + Testing Library** (dev) - client test runner and DOM testing.
   Vitest shares Vite's config (zero extra setup); Testing Library forces
   tests to behave like a user, not like the implementation.
+- **react-router-dom** - client-side routing (menu, login, register,
+  account, role workspaces). Added in Sprint 2 when the app grew past one
+  page.
+- **zustand** - client state (the auth session). ~1KB, no boilerplate, and
+  the state library named by the requirements doc.
 
 **Tooling**
 - **npm workspaces** - one `npm install` for server + client, one repo.
@@ -59,8 +71,10 @@ cp server/.env.example server/.env   # put your real MONGO_URI in server/.env
 cp client/.env.example client/.env
 ```
 
-`server/.env` holds your secrets (the MongoDB connection string). It is
-gitignored and must never be committed or shared.
+`server/.env` holds your secrets (the MongoDB connection string, the two
+JWT secrets, optional first-admin credentials `ADMIN_EMAIL`/`ADMIN_PASSWORD`).
+It is gitignored and must never be committed or shared. See
+`docs/WALKTHROUGH-SPRINT2.md` for the full local auth setup.
 
 ## Run
 
@@ -81,6 +95,11 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `GET /api/health` - liveness check
 - `GET /api/menu` - available menu items (`?category=<slug>` to filter)
 - `GET /api/menu/:slug` - one available item
+- `POST /api/auth/register` - customer registration (role is always `customer`)
+- `POST /api/auth/login` - unified login for all roles
+- `POST /api/auth/refresh` - rotate the refresh cookie, get a new access token
+- `POST /api/auth/logout` - revoke the refresh session
+- `GET /api/auth/me` - current user (Bearer access token)
 
 Every response follows one shape (see `docs/CONVENTIONS.md`): success is
 `{ success: true, data: ... }`, error is
