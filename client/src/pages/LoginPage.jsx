@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.js';
 import { homeForRole } from '@/auth/roleRedirect.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
+import OAuthButtons from '@/components/OAuthButtons.jsx';
 
 // The one login page for all roles (doc 3.1). The role returned by the
 // backend decides where the user lands - the page never asks for it.
@@ -15,6 +16,12 @@ export default function LoginPage({ lang }) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+
+  // OAuth failures come back from the provider dance as a query param.
+  useEffect(() => {
+    const code = new URLSearchParams(location.search).get('oauthError');
+    if (code) setError(t(lang, `oauthErr_${code}`));
+  }, [location.search, lang]);
 
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -65,6 +72,7 @@ export default function LoginPage({ lang }) {
         <Button type="submit" disabled={busy}>
           {busy ? t(lang, 'authWorking') : t(lang, 'loginSubmit')}
         </Button>
+        <OAuthButtons lang={lang} />
       </form>
       <p className="mt-4 text-center text-sm text-secondary">
         {t(lang, 'noAccount')}{' '}

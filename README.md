@@ -1,6 +1,9 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 16: Cloudinary
+MERN monorepo (MongoDB, Express, React, Node). Sprint 17: OAuth sign-in
+(Google + Facebook) - full authorization-code flow, verified-email account
+linking, env-gated provider buttons, signed-state CSRF. Sprint 16:
+Cloudinary
 image uploads for banners - admin file upload, old-asset cleanup on
 replace/delete, env-gated with the plain-URL path intact. Sprint 15: admin
 content
@@ -31,7 +34,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT16.md`, one per sprint).
+  `docs/WALKTHROUGH-SPRINT17.md`, one per sprint).
   `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
   (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
@@ -127,6 +130,10 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/auth/login` - unified login for all roles
 - `POST /api/auth/refresh` - rotate the refresh cookie, get a new access token
 - `POST /api/auth/logout` - revoke the refresh session
+- `GET /api/auth/oauth/providers` - which OAuth buttons to show
+- `GET /api/auth/oauth/google|facebook` - start the provider redirect
+- `GET /api/auth/oauth/:provider/callback` - exchange, link-or-create,
+  set the refresh cookie, land on `/oauth/callback`
 - `GET /api/auth/me` - current user (Bearer access token)
 - `POST /api/orders` - place a COD order (auth; ids+quantities only, the
   server re-prices; `Idempotency-Key` header makes retries safe)

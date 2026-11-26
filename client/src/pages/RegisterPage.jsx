@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
+import OAuthButtons from '@/components/OAuthButtons.jsx';
 
 // Public registration creates customer accounts only (doc 3.2) - the
 // backend ignores any role field, and this form never sends one.
@@ -74,6 +75,7 @@ export default function RegisterPage({ lang }) {
         <Button type="submit" disabled={busy}>
           {busy ? t(lang, 'authWorking') : t(lang, 'registerSubmit')}
         </Button>
+        <OAuthButtons lang={lang} />
       </form>
       <p className="mt-4 text-center text-sm text-secondary">
         {t(lang, 'haveAccount')}{' '}

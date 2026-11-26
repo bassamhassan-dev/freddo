@@ -20,7 +20,7 @@ const invalidCredentials = () =>
   // the API must not reveal which emails are registered.
   new AppError(401, 'AUTH_INVALID_CREDENTIALS', 'الإيميل أو الباسورد غلط', 'Incorrect email or password');
 
-async function issueSession(user) {
+export async function issueSession(user) {
   const sessionId = new mongoose.Types.ObjectId().toString();
   const refreshToken = signRefreshToken(user, sessionId);
   await RefreshToken.create({

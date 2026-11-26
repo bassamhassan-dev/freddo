@@ -225,5 +225,14 @@
   "contentKey_menuTitle": "عنوان قسم المنيو",
   "contentKey_menuSubtitle": "السطر تحت عنوان المنيو",
   "contentKey_menuEmpty": "رسالة المنيو الفاضي",
-  "uploadingImage": "بيترفع..."
+  "uploadingImage": "بيترفع...",
+  "oauthDivider": "أو سجل بـ",
+  "oauthGoogle": "الدخول بجوجل",
+  "oauthFacebook": "الدخول بفيسبوك",
+  "oauthWorking": "بنكمل تسجيل الدخول...",
+  "oauthErr_OAUTH_STATE": "رابط الدخول منتهي أو مش صحيح، جرب تاني",
+  "oauthErr_OAUTH_FAILED": "تسجيل الدخول ماكتملش، جرب تاني",
+  "oauthErr_OAUTH_EMAIL_REQUIRED": "محتاجين إيميلك من مزود الدخول",
+  "oauthErr_OAUTH_EMAIL_UNVERIFIED": "الإيميل ده مش مؤكد عند مزود الدخول",
+  "oauthErr_AUTH_INACTIVE": "الحساب ده متوقف، كلم الإدارة"
 }

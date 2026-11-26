@@ -225,5 +225,14 @@
   "contentKey_menuTitle": "Menu section title",
   "contentKey_menuSubtitle": "Line under the menu title",
   "contentKey_menuEmpty": "Empty-menu message",
-  "uploadingImage": "Uploading..."
+  "uploadingImage": "Uploading...",
+  "oauthDivider": "or continue with",
+  "oauthGoogle": "Continue with Google",
+  "oauthFacebook": "Continue with Facebook",
+  "oauthWorking": "Finishing sign-in...",
+  "oauthErr_OAUTH_STATE": "The sign-in link expired or is invalid, try again",
+  "oauthErr_OAUTH_FAILED": "Sign-in did not complete, try again",
+  "oauthErr_OAUTH_EMAIL_REQUIRED": "We need your email from the sign-in provider",
+  "oauthErr_OAUTH_EMAIL_UNVERIFIED": "This email is not verified with the sign-in provider",
+  "oauthErr_AUTH_INACTIVE": "This account is disabled, contact the café"
 }

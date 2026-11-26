@@ -21,7 +21,15 @@ const userSchema = new mongoose.Schema(
     },
     // bcrypt hash, never the plain password. select:false keeps it out of
     // every query result unless explicitly requested - no accidental leaks.
-    passwordHash: { type: String, required: true, select: false },
+    // OAuth-only accounts have no password; passwordHash is required
+    // exactly when neither provider id is set.
+    passwordHash: {
+      type: String,
+      select: false,
+      required: function () { return !this.oauthGoogleId && !this.oauthFacebookId; },
+    },
+    oauthGoogleId: { type: String, unique: true, sparse: true },
+    oauthFacebookId: { type: String, unique: true, sparse: true },
     role: { type: String, enum: ALL_ROLES, default: ROLES.CUSTOMER },
     // Optional contact phone, set when an admin creates a staff account.
     phone: { type: String, trim: true },
