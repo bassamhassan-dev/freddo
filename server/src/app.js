@@ -1,11 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-import healthRouter from './routes/health.js';
-import menuRouter from './routes/menu.js';
-import { errorHandler, notFoundHandler } from './middleware/errors.js';
+import healthRouter from './features/health/health.routes.js';
+import menuRouter from './features/menu/menu.routes.js';
+import { notFound } from './middleware/notFound.js';
+import { globalErrorHandler } from './middleware/globalErrorHandler.js';
 
 // The Express app is separate from index.js so tests can import it
 // without opening a real port or connecting to a database.
+//
+// Wiring order is the architecture in miniature: routes first, then the
+// 404 catcher for anything unmatched, then the one global error handler
+// that writes every error response the API ever sends.
 const app = express();
 
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
@@ -18,8 +23,7 @@ app.get('/', (req, res) => {
   res.json({ name: 'Freddo API', status: 'running' });
 });
 
-// Any unmatched route, then any thrown error, land here.
-app.use(notFoundHandler);
-app.use(errorHandler);
+app.use(notFound);
+app.use(globalErrorHandler);
 
 export default app;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../src/app.js';
-import MenuItem from '../src/models/MenuItem.js';
+import MenuItem from '../src/features/menu/menuItem.model.js';
 
 // These tests run against a real MongoDB started in memory just for the
 // test run (mongodb-memory-server). No connection string, no credentials,
@@ -54,7 +54,9 @@ test('GET /api/menu returns only available items, in display order', async () =>
 
   const res = await fetch(`${baseUrl}/api/menu`);
   assert.equal(res.status, 200);
-  const { items } = await res.json();
+  const { success, data } = await res.json();
+  assert.equal(success, true);
+  const { items } = data;
   assert.deepEqual(
     items.map((i) => i.slug),
     ['a-item', 'b-item']
@@ -72,8 +74,9 @@ test('GET /api/menu?category filters by category slug', async () => {
   ]);
 
   const res = await fetch(`${baseUrl}/api/menu?category=desserts`);
-  const { items } = await res.json();
-  assert.equal(items.length, 1);
+  const { data } = await res.json();
+  assert.equal(data.items.length, 1);
+  const { items } = data;
   assert.equal(items[0].slug, 'cake');
 });
 
@@ -83,7 +86,8 @@ test('GET /api/menu/:slug returns one available item without internal fields', a
 
   const res = await fetch(`${baseUrl}/api/menu/spanish-latte`);
   assert.equal(res.status, 200);
-  const { item } = await res.json();
+  const { data } = await res.json();
+  const { item } = data;
   assert.equal(item.name.ar, 'سبانيش لاتيه');
   assert.equal(item.name.en, 'Spanish Latte');
   assert.equal(item.basePrice, 75);
@@ -102,10 +106,11 @@ test('GET /api/menu/:slug is 404 for unavailable and unknown items', async () =>
   for (const slug of ['off-menu', 'never-existed']) {
     const res = await fetch(`${baseUrl}/api/menu/${slug}`);
     assert.equal(res.status, 404);
-    const { error } = await res.json();
-    assert.equal(error.code, 'ITEM_NOT_FOUND');
-    assert.ok(error.message.ar);
-    assert.ok(error.message.en);
+    const body = await res.json();
+    assert.equal(body.success, false);
+    assert.equal(body.error.code, 'ITEM_NOT_FOUND');
+    assert.ok(body.error.message.ar);
+    assert.ok(body.error.message.en);
   }
 });
 
@@ -124,6 +129,7 @@ test('model validation rejects negative prices and bad slugs', async () => {
 test('unknown API routes return the standard 404 shape', async () => {
   const res = await fetch(`${baseUrl}/api/nope`);
   assert.equal(res.status, 404);
-  const { error } = await res.json();
-  assert.equal(error.code, 'NOT_FOUND');
+  const body = await res.json();
+  assert.equal(body.success, false);
+  assert.equal(body.error.code, 'NOT_FOUND');
 });

@@ -20,7 +20,8 @@ test('GET /api/health returns ok', async () => {
   const res = await fetch(`${baseUrl}/api/health`);
   assert.equal(res.status, 200);
   const body = await res.json();
-  assert.equal(body.status, 'ok');
+  assert.equal(body.success, true);
+  assert.equal(body.data.status, 'ok');
 });
 
 test('GET / returns the API name', async () => {

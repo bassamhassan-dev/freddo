@@ -2,10 +2,12 @@
 // client/.env (VITE_API_URL), falling back to the local dev server.
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
+// The API's unified contract (docs/CONVENTIONS.md): every success answers
+// { success: true, data: ... }, every error { success: false, error:
+// { code, message: { ar, en } } }. Callers always get the unwrapped `data`.
 async function request(path) {
   const res = await fetch(`${API_URL}${path}`);
   if (!res.ok) {
-    // The API always answers errors as { error: { code, message: {ar,en} } }.
     let code = 'UNKNOWN';
     try {
       const body = await res.json();
@@ -15,7 +17,8 @@ async function request(path) {
     }
     throw Object.assign(new Error(`API ${path} failed with ${res.status}`), { status: res.status, code });
   }
-  return res.json();
+  const body = await res.json();
+  return body.data;
 }
 
 export function getMenu(category) {

@@ -1,5 +1,12 @@
 # Freddo - Sprint 1: قاعدة البيانات، أول model، وأول API حقيقي
 
+> **تحديث Sprint 1.5:** الهيكل اتنضّم من يومها. اللي هنا كان `src/models/`
+> و`src/routes/` و`src/middleware/errors.js` بقى `src/features/menu/`
+> (routes + controller + service + model مع بعض) و`src/utils/` و
+> `src/middleware/globalErrorHandler.js`. الشرح اللي تحت لسه صحيح منطقيًا،
+> بس المسارات الجديدة والقواعد الثابتة في `docs/CONVENTIONS.md`.
+
+
 الملف ده شرح بالمصري لكل قرار اتاخد في Sprint 1، عشان تقدر تدافع عنه في أي
 إنترفيو. اقره بعد WALKTHROUGH.md بتاع Sprint 0.
 

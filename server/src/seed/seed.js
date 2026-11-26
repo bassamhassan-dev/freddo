@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import mongoose from 'mongoose';
 import { connectDB } from '../config/db.js';
-import MenuItem from '../models/MenuItem.js';
+import MenuItem from '../features/menu/menuItem.model.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
 // Items are upserted by slug, so re-running the seed is safe and never

@@ -20,12 +20,15 @@ const sampleItems = [
 
 function mockMenuFetch(body, ok = true) {
   return vi.fn(() =>
-    Promise.resolve({ ok, json: () => Promise.resolve(ok ? body : { error: { code: 'X' } }) })
+    Promise.resolve({
+      ok,
+      json: () => Promise.resolve(ok ? { success: true, data: body } : { success: false, error: { code: 'X' } }),
+    })
   );
 }
 
 beforeEach(() => {
-  vi.stubGlobal('fetch', mockMenuFetch({ items: sampleItems }));
+  vi.stubGlobal('fetch', mockMenuFetch({ items: sampleItems })); // mock returns data, as the API wrapper unwraps it
 });
 
 afterEach(() => {
