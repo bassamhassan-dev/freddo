@@ -94,7 +94,7 @@ export default function AccountPage({ lang }) {
               {loyalty.balance} {t(lang, 'loyaltyPoints')}
             </p>
             <p className="text-xs text-secondary">
-              {t(lang, 'loyaltyEarnNote').replace('{n}', loyalty.egpPerPoint)}
+              {t(lang, 'loyaltyEarnNote').replace('{n}', loyalty.earnPercent).replace('{r}', loyalty.redeemPoints)}
             </p>
             {loyalty.transactions.length > 0 && (
               <ul className="mt-3 flex flex-col gap-1 text-xs text-secondary">

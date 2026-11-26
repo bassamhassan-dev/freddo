@@ -170,7 +170,7 @@
   "archive": "Archive",
   "noMessages": "No messages.",
   "loyaltyPoints": "points",
-  "loyaltyEarnNote": "You earn 1 point for every {n} EGP of completed orders",
+  "loyaltyEarnNote": "You earn points worth {n}% of each completed order; {r} points = a free drink",
   "loyaltyType_earn": "Points earned",
   "loyaltyType_redeem": "Points redeemed",
   "loyaltyType_refund": "Points refund",
@@ -337,7 +337,7 @@
   "chat.adminEmpty": "No conversations yet",
   "chat.adminPick": "Pick a conversation to view it",
   "admin.tabs.chat": "Chats",
-  "redeemFreeDrink": "Redeem 100 points for a free drink",
+  "redeemFreeDrink": "Redeem {n} points for a free drink",
   "pointsUnit": "pts",
   "freeDrinkDiscount": "Free drink (loyalty)",
   "admin.accounts.points": "Points",
@@ -381,5 +381,8 @@
   "admin.menu.price": "Price",
   "admin.menu.variants": "Sizes",
   "admin.menu.addOns": "Add-ons",
-  "admin.menu.confirmDelete": "Delete this item for good?"
+  "admin.menu.confirmDelete": "Delete this item for good?",
+  "admin.loyalty.title": "Loyalty rules",
+  "admin.loyalty.earnPercent": "Points earned (% of order)",
+  "admin.loyalty.redeemPoints": "Points for a free drink"
 }

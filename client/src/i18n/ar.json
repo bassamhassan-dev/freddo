@@ -170,7 +170,7 @@
   "archive": "أرشفة",
   "noMessages": "مفيش رسائل.",
   "loyaltyPoints": "نقطة",
-  "loyaltyEarnNote": "بتكسب نقطة عن كل {n} جنيه من طلباتك المكتملة",
+  "loyaltyEarnNote": "بتكسب نقاط بقيمة {n}% من كل طلب مكتمل، و{r} نقطة = مشروب مجاني",
   "loyaltyType_earn": "نقاط مكتسبة",
   "loyaltyType_redeem": "نقاط مستبدلة",
   "loyaltyType_refund": "استرجاع نقاط",
@@ -337,7 +337,7 @@
   "chat.adminEmpty": "مفيش محادثات لسه",
   "chat.adminPick": "اختار محادثة عشان تشوفها",
   "admin.tabs.chat": "المحادثات",
-  "redeemFreeDrink": "استبدل 100 نقطة بمشروب مجاني",
+  "redeemFreeDrink": "استبدل {n} نقطة بمشروب مجاني",
   "pointsUnit": "نقطة",
   "freeDrinkDiscount": "مشروب مجاني (الولاء)",
   "admin.accounts.points": "النقاط",
@@ -381,5 +381,8 @@
   "admin.menu.price": "السعر",
   "admin.menu.variants": "الأحجام",
   "admin.menu.addOns": "الإضافات",
-  "admin.menu.confirmDelete": "متأكد إنك عايز تمسح الصنف ده؟"
+  "admin.menu.confirmDelete": "متأكد إنك عايز تمسح الصنف ده؟",
+  "admin.loyalty.title": "قواعد نقاط الولاء",
+  "admin.loyalty.earnPercent": "نسبة النقاط من الطلب (%)",
+  "admin.loyalty.redeemPoints": "نقاط المشروب المجاني"
 }

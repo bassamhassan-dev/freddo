@@ -5,6 +5,40 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import ChatAvatar from './ChatAvatar.jsx';
+import { apiLoyaltySettings, apiSaveLoyaltySettings } from '@/api/loyalty.js';
+
+// Sprint 36: the two loyalty rules, editable. Defaults: 10% of the order
+// total becomes points, 100 points buy one free drink.
+function LoyaltyRules({ lang }) {
+  const [rules, setRules] = useState(null);
+  const [msg, setMsg] = useState(null);
+  useEffect(() => { apiLoyaltySettings().then(setRules).catch(() => {}); }, []);
+  if (!rules) return null;
+  const save = async (e) => {
+    e.preventDefault();
+    setMsg(null);
+    try {
+      setRules(await apiSaveLoyaltySettings({ earnPercent: rules.earnPercent, redeemPoints: rules.redeemPoints }));
+      setMsg({ ok: true, text: t(lang, 'profileSaved') });
+    } catch (err) {
+      setMsg({ ok: false, text: err.message?.[lang] || t(lang, 'orderError') });
+    }
+  };
+  const input = 'w-24 rounded-xl border border-border bg-background p-1.5 text-sm text-foreground';
+  return (
+    <form onSubmit={save} className="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-border bg-card p-4 text-sm">
+      <h3 className="w-full font-bold text-primary">{t(lang, 'admin.loyalty.title')}</h3>
+      <label className="flex flex-col gap-1 text-secondary">{t(lang, 'admin.loyalty.earnPercent')}
+        <input className={input} dir="ltr" type="number" min="1" max="100" value={rules.earnPercent} onChange={(e) => setRules({ ...rules, earnPercent: e.target.value })} />
+      </label>
+      <label className="flex flex-col gap-1 text-secondary">{t(lang, 'admin.loyalty.redeemPoints')}
+        <input className={input} dir="ltr" type="number" min="10" max="10000" value={rules.redeemPoints} onChange={(e) => setRules({ ...rules, redeemPoints: e.target.value })} />
+      </label>
+      <Button size="sm" type="submit">{t(lang, 'saveProfile')}</Button>
+      {msg && <p className={`w-full font-semibold ${msg.ok ? 'text-accent' : 'text-red-400'}`}>{msg.text}</p>}
+    </form>
+  );
+}
 
 // Account management tab (doc 3.7): overview totals, search/filter, create
 // staff accounts, activate/deactivate and role changes. Every action is
@@ -74,6 +108,7 @@ export default function AdminAccounts({ lang }) {
 
   return (
     <div>
+      <LoyaltyRules lang={lang} />
       {/* Overview totals by role */}
       {data && (
         <div className="mb-4 flex flex-wrap justify-center gap-2">

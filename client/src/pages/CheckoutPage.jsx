@@ -25,12 +25,13 @@ export default function CheckoutPage({ lang }) {
   // comes from the server; the comped amount preview mirrors the server
   // rule (cheapest drink unit). The server re-decides everything at submit.
   const [loyaltyBalance, setLoyaltyBalance] = useState(0);
+  const [redeemPoints, setRedeemPoints] = useState(100); // admin-configurable threshold
   const [redeem, setRedeem] = useState(false);
   const [couponInput, setCouponInput] = useState('');
   const [couponError, setCouponError] = useState(null);
 
   useEffect(() => {
-    apiMyLoyalty().then(({ balance }) => setLoyaltyBalance(balance || 0)).catch(() => {});
+    apiMyLoyalty().then(({ balance, redeemPoints: rp }) => { setLoyaltyBalance(balance || 0); if (rp) setRedeemPoints(rp); }).catch(() => {});
   }, []);
 
   // Repair stale cart lines: a line saved before an item had sizes carries
@@ -61,7 +62,7 @@ export default function CheckoutPage({ lang }) {
   }, []);
   const drinkUnitPrices = lines.filter((l) => l.isDrink).map((l) => l.unitPrice);
   const freeDrinkValue = drinkUnitPrices.length > 0 ? Math.min(...drinkUnitPrices) : 0;
-  const canRedeem = loyaltyBalance >= 100 && freeDrinkValue > 0;
+  const canRedeem = loyaltyBalance >= redeemPoints && freeDrinkValue > 0;
   const loyaltyDiscount = redeem && canRedeem ? freeDrinkValue : 0;
   const total = subtotal - (coupon?.discount || 0) - loyaltyDiscount;
   const navigate = useNavigate();
@@ -163,7 +164,7 @@ export default function CheckoutPage({ lang }) {
         {canRedeem && (
           <label className="flex items-center gap-2 rounded-xl border border-border bg-background/40 px-3 py-2 text-sm text-foreground">
             <input type="checkbox" checked={redeem} onChange={(e) => setRedeem(e.target.checked)} />
-            {t(lang, 'redeemFreeDrink')} ({loyaltyBalance} {t(lang, 'pointsUnit')})
+            {t(lang, 'redeemFreeDrink').replace('{n}', redeemPoints)} ({loyaltyBalance} {t(lang, 'pointsUnit')})
           </label>
         )}
         {loyaltyDiscount > 0 && (

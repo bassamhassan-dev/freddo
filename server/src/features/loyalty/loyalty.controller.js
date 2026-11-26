@@ -17,3 +17,11 @@ export const adjust = catchAsync(async (req, res) => {
   const tx = await loyaltyService.adjust(userId, points, description);
   sendSuccess(res, 201, tx);
 });
+
+// GET/PUT /api/loyalty/admin/settings - earn percent + redeem threshold.
+export const getSettings = catchAsync(async (req, res) => {
+  sendSuccess(res, 200, await loyaltyService.getSettings());
+});
+export const updateSettings = catchAsync(async (req, res) => {
+  sendSuccess(res, 200, await loyaltyService.updateSettings(req.body || {}));
+});
