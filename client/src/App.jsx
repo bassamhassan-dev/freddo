@@ -24,6 +24,7 @@ import NotFoundPage from '@/pages/NotFoundPage.jsx';
 import HomeBanners from '@/components/HomeBanners.jsx';
 import HeroSlider from '@/components/HeroSlider.jsx';
 import { FeaturedSection, OffersSection, AboutSection, GallerySection, InfoStrip } from '@/components/HomeSections.jsx';
+import { TestimonialsSection, LoyaltyTeaser } from '@/components/HomeExtras.jsx';
 import SiteFooter from '@/components/SiteFooter.jsx';
 import { useContentStore } from '@/store/content.js';
 
@@ -32,6 +33,27 @@ import { useContentStore } from '@/store/content.js';
 function AnimatedMain({ children }) {
   const { pathname } = useLocation();
   return <main key={pathname} className="animate-fade-up">{children}</main>;
+}
+
+// Sprint 24: on the homepage the header floats over the full-screen hero
+// so they read as one unit; inner pages get the normal in-flow header.
+function HeaderShell({ lang, onToggleLang }) {
+  const { pathname } = useLocation();
+  return <SiteHeader lang={lang} onToggleLang={onToggleLang} overlay={pathname === '/'} />;
+}
+
+// Hash links in the nav (/#menu, /#offers, ...) scroll to their section
+// once it exists; the homepage sections render async after the fetches.
+function HashScroll() {
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash) return undefined;
+    const id = setTimeout(() => {
+      document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 600);
+    return () => clearTimeout(id);
+  }, [hash]);
+  return null;
 }
 
 export default function App() {
@@ -57,7 +79,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <div dir={direction} className="min-h-screen">
-        <SiteHeader lang={lang} onToggleLang={() => setLang(lang === 'ar' ? 'en' : 'ar')} />
+        <HeaderShell lang={lang} onToggleLang={() => setLang(lang === 'ar' ? 'en' : 'ar')} />
+        <HashScroll />
         <AnimatedMain>
           <Routes>
             <Route
@@ -71,6 +94,8 @@ export default function App() {
                   <OffersSection lang={lang} />
                   <AboutSection lang={lang} />
                   <GallerySection lang={lang} />
+                  <TestimonialsSection lang={lang} />
+                  <LoyaltyTeaser lang={lang} />
                   <InfoStrip lang={lang} />
                 </>
               }

@@ -31,14 +31,14 @@ export default function HeroSlider({ lang }) {
     return () => clearInterval(id);
   }, [banners, paused, reduced]);
 
-  if (banners === null) return <div className="h-[55vh] w-full animate-pulse bg-card" />;
+  if (banners === null) return <div className="h-[72vh] w-full animate-pulse bg-card md:h-screen" />;
   if (banners.length === 0) return <HeroSection lang={lang} />;
 
   const active = banners[slide];
 
   return (
     <section
-      className="relative h-[55vh] min-h-[340px] w-full overflow-hidden md:h-[68vh]"
+      className="relative h-[72vh] min-h-[420px] w-full overflow-hidden md:h-screen"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -47,12 +47,12 @@ export default function HeroSlider({ lang }) {
           key={b._id}
           aria-hidden={i !== slide}
           className={`absolute inset-0 bg-cover bg-center motion-safe:transition-opacity motion-safe:duration-700 ${
-            i === slide ? 'opacity-100' : 'opacity-0'
+            i === slide ? 'opacity-100 motion-safe:animate-hero-zoom' : 'opacity-0'
           }`}
           style={{ backgroundImage: `url(${b.imageUrl})` }}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#0b0806] via-black/40 to-black/20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-transparent to-[#0b0806]" />
       <div className="relative mx-auto flex h-full w-full max-w-6xl flex-col items-start justify-end gap-3 px-5 pb-12">
         <p className="text-3xl font-black text-primary [text-shadow:0_0_18px_rgba(255,150,20,.6)] md:text-5xl">
           {active.title[lang]}

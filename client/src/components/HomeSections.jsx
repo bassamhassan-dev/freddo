@@ -38,7 +38,7 @@ export function OffersSection({ lang }) {
   }, []);
   if (!sectionOn(sections, 'sectionOffers') || !banners.length) return null;
   return (
-    <section className="mx-auto w-full max-w-6xl px-5 pb-12">
+    <section id="offers" className="mx-auto w-full max-w-6xl scroll-mt-20 px-5 pb-12">
       <h2 className="mb-1 text-center text-2xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.5)]">
         {ct(overrides, lang, 'offersTitle', t)}
       </h2>
@@ -57,7 +57,7 @@ export function AboutSection({ lang }) {
   const img1 = ct(overrides, lang, 'aboutImage1', t);
   const img2 = ct(overrides, lang, 'aboutImage2', t);
   return (
-    <section className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 px-5 pb-12 md:flex-row md:gap-10">
+    <section id="about" className="mx-auto flex w-full max-w-6xl scroll-mt-20 flex-col items-center gap-6 px-5 pb-12 md:flex-row md:gap-10">
       <div className="grid w-full max-w-md grid-cols-2 gap-3">
         <img src={img1} alt="" className="h-56 w-full rounded-2xl border border-border object-cover" loading="lazy" />
         <img src={img2} alt="" className="mt-8 h-56 w-full rounded-2xl border border-border object-cover" loading="lazy" />
@@ -114,24 +114,27 @@ const PhoneIcon = () => (
   </svg>
 );
 
+function FeatureCard({ icon, label, value, ltr = false }) {
+  // One Aura-style feature card: glowing icon ring, small-caps gold label.
+  return (
+    <div className="flex flex-col items-center gap-2 rounded-2xl border border-border bg-card p-5 text-center transition hover:border-primary/50 hover:shadow-neon-card">
+      <span className="flex h-11 w-11 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary shadow-neon-sm">
+        {icon}
+      </span>
+      <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-primary">{label}</p>
+      <p className="text-sm font-bold text-foreground" dir={ltr ? 'ltr' : undefined}>{value}</p>
+    </div>
+  );
+}
+
 export function InfoStrip({ lang }) {
   const { overrides, sections } = useContentStore();
   if (!sectionOn(sections, 'sectionInfo')) return null;
-  const cell = 'flex flex-col items-center gap-1 rounded-2xl border border-border bg-card p-4 text-center';
   return (
     <section className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-3 px-5 pb-14 sm:grid-cols-3">
-      <div className={cell}>
-        <ClockIcon />
-        <p className="text-sm font-bold text-foreground">{ct(overrides, lang, 'infoHours', t)}</p>
-      </div>
-      <div className={cell}>
-        <PinIcon />
-        <p className="text-sm font-bold text-foreground">{ct(overrides, lang, 'infoLocation', t)}</p>
-      </div>
-      <div className={cell}>
-        <PhoneIcon />
-        <p className="text-sm font-bold text-foreground" dir="ltr">{ct(overrides, lang, 'infoPhone', t)}</p>
-      </div>
+      <FeatureCard icon={<ClockIcon />} label={t(lang, 'infoHoursLabel')} value={ct(overrides, lang, 'infoHours', t)} />
+      <FeatureCard icon={<PinIcon />} label={t(lang, 'infoLocationLabel')} value={ct(overrides, lang, 'infoLocation', t)} />
+      <FeatureCard icon={<PhoneIcon />} label={t(lang, 'infoPhoneLabel')} value={ct(overrides, lang, 'infoPhone', t)} ltr />
     </section>
   );
 }

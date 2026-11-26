@@ -34,7 +34,7 @@ export default function SiteFooter({ lang }) {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={s.label}
-                  className="rounded-full border border-border p-2 text-accent transition-all hover:border-primary hover:text-primary hover:shadow-neon-sm"
+                  className="rounded-full border border-border p-2 text-accent transition-all duration-300 hover:border-primary hover:text-primary hover:shadow-neon-sm motion-safe:hover:-translate-y-1 motion-safe:hover:rotate-6"
                 >
                   <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current"><path d={s.path} /></svg>
                 </a>

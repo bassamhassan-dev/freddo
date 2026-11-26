@@ -36,7 +36,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic: one per sprint,
-  `docs/WALKTHROUGH*.md`, currently up to Sprint 23b).
+  `docs/WALKTHROUGH*.md`, currently up to Sprint 24).
 - `client/public/photos/` - the cafe's real photos (optimized JPEGs) used by
   the hero slider, banners, about and gallery sections; each slot is
   replaceable from the admin CMS.

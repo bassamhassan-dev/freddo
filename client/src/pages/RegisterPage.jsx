@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.js';
-import { t } from '@/i18n/index.js';
+import { t, getDirection } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 import OAuthButtons from '@/components/OAuthButtons.jsx';
 import FreddoMark from '@/components/FreddoMark.jsx';
+import AuthArtFrame from '@/components/AuthArtFrame.jsx';
 
 // Public registration creates customer accounts only (doc 3.2) - the
 // backend ignores any role field, and this form never sends one.
@@ -40,7 +41,8 @@ export default function RegisterPage({ lang }) {
   };
 
   return (
-    <section className="mx-auto w-full max-w-md px-5 pb-16">
+    <section dir="ltr" className="mx-auto grid w-full max-w-4xl items-stretch gap-6 px-5 pb-16 md:grid-cols-2">
+      <div dir={getDirection(lang)}>
       <h2 className="mb-6 text-center text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
         {t(lang, 'registerTitle')}
       </h2>
@@ -106,6 +108,8 @@ export default function RegisterPage({ lang }) {
           {t(lang, 'login')}
         </Link>
       </p>
+      </div>
+      <AuthArtFrame lang={lang} />
     </section>
   );
 }

@@ -40,7 +40,7 @@ export default function MenuPage({ lang }) {
     : items;
 
   return (
-    <section className="mx-auto w-full max-w-5xl px-5 pb-16">
+    <section id="menu" className="mx-auto w-full max-w-5xl scroll-mt-20 px-5 pb-16">
       <div className="mb-6 text-center">
         <h2 className="text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
           {ct(overrides, lang, 'menuTitle', t)}

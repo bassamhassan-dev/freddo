@@ -77,3 +77,25 @@
 ::-webkit-scrollbar-track { background: #0b0806; }
 ::-webkit-scrollbar-thumb { background: #3a2a14; border-radius: 8px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 178, 26, 0.45); }
+
+/* Sprint 24: the active hero slide zooms in very slowly (Ken Burns) while
+   it is on screen; the 3s duration matches the slider's rotation. */
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.07); }
+}
+.animate-hero-zoom {
+  animation: hero-zoom 3s ease-out forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-zoom { animation: none; }
+}
+
+/* Sprint 24: the neon ring behind the auth mark breathes slowly. */
+@keyframes freddo-ring {
+  0%, 100% { transform: scale(1); opacity: 0.55; }
+  50% { transform: scale(1.08); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*='freddo-ring'] { animation: none !important; }
+}

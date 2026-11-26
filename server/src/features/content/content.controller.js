@@ -13,6 +13,7 @@ export const COPY_KEYS = Object.freeze([
   'aboutTitle', 'aboutBody',
   'infoHours', 'infoLocation', 'infoPhone',
   'footerTagline', 'footerRights', 'galleryTitle',
+  'reviewsHomeTitle', 'loyaltyTitle', 'loyaltyBody', 'loyaltyCta',
 ]);
 // Image keys hold site-relative photo paths (admin can point them at
 // any uploaded asset); social keys hold external https links.
@@ -21,7 +22,7 @@ export const URL_KEYS = Object.freeze([
   'aboutImage1', 'aboutImage2',
   'galleryImage1', 'galleryImage2', 'galleryImage3', 'galleryImage4', 'galleryImage5', 'galleryImage6',
 ]);
-export const SECTION_KEYS = Object.freeze(['sectionFeatured', 'sectionOffers', 'sectionAbout', 'sectionInfo', 'sectionGallery', 'footer']);
+export const SECTION_KEYS = Object.freeze(['sectionFeatured', 'sectionOffers', 'sectionAbout', 'sectionInfo', 'sectionGallery', 'sectionReviews', 'sectionLoyalty', 'footer']);
 export const CONTENT_KEYS = Object.freeze([...COPY_KEYS, ...URL_KEYS, ...SECTION_KEYS]);
 
 // GET /api/content - public: the overrides the homepage renders with.

@@ -18,25 +18,37 @@ export default function MenuItemCard({ item, lang }) {
   const lowestPrice = Math.min(item.basePrice, ...variantPrices);
 
   return (
-    <Card className="group flex h-full flex-col transition-all duration-300 hover:border-primary/60 motion-safe:hover:-translate-y-1">
+    <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:border-primary/60 hover:shadow-neon-card motion-safe:hover:-translate-y-1">
       <Link to={`/item/${item.slug}`} className="flex h-full flex-col" aria-label={item.name[lang]}>
       {item.images?.[0]?.url ? (
-        <img
-          src={item.images[0].url}
-          alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
-          className="h-36 w-full rounded-t-xl object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105"
-          loading="lazy"
-        />
+        <div className="relative">
+          <img
+            src={item.images[0].url}
+            alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
+            className="h-40 w-full object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
+          {/* The price floats over the art: eye-catching and scannable. */}
+          <span className="absolute bottom-2 end-2 rounded-full border border-primary/50 bg-background/85 px-3 py-1 text-sm font-extrabold text-accent shadow-neon-sm backdrop-blur">
+            {variantPrices.length > 0 && (
+              <span className="me-1 text-[10px] font-semibold text-muted-foreground">{t(lang, 'from')} </span>
+            )}
+            {formatPrice(lang, lowestPrice)}
+          </span>
+        </div>
       ) : null}
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle>{item.name[lang]}</CardTitle>
-          <span className="shrink-0 text-lg font-extrabold text-accent [text-shadow:0_0_10px_rgba(255,150,20,.6)]">
-            {variantPrices.length > 0 && (
-              <span className="me-1 text-xs font-semibold text-muted-foreground">{t(lang, 'from')} </span>
-            )}
-            {formatPrice(lang, lowestPrice)}
-          </span>
+          {!item.images?.[0]?.url && (
+            <span className="shrink-0 text-lg font-extrabold text-accent [text-shadow:0_0_10px_rgba(255,150,20,.6)]">
+              {variantPrices.length > 0 && (
+                <span className="me-1 text-xs font-semibold text-muted-foreground">{t(lang, 'from')} </span>
+              )}
+              {formatPrice(lang, lowestPrice)}
+            </span>
+          )}
         </div>
         <CardDescription>{item.description[lang]}</CardDescription>
       </CardHeader>
