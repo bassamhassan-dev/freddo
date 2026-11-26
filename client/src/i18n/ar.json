@@ -168,5 +168,11 @@
   "msg_archived": "مؤرشفة",
   "markRead": "اتقرت",
   "archive": "أرشفة",
-  "noMessages": "مفيش رسائل."
+  "noMessages": "مفيش رسائل.",
+  "loyaltyPoints": "نقطة",
+  "loyaltyEarnNote": "بتكسب نقطة عن كل {n} جنيه من طلباتك المكتملة",
+  "loyaltyType_earn": "نقاط مكتسبة",
+  "loyaltyType_redeem": "نقاط مستبدلة",
+  "loyaltyType_refund": "استرجاع نقاط",
+  "loyaltyType_adjustment": "تعديل من الإدارة"
 }

@@ -168,5 +168,11 @@
   "msg_archived": "Archived",
   "markRead": "Mark read",
   "archive": "Archive",
-  "noMessages": "No messages."
+  "noMessages": "No messages.",
+  "loyaltyPoints": "points",
+  "loyaltyEarnNote": "You earn 1 point for every {n} EGP of completed orders",
+  "loyaltyType_earn": "Points earned",
+  "loyaltyType_redeem": "Points redeemed",
+  "loyaltyType_refund": "Points refund",
+  "loyaltyType_adjustment": "Admin adjustment"
 }

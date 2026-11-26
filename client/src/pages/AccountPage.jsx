@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth.js';
+import { apiMyLoyalty } from '@/api/loyalty.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 
@@ -8,6 +10,11 @@ import { Button } from '@/components/ui/button';
 export default function AccountPage({ lang }) {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const [loyalty, setLoyalty] = useState(null);
+
+  useEffect(() => {
+    apiMyLoyalty().then(setLoyalty).catch(() => setLoyalty(null));
+  }, []);
 
   const onLogout = async () => {
     await logout();
@@ -25,6 +32,28 @@ export default function AccountPage({ lang }) {
         <p className="text-sm text-secondary">
           {t(lang, 'role')}: {t(lang, `role_${user?.role}`)}
         </p>
+        {loyalty && (
+          <div className="mt-2 rounded-xl border border-border bg-background p-4">
+            <p className="text-lg font-black text-primary">
+              {loyalty.balance} {t(lang, 'loyaltyPoints')}
+            </p>
+            <p className="text-xs text-secondary">
+              {t(lang, 'loyaltyEarnNote').replace('{n}', loyalty.egpPerPoint)}
+            </p>
+            {loyalty.transactions.length > 0 && (
+              <ul className="mt-3 flex flex-col gap-1 text-xs text-secondary">
+                {loyalty.transactions.slice(0, 5).map((tx) => (
+                  <li key={tx._id} className="flex justify-between gap-2">
+                    <span>{tx.description || t(lang, `loyaltyType_${tx.type}`)}</span>
+                    <span className={tx.points >= 0 ? 'text-primary' : 'text-red-400'}>
+                      {tx.points >= 0 ? `+${tx.points}` : tx.points}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         <Link to="/orders">
           <Button variant="ghost" className="mt-2 w-full">{t(lang, 'myOrders')}</Button>
         </Link>

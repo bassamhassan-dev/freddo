@@ -3,6 +3,7 @@ import Order, { ORDER_TRANSITIONS } from './order.model.js';
 import MenuItem from '../menu/menuItem.model.js';
 import * as couponService from '../coupons/coupon.service.js';
 import { AppError } from '../../utils/AppError.js';
+import { awardForCompletedOrder } from '../loyalty/loyalty.service.js';
 
 // The order business rules. The single most important one (doc 8.5/9.4):
 // the client sends only slugs, ids and quantities - NEVER prices. Every
@@ -188,5 +189,6 @@ export async function applyTransition(order, nextStatus, actorId) {
   if (nextStatus === 'completed') order.completedAt = new Date();
   if (nextStatus === 'cancelled') order.cancelledAt = new Date();
   await order.save();
+  if (nextStatus === 'completed') await awardForCompletedOrder(order);
   return order;
 }

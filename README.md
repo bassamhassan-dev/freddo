@@ -1,26 +1,30 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 4: orders -
+MERN monorepo (MongoDB, Express, React, Node). Sprint 12: loyalty points -
+earn on completed orders only, append-only ledger with per-order
+idempotency, admin adjustments, balance on the account page. Sprint 11:
+contact messages - public rate-limited form, admin inbox tab. Sprint 10:
+reservations - table assignment, seatings, lead time, customer cancel.
+Sprint 9: coupons - percent/fixed with expiry and usage caps, checkout field.
+Sprint 8: reviews - verified-purchase badge, admin moderation. Sprint 7:
+account management. Sprint 6: barista workspace + recipes. Sprint 5:
+minimal admin. Sprint 4: orders -
 server-authoritative COD orders with snapshots, idempotency, cancellation,
-checkout + order history UI. Sprint 3: guest cart -
-item detail page (variants, add-ons, notes), browser-persisted cart with
-config-based line identity, cart page. Sprint 2: auth (JWT access+refresh
-rotation, unified login). Sprint 1.5: feature-based
-layering (routes - controllers - services - models), unified API response
-shape, AppError + catchAsync + global error handler. Sprint 1: MongoDB wired with
-Mongoose, first bilingual `MenuItem` model, public menu API, and a Tailwind +
-shadcn frontend that renders the menu in Arabic (RTL) and English.
+checkout + order history UI. Sprint 3: guest cart. Sprint 2: auth (JWT
+access+refresh rotation, unified login). Sprint 1.5: feature-based layering
+and the unified API response shape. Sprint 1: MongoDB + first bilingual
+menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 
 ## Layout
 
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
-- `docs/` - walkthroughs and decisions (Arabic: `docs/WALKTHROUGH.md`,
-  `docs/WALKTHROUGH-SPRINT1.md`, `docs/WALKTHROUGH-SPRINT2.md`,
-  `docs/WALKTHROUGH-SPRINT3.md`,
-  `docs/WALKTHROUGH-SPRINT4.md`). `docs/CONVENTIONS.md` is the standing
-  blueprint every sprint follows (layering, error handling, response
-  shape, naming, and the reasoning behind each).
+- `docs/` - walkthroughs and decisions (Egyptian Arabic:
+  `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
+  `docs/WALKTHROUGH-SPRINT12.md`, one per sprint).
+  `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
+  (layering, error handling, response shape, naming, and the reasoning
+  behind each).
 
 ## Tech stack (what and why)
 
@@ -112,6 +116,18 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `GET /api/orders/mine` - the customer's orders
 - `GET /api/orders/:id` - one order (owner or admin)
 - `POST /api/orders/:id/cancel` - cancel while still pending
+- `POST /api/reviews` / `GET /api/reviews` - write (auth) / read (public,
+  visible-only) reviews
+- `POST /api/coupons/validate` - check a coupon code against a cart total
+- `POST /api/reservations` / `GET /api/reservations/mine` /
+  `POST /api/reservations/:id/cancel` - book a table (auth)
+- `POST /api/contact` - public, rate-limited contact form
+- `GET /api/loyalty/mine` - the customer's points balance + recent ledger
+- `POST /api/loyalty/admin/adjust` - admin points correction (reason
+  mandatory)
+- `GET /api/admin/...` - staff dashboards (orders, menu, accounts, reviews,
+  coupons, reservations, contact) - all admin-role only
+- `GET /api/barista/...` - the barista workspace (today's queue, recipes)
 
 Every response follows one shape (see `docs/CONVENTIONS.md`): success is
 `{ success: true, data: ... }`, error is
