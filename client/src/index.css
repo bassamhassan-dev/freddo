@@ -56,3 +56,24 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-freddo-glow, .steam-wisp { animation: none; }
 }
+
+/* Sprint 21 polish: quiet, identity-consistent touches. Everything motion
+   is CSS-only and disabled under prefers-reduced-motion. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up {
+  animation: fade-up 0.45s ease-out both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up { animation: none; }
+}
+
+/* Amber selection and a thin dark scrollbar with an amber hover, so even
+   chrome matches the neon identity. */
+::selection { background: rgba(255, 178, 26, 0.35); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0b0806; }
+::-webkit-scrollbar-thumb { background: #3a2a14; border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 178, 26, 0.45); }

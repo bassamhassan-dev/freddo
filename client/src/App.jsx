@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { DEFAULT_LANG, getDirection, t } from '@/i18n/index.js';
 import { useAuthStore } from '@/store/auth.js';
 import SiteHeader from '@/components/SiteHeader.jsx';
@@ -25,6 +25,13 @@ import HomeBanners from '@/components/HomeBanners.jsx';
 import HeroSection from '@/components/HeroSection.jsx';
 import { useContentStore } from '@/store/content.js';
 
+// Sprint 21 polish: every route change replays a short fade-up on <main>,
+// keyed by path so each page enters cleanly. CSS-only, reduced-motion safe.
+function AnimatedMain({ children }) {
+  const { pathname } = useLocation();
+  return <main key={pathname} className="animate-fade-up">{children}</main>;
+}
+
 export default function App() {
   const [lang, setLang] = useState(DEFAULT_LANG);
   const direction = getDirection(lang);
@@ -49,7 +56,7 @@ export default function App() {
     <BrowserRouter>
       <div dir={direction} className="min-h-screen">
         <SiteHeader lang={lang} onToggleLang={() => setLang(lang === 'ar' ? 'en' : 'ar')} />
-        <main>
+        <AnimatedMain>
           <Routes>
             <Route
               path="/"
@@ -126,7 +133,7 @@ export default function App() {
             />
             <Route path="*" element={<NotFoundPage lang={lang} />} />
           </Routes>
-        </main>
+        </AnimatedMain>
       </div>
     </BrowserRouter>
   );

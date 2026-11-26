@@ -18,13 +18,13 @@ export default function MenuItemCard({ item, lang }) {
   const lowestPrice = Math.min(item.basePrice, ...variantPrices);
 
   return (
-    <Card className="flex h-full flex-col transition-colors hover:border-primary/60">
+    <Card className="group flex h-full flex-col transition-all duration-300 hover:border-primary/60 motion-safe:hover:-translate-y-1">
       <Link to={`/item/${item.slug}`} className="flex h-full flex-col" aria-label={item.name[lang]}>
       {item.images?.[0]?.url ? (
         <img
           src={item.images[0].url}
           alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
-          className="h-36 w-full rounded-t-xl object-cover"
+          className="h-36 w-full rounded-t-xl object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:group-hover:scale-105"
           loading="lazy"
         />
       ) : null}

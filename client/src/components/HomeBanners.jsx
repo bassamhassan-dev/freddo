@@ -50,7 +50,7 @@ export default function HomeBanners({ lang }) {
   return (
     <section className="mx-auto mb-10 flex w-full max-w-4xl flex-col gap-3 px-5">
       {main.length > 0 && (
-        <div>
+        <div key={main[slide]._id} className="animate-fade-up">
           <BannerCard banner={main[slide]} lang={lang} tall />
           {main.length > 1 && (
             <div className="mt-2 flex justify-center gap-1">
@@ -60,7 +60,7 @@ export default function HomeBanners({ lang }) {
                   type="button"
                   aria-label={`slide ${i + 1}`}
                   onClick={() => setSlide(i)}
-                  className={`h-1.5 w-6 rounded-full ${i === slide ? 'bg-primary' : 'bg-border'}`}
+                  className={`h-1.5 w-6 rounded-full transition-colors duration-300 ${i === slide ? 'bg-primary shadow-neon-sm' : 'bg-border'}`}
                 />
               ))}
             </div>
