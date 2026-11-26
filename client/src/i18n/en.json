@@ -156,5 +156,17 @@
   "markCompleted": "Complete",
   "markNoShow": "No-show",
   "indoor": "Indoor",
-  "outdoor": "Outdoor"
+  "outdoor": "Outdoor",
+  "contactTitle": "Contact us",
+  "contactSent": "Your message arrived, we will reply soon.",
+  "subjectPlaceholder": "Subject",
+  "messagePlaceholder": "Write your message...",
+  "sendMessage": "Send",
+  "adminMessagesTab": "Messages",
+  "msg_new": "New",
+  "msg_read": "Read",
+  "msg_archived": "Archived",
+  "markRead": "Mark read",
+  "archive": "Archive",
+  "noMessages": "No messages."
 }

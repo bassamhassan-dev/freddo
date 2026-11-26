@@ -156,5 +156,17 @@
   "markCompleted": "اتم",
   "markNoShow": "ما جهش",
   "indoor": "جوّه",
-  "outdoor": "برّه"
+  "outdoor": "برّه",
+  "contactTitle": "كلمنا",
+  "contactSent": "رسالتك وصلت، هنرد عليك قريب.",
+  "subjectPlaceholder": "الموضوع",
+  "messagePlaceholder": "اكتب رسالتك...",
+  "sendMessage": "ابعت",
+  "adminMessagesTab": "الرسائل",
+  "msg_new": "جديدة",
+  "msg_read": "مقروءة",
+  "msg_archived": "مؤرشفة",
+  "markRead": "اتقرت",
+  "archive": "أرشفة",
+  "noMessages": "مفيش رسائل."
 }

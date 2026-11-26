@@ -17,6 +17,7 @@ import WorkspaceStubPage from '@/pages/WorkspaceStubPage.jsx';
 import AdminPage from '@/pages/AdminPage.jsx';
 import BaristaPage from '@/pages/BaristaPage.jsx';
 import ReservationsPage from '@/pages/ReservationsPage.jsx';
+import ContactPage from '@/pages/ContactPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 
@@ -54,6 +55,7 @@ export default function App() {
             />
             <Route path="/item/:slug" element={<ItemDetailPage lang={lang} />} />
             <Route path="/cart" element={<CartPage lang={lang} />} />
+            <Route path="/contact" element={<ContactPage lang={lang} />} />
             <Route
               path="/reservations"
               element={

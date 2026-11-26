@@ -18,6 +18,9 @@ export default function SiteHeader({ lang, onToggleLang }) {
         <span className="mt-1 text-[11px] font-bold tracking-[0.34em] text-primary">{t(lang, 'appName')}</span>
       </Link>
       <div className="flex items-center gap-2">
+        <Link to="/contact" className="text-sm font-bold text-secondary transition hover:text-primary">
+          {t(lang, 'contactTitle')}
+        </Link>
         <Link to="/cart">
           <Button variant="ghost" size="sm" aria-label={t(lang, 'cartTitle')}>
             {t(lang, 'cartIcon')}{count > 0 ? ` (${count})` : ''}
