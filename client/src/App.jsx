@@ -14,6 +14,8 @@ import LoginPage from '@/pages/LoginPage.jsx';
 import RegisterPage from '@/pages/RegisterPage.jsx';
 import AccountPage from '@/pages/AccountPage.jsx';
 import WorkspaceStubPage from '@/pages/WorkspaceStubPage.jsx';
+import AdminPage from '@/pages/AdminPage.jsx';
+import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 
 export default function App() {
@@ -85,7 +87,14 @@ export default function App() {
               }
             />
             {/* Role homes (doc 3.1); real dashboards land in their sprints. */}
-            <Route path="/admin" element={<WorkspaceStubPage lang={lang} titleKey="adminWorkspace" />} />
+            <Route
+              path="/admin"
+              element={
+                <RequireRole lang={lang} role="admin">
+                  <AdminPage lang={lang} />
+                </RequireRole>
+              }
+            />
             <Route path="/barista" element={<WorkspaceStubPage lang={lang} titleKey="baristaWorkspace" />} />
             <Route path="*" element={<NotFoundPage lang={lang} />} />
           </Routes>

@@ -76,5 +76,15 @@
   "status_preparing": "بيتجهز",
   "status_ready": "جاهز للاستلام",
   "status_completed": "اتسلّم",
-  "status_cancelled": "ملغي"
+  "status_cancelled": "ملغي",
+  "adminOrdersTab": "الطلبات",
+  "adminMenuTab": "المنيو",
+  "adminNoOrders": "مفيش طلبات بالحالة دي.",
+  "available": "متاح",
+  "unavailable": "موقوف",
+  "move_confirmed": "أكّد",
+  "move_preparing": "ابدأ التجهيز",
+  "move_ready": "جاهز",
+  "move_completed": "اتسلّم",
+  "move_cancelled": "إلغاء"
 }

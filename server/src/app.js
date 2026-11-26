@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import healthRouter from './features/health/health.routes.js';
 import authRouter from './features/auth/auth.routes.js';
 import orderRouter from './features/orders/order.routes.js';
+import adminRouter from './features/admin/admin.routes.js';
 import menuRouter from './features/menu/menu.routes.js';
 import { notFound } from './middleware/notFound.js';
 import { globalErrorHandler } from './middleware/globalErrorHandler.js';
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/admin', adminRouter);
 app.use('/api/menu', menuRouter);
 
 app.get('/', (req, res) => {

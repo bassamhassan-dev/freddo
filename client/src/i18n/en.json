@@ -76,5 +76,15 @@
   "status_preparing": "Preparing",
   "status_ready": "Ready for pickup",
   "status_completed": "Completed",
-  "status_cancelled": "Cancelled"
+  "status_cancelled": "Cancelled",
+  "adminOrdersTab": "Orders",
+  "adminMenuTab": "Menu",
+  "adminNoOrders": "No orders with this status.",
+  "available": "Available",
+  "unavailable": "Off",
+  "move_confirmed": "Confirm",
+  "move_preparing": "Start preparing",
+  "move_ready": "Ready",
+  "move_completed": "Complete",
+  "move_cancelled": "Cancel"
 }
