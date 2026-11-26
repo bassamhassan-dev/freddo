@@ -11,7 +11,9 @@ import Coupon from '../features/coupons/coupon.model.js';
 import Order from '../features/orders/order.model.js';
 import User from '../features/auth/user.model.js';
 
+import Category from '../features/catalog/category.model.js';
 import { ROLES } from '../utils/roles.js';
+import { categories as realCategories, realItems } from './realMenu.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
 // Items are upserted by slug, so re-running the seed is safe and never
@@ -477,6 +479,25 @@ async function seed() {
     await MenuItem.updateOne(
       { slug, $or: [{ images: { $exists: false } }, { images: { $size: 0 } }] },
       { $set: { images: [{ url: `/menu/${slug}.svg`, alt: item.name }] } }
+    );
+    upserted += 1;
+  }
+
+  // Real printed menu (Sprint 37). Real categories come first; the old demo
+  // items and categories stay in the database but are switched off, nothing
+  // is deleted. Photos are only replaced while they are still our /menu/ files,
+  // so an image uploaded by the admin survives a re-seed.
+  const realSlugs = new Set(realItems.map((i) => i.slug));
+  await MenuItem.updateMany({ slug: { $nin: [...realSlugs] } }, { $set: { isAvailable: false } });
+  for (const [n, c] of realCategories.entries()) {
+    await Category.updateOne({ slug: c.slug }, { $set: { name: c.name, sortOrder: n } }, { upsert: true });
+  }
+  await Category.updateMany({ slug: { $nin: realCategories.map((c) => c.slug) } }, { $set: { sortOrder: 100 } });
+  for (const { imageUrl, ...item } of realItems) {
+    await MenuItem.updateOne({ slug: item.slug }, { $set: item }, { upsert: true });
+    await MenuItem.updateOne(
+      { slug: item.slug, $or: [{ images: { $size: 0 } }, { 'images.0.url': /^\/menu\// }] },
+      { $set: { images: [{ url: imageUrl, alt: item.name }] } }
     );
     upserted += 1;
   }
