@@ -95,3 +95,27 @@ test('unknown keys are rejected and writes are admin-only', async () => {
   assert.equal((await api('/admin/content', { token: customerToken })).status, 403);
   assert.equal((await api('/admin/content')).status, 401);
 });
+
+test('section keys toggle visibility with no copy; url keys need https', async () => {
+  // Section toggle.
+  const off = await api('/admin/content/sectionAbout', { method: 'PUT', token: adminToken, body: { enabled: false } });
+  assert.equal(off.status, 200);
+  assert.equal(off.body.data.enabled, false);
+  let pub = await api('/content');
+  assert.equal(pub.body.data.sections.sectionAbout, false);
+  const on = await api('/admin/content/sectionAbout', { method: 'PUT', token: adminToken, body: { enabled: true } });
+  assert.equal(on.body.data.enabled, true);
+  pub = await api('/content');
+  assert.equal(pub.body.data.sections.sectionAbout, true);
+
+  // A section PUT without a boolean is rejected.
+  assert.equal((await api('/admin/content/sectionAbout', { method: 'PUT', token: adminToken, body: {} })).status, 400);
+
+  // URL keys: https only, empty reverts.
+  assert.equal((await api('/admin/content/socialFacebook', { method: 'PUT', token: adminToken, body: { url: 'http://fb.com/x' } })).status, 400);
+  const ok = await api('/admin/content/socialFacebook', { method: 'PUT', token: adminToken, body: { url: 'https://facebook.com/freddo' } });
+  assert.equal(ok.status, 200);
+  assert.equal(ok.body.data.value.en, 'https://facebook.com/freddo');
+  pub = await api('/content');
+  assert.equal(pub.body.data.contents.socialFacebook.ar, 'https://facebook.com/freddo');
+});

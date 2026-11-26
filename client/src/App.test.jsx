@@ -53,9 +53,10 @@ describe('App smoke test', () => {
     // Header + hero both carry the wordmark since Sprint 18.
     expect(screen.getAllByText('FREDDO').length).toBeGreaterThan(0);
     // The menu loads from the (mocked) API and shows Arabic names.
-    await waitFor(() => expect(screen.getByText('سبانيش لاتيه')).toBeTruthy());
-    expect(screen.getByText('قهوة ساخنة')).toBeTruthy();
-    expect(screen.getByText('الأكثر مبيعًا')).toBeTruthy();
+    // Featured section + menu grid both show the item.
+    await waitFor(() => expect(screen.getAllByText('سبانيش لاتيه').length).toBeGreaterThan(0));
+    expect(screen.getAllByText('قهوة ساخنة').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('الأكثر مبيعًا').length).toBeGreaterThan(0);
   });
 });
 

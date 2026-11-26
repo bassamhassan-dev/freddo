@@ -4,7 +4,7 @@ import { AppError } from '../../utils/AppError.js';
 import Banner from './banner.model.js';
 import { deleteImage } from '../uploads/cloudinary.service.js';
 
-const PLACEMENTS = ['main', 'secondary_left', 'secondary_right'];
+const PLACEMENTS = ['main', 'secondary_left', 'secondary_right', 'offers'];
 
 // Links must be http(s) URLs or site-relative paths (doc 5.3: validate).
 const isValidLink = (value) =>
@@ -40,7 +40,8 @@ function validatePayload(body) {
   if (!body || !PLACEMENTS.includes(body.placement)) {
     throw new AppError(400, 'VALIDATION', 'مكان البانر مش صحيح', 'Invalid banner placement');
   }
-  if (!body.imageUrl || !/^https?:\/\/.+/.test(body.imageUrl)) {
+  // https uploads or site-relative static assets (seeded photo banners).
+  if (!body.imageUrl || !(/^https?:\/\/.+/.test(body.imageUrl) || /^\/[\w./-]+$/.test(body.imageUrl))) {
     throw new AppError(400, 'INVALID_IMAGE', 'رابط الصورة مش صحيح', 'The image URL is invalid');
   }
   if (body.ctaLink && !isValidLink(body.ctaLink)) {

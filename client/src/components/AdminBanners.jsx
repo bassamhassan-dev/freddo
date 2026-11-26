@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 // Admin banner management (doc 5.3): create, edit, delete, reorder via
 // sortOrder, activate/deactivate, and schedule the campaign window.
-const PLACEMENTS = ['main', 'secondary_left', 'secondary_right'];
+const PLACEMENTS = ['main', 'secondary_left', 'secondary_right', 'offers'];
 const empty = {
   placement: 'main',
   cloudinaryPublicId: '',

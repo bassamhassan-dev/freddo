@@ -14,7 +14,7 @@ const bannerSchema = new mongoose.Schema(
   {
     placement: {
       type: String,
-      enum: ['main', 'secondary_left', 'secondary_right'],
+      enum: ['main', 'secondary_left', 'secondary_right', 'offers'],
       required: true,
       index: true,
     },

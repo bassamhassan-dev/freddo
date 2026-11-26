@@ -9,9 +9,13 @@ const siteContentSchema = new mongoose.Schema(
   {
     key: { type: String, required: true, unique: true, trim: true },
     value: {
-      ar: { type: String, trim: true, maxlength: 500, required: true },
-      en: { type: String, trim: true, maxlength: 500, required: true },
+      // Optional: section keys only carry the enabled flag, copy and URL
+      // keys fill these. Maxlength keeps the CMS lean on purpose.
+      ar: { type: String, trim: true, maxlength: 500 },
+      en: { type: String, trim: true, maxlength: 500 },
     },
+    // For section keys: is this homepage section visible right now.
+    enabled: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

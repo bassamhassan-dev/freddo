@@ -23,6 +23,8 @@ import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 import HomeBanners from '@/components/HomeBanners.jsx';
 import HeroSlider from '@/components/HeroSlider.jsx';
+import { FeaturedSection, OffersSection, AboutSection, GallerySection, InfoStrip } from '@/components/HomeSections.jsx';
+import SiteFooter from '@/components/SiteFooter.jsx';
 import { useContentStore } from '@/store/content.js';
 
 // Sprint 21 polish: every route change replays a short fade-up on <main>,
@@ -64,7 +66,12 @@ export default function App() {
                 <>
                   <HeroSlider lang={lang} />
                   <HomeBanners lang={lang} />
+                  <FeaturedSection lang={lang} />
                   <MenuPage lang={lang} />
+                  <OffersSection lang={lang} />
+                  <AboutSection lang={lang} />
+                  <GallerySection lang={lang} />
+                  <InfoStrip lang={lang} />
                 </>
               }
             />
@@ -134,6 +141,7 @@ export default function App() {
             <Route path="*" element={<NotFoundPage lang={lang} />} />
           </Routes>
         </AnimatedMain>
+        <SiteFooter lang={lang} />
       </div>
     </BrowserRouter>
   );

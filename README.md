@@ -35,9 +35,11 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 
 - `server/` - Express API (Node, ES modules)
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
-- `docs/` - walkthroughs and decisions (Egyptian Arabic:
-  `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT18.md`, one per sprint).
+- `docs/` - walkthroughs and decisions (Egyptian Arabic: one per sprint,
+  `docs/WALKTHROUGH*.md`, currently up to Sprint 23b).
+- `client/public/photos/` - the cafe's real photos (optimized JPEGs) used by
+  the hero slider, banners, about and gallery sections; each slot is
+  replaceable from the admin CMS.
   `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
   (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning
@@ -157,9 +159,11 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/admin/uploads` - image upload to Cloudinary (admin; 503
   `CLOUDINARY_NOT_CONFIGURED` until the env vars are set);
   `GET /api/admin/uploads/status` reports whether uploads are live
-- `GET /api/content` - homepage copy overrides (public);
-  `GET /api/admin/content` + `PUT /api/admin/content/:key` (admin)
-- `GET /api/banners?placement=main|secondary_left|secondary_right` -
+- `GET /api/content` - homepage copy overrides + section visibility
+  (public); `GET /api/admin/content` + `PUT /api/admin/content/:key` (admin).
+  Three key kinds: bilingual copy, URL/photo keys (https or site-relative),
+  and section show/hide toggles
+- `GET /api/banners?placement=main|secondary_left|secondary_right|offers` -
   active in-window banners (public); CRUD under `GET/POST /api/admin/banners`
   and `PATCH/DELETE /api/admin/banners/:id` (admin)
 - `POST /api/loyalty/admin/adjust` - admin points correction (reason

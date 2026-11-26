@@ -1,10 +1,10 @@
 // The centered Freddo mark used on the auth pages and the hero: steam
 // wisps over the glowing wordmark. Pure CSS animation (no libraries),
 // paused for users who prefer reduced motion.
-export default function FreddoMark({ subtitle }) {
+export default function FreddoMark({ subtitle, small = false }) {
   return (
     <div className="flex flex-col items-center leading-none">
-      <div className="mb-1 flex items-end gap-1" aria-hidden="true">
+      <div className={`mb-1 flex items-end gap-1 ${small ? 'hidden' : ''}`} aria-hidden="true">
         {[0, 1, 2].map((i) => (
           <span
             key={i}
@@ -13,7 +13,7 @@ export default function FreddoMark({ subtitle }) {
           />
         ))}
       </div>
-      <span className="animate-freddo-glow font-brand text-5xl font-black tracking-wide text-[#fff6e6]">
+      <span className={`animate-freddo-glow font-brand ${small ? 'text-2xl' : 'text-5xl'} font-black tracking-wide text-[#fff6e6]`}>
         FREDDO
       </span>
       {subtitle && <span className="mt-2 text-[11px] font-bold tracking-[0.34em] text-primary">{subtitle}</span>}

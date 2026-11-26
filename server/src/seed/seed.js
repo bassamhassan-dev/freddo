@@ -478,11 +478,13 @@ async function seed() {
   // fresh setup. Upserted by English title; the admin can edit or delete
   // them like any banner (Sprint 13/16).
   const sampleBanners = [
-    { placement: 'main', title: { ar: 'عرض الأسبوع', en: 'Deal of the week' }, description: { ar: 'خصم ٢٥٪ على السبانش لاتيه', en: '25% off Spanish Latte' }, imageUrl: '/banners/offer-main.svg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/item/spanish-latte', sortOrder: 0 },
-    { placement: 'main', title: { ar: 'وصل جديد', en: 'Just landed' }, description: { ar: 'تسوية فريدو الخاصة، بن محمص طازة كل أسبوع', en: 'The Freddo house roast, freshly roasted every week' }, imageUrl: '/banners/new-roast-main.svg', sortOrder: 1 },
-    { placement: 'main', title: { ar: 'ليالي فريدو', en: 'Freddo nights' }, description: { ar: 'سهرتك أحلى مع قهوتنا', en: 'Better nights with our coffee' }, imageUrl: '/banners/night-main.svg', ctaText: { ar: 'احجز ترابيزتك', en: 'Book a table' }, ctaLink: '/reservations', sortOrder: 2 },
-    { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/banners/book-secondary.svg', ctaLink: '/reservations', sortOrder: 0 },
-    { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/banners/loyalty-secondary.svg', ctaLink: '/account', sortOrder: 0 },
+    { placement: 'main', title: { ar: 'قهوتك.. على مزاجك', en: 'Your Coffee.. Your Mood' }, description: { ar: 'فريدو - الواسطى، بني سويف', en: 'Freddo - El Wasta, Beni Suef' }, imageUrl: '/photos/hero-storefront.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/menu', sortOrder: 0 },
+    { placement: 'main', title: { ar: 'قهوة كويسة.. مزاج كويس', en: 'Good Coffee Good Mood' }, description: { ar: 'تسوية فريدو الخاصة، بن محمص طازة', en: 'The Freddo house roast, freshly roasted' }, imageUrl: '/photos/hero-counter.jpg', ctaText: { ar: 'اتفضل على المنيو', en: 'See the menu' }, ctaLink: '/menu', sortOrder: 1 },
+    { placement: 'main', title: { ar: 'مشروبك المفضل مستنيك', en: 'Your favorite drink is waiting' }, description: { ar: 'جرب توقيعات فريدو', en: 'Try the Freddo signatures' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/menu', sortOrder: 2 },
+    { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/photos/photo-pink-room.jpg', ctaLink: '/reservations', sortOrder: 0 },
+    { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/photos/photo-grey-seating.jpg', ctaLink: '/account', sortOrder: 0 },
+    { placement: 'offers', title: { ar: 'خصم الترحيب', en: 'Welcome deal' }, description: { ar: 'كود WELCOME10 على أول طلب', en: 'Code WELCOME10 on your first order' }, imageUrl: '/photos/hero-drinks.jpg', ctaText: { ar: 'اطلب بخصم', en: 'Order with the deal' }, ctaLink: '/menu', sortOrder: 0 },
+    { placement: 'offers', title: { ar: 'عرض الويكند', en: 'Weekend vibes' }, description: { ar: 'اجمع صحابك عندنا', en: 'Bring your crew over' }, imageUrl: '/photos/photo-pink-seating.jpg', ctaText: { ar: 'احجز مكانك', en: 'Book your spot' }, ctaLink: '/reservations', sortOrder: 1 },
   ];
   // A welcome coupon so the checkout discount flow (Sprint 10) is visible
   // on first run. Upserted by code; admin edits survive re-seeds.
