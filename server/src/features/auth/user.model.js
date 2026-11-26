@@ -33,6 +33,13 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ALL_ROLES, default: ROLES.CUSTOMER },
     // Optional contact phone, set when an admin creates a staff account.
     phone: { type: String, trim: true },
+    // Email verification (Sprint 33): a customer can browse right after
+    // registering, but ordering is blocked until the link in the
+    // verification email is clicked. The token is stored as a sha256 hash
+    // (like the refresh tokens) - the raw token only exists in the email.
+    emailVerifiedAt: { type: Date },
+    verificationTokenHash: { type: String, select: false },
+    verificationTokenExpiresAt: { type: Date, select: false },
     // Disabled accounts exist but cannot log in (doc 3.3).
     isActive: { type: Boolean, default: true },
     lastLoginAt: { type: Date },
@@ -58,6 +65,7 @@ userSchema.methods.toPublicJSON = function toPublicJSON() {
     email: this.email,
     role: this.role,
     phone: this.phone,
+    emailVerified: Boolean(this.emailVerifiedAt),
   };
 };
 

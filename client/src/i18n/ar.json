@@ -357,5 +357,12 @@
   "fulfillment_delivery": "توصيل للبيت",
   "deliveryAddress": "عنوان التوصيل",
   "deliveryAddressPlaceholder": "المنطقة، الشارع، رقم العمارة، علامة مميزة...",
-  "codNoteDelivery": "الدفع كاش عند التوصيل."
+  "codNoteDelivery": "الدفع كاش عند التوصيل.",
+  "verifyEmailTitle": "تأكيد الإيميل",
+  "verifyEmailWorking": "بنأكد إيميلك...",
+  "verifyEmailOk": "تمام! إيميلك اتأكد، تقدر تطلب دلوقتي.",
+  "verifyEmailBad": "اللينك ده مش صالح أو خلص. سجل دخول واطلب لينك جديد من صفحة التشيك آوت.",
+  "emailVerifyNotice": "لازم تأكد إيميلك قبل ما تطلب. بعطنا لينك على إيميلك لو ماوصلكش، دوس الزرار ده.",
+  "resendVerification": "ابعت لينك التأكيد تاني",
+  "resendVerificationSent": "اتبعت! بص على إيميلك (والسبام)."
 }

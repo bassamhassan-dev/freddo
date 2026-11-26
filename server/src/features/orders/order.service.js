@@ -4,6 +4,7 @@ import MenuItem from '../menu/menuItem.model.js';
 import * as couponService from '../coupons/coupon.service.js';
 import { AppError } from '../../utils/AppError.js';
 import { awardForCompletedOrder, loyaltyDiscountFor, redeemForOrder, refundForCancelledOrder } from '../loyalty/loyalty.service.js';
+import { sendOrderConfirmationEmail } from '../../services/mail.service.js';
 
 // The order business rules. The single most important one (doc 8.5/9.4):
 // the client sends only slugs, ids and quantities - NEVER prices. Every
@@ -77,6 +78,13 @@ async function priceLine(requested) {
 }
 
 export async function createOrder(user, { phone, notes, lines, idempotencyKey, couponCode, redeemPoints, fulfillmentType, deliveryAddress }) {
+  // Sprint 33: ordering requires a verified email. Browsing and cart are
+  // open to everyone; the gate sits here so it cannot be skipped from the
+  // client. OAuth users are verified by the provider, seeded/demo users
+  // are verified at seed time.
+  if (user.role === 'customer' && !user.emailVerifiedAt) {
+    throw new AppError(403, 'EMAIL_NOT_VERIFIED', 'أكد إيميلك الأول من اللينك اللي اتبعتلك عشان تقدر تطلب', 'Confirm your email from the link we sent you before ordering');
+  }
   const fulfillment = fulfillmentType === 'delivery' ? 'delivery' : 'pickup';
   const address = typeof deliveryAddress === 'string' ? deliveryAddress.trim().slice(0, 300) : '';
   if (fulfillment === 'delivery' && address.length < 5) {
@@ -161,10 +169,15 @@ export async function createOrder(user, { phone, notes, lines, idempotencyKey, c
         // see comment above
       }
     }
+    // Order-confirmation email (Sprint 33). Awaiting keeps tests
+    // deterministic; sendMailSafe swallows transport errors, so a mail
+    // outage can never fail a placed order.
+    await sendOrderConfirmationEmail(user, order);
     return { order, replayed: false };
   } catch (err) {
     if (err.code === 11000 && err.message.includes('orderNumber')) {
       const order = await Order.create(build()); // one retry on number collision
+      await sendOrderConfirmationEmail(user, order);
       return { order, replayed: false };
     }
     if (err.code === 11000 && err.message.includes('idempotencyKey')) {

@@ -18,7 +18,7 @@ let mongod;
 
 async function makeUser(email) {
   const passwordHash = await User.hashPassword('secret123');
-  const user = await User.create({ name: 'Test', email, passwordHash, role: 'customer' });
+  const user = await User.create({ name: 'Test', email, passwordHash, role: 'customer', emailVerifiedAt: new Date() });
   await LoyaltyAccount.create({ user: user._id, balance: REDEEM_POINTS, lifetimeEarned: REDEEM_POINTS });
   return user;
 }

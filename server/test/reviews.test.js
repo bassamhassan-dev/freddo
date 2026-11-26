@@ -32,7 +32,7 @@ async function api(path, { method = 'GET', body, token } = {}) {
 
 async function makeUser(email, role = ROLES.CUSTOMER) {
   const passwordHash = await User.hashPassword('secret123');
-  const user = await User.create({ name: 'Reviewer', email, passwordHash, role });
+  const user = await User.create({ name: 'Reviewer', email, passwordHash, role, emailVerifiedAt: new Date() });
   return { user, token: signAccessToken(user) };
 }
 

@@ -357,5 +357,12 @@
   "fulfillment_delivery": "Delivery",
   "deliveryAddress": "Delivery address",
   "deliveryAddressPlaceholder": "Area, street, building, landmark...",
-  "codNoteDelivery": "Cash on delivery."
+  "codNoteDelivery": "Cash on delivery.",
+  "verifyEmailTitle": "Email confirmation",
+  "verifyEmailWorking": "Confirming your email...",
+  "verifyEmailOk": "Done! Your email is confirmed, you can order now.",
+  "verifyEmailBad": "This link is invalid or expired. Log in and request a new one from checkout.",
+  "emailVerifyNotice": "You need to confirm your email before ordering. We sent you a link - hit the button if it never arrived.",
+  "resendVerification": "Resend confirmation link",
+  "resendVerificationSent": "Sent! Check your inbox (and spam)."
 }

@@ -61,6 +61,9 @@ export async function handleOAuthCallback(provider, code, redirectUri) {
   if (!user.isActive) {
     throw new AppError(403, 'AUTH_INACTIVE', 'الحساب ده متوقف، كلم الإدارة', 'This account is disabled, contact the café');
   }
+  // The provider already verified this email (checked above), so OAuth
+  // accounts never need the email-link step.
+  if (!user.emailVerifiedAt) user.emailVerifiedAt = new Date();
   user.lastLoginAt = new Date();
   await user.save();
   return { user, ...(await issueSession(user)) };

@@ -552,7 +552,7 @@ async function seed() {
   let demo = await User.findOne({ email: demoEmail });
   if (!demo) {
     const passwordHash = await User.hashPassword('demo12345');
-    demo = await User.create({ name: 'ضيف فريدو', email: demoEmail, passwordHash, role: 'customer' });
+    demo = await User.create({ name: 'ضيف فريدو', email: demoEmail, passwordHash, role: 'customer', emailVerifiedAt: new Date() });
   }
   const orderableSlugs = items.filter((i) => i.isAvailable).map((i) => i.slug);
   const orderableDocs = await MenuItem.find({ slug: { $in: orderableSlugs } }).select('_id slug name basePrice');
@@ -609,6 +609,7 @@ async function seed() {
           passwordHash,
           role: ROLES.ADMIN,
           isActive: true,
+          emailVerifiedAt: new Date(),
         },
       },
       { upsert: true }

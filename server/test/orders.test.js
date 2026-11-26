@@ -43,7 +43,7 @@ async function api(path, { method = 'GET', body, token, headers = {} } = {}) {
 
 async function makeCustomer(email) {
   const passwordHash = await User.hashPassword('secret123');
-  const user = await User.create({ name: 'Test Customer', email, passwordHash });
+  const user = await User.create({ name: 'Test Customer', email, passwordHash, emailVerifiedAt: new Date() });
   const { signAccessToken } = await import('../src/utils/tokens.js');
   return { user, token: signAccessToken(user) };
 }

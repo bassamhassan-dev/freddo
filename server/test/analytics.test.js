@@ -48,7 +48,7 @@ before(async () => {
   const passwordHash = await User.hashPassword('secret123');
   const admin = await User.create({ name: 'Admin', email: 'admin@example.com', passwordHash, role: 'admin' });
   adminToken = signAccessToken(admin);
-  customer = await User.create({ name: 'Cust', email: 'c@example.com', passwordHash });
+  customer = await User.create({ name: 'Cust', email: 'c@example.com', passwordHash, emailVerifiedAt: new Date() });
   await new Promise((resolve) => {
     server = app.listen(0, () => {
       baseUrl = `http://localhost:${server.address().port}`;

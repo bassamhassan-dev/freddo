@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCartStore, cartSubtotal } from '@/store/cart.js';
 import { apiCreateOrder } from '@/api/orders.js';
+import { apiResendVerification } from '@/api/auth.js';
 import { getMenu } from '@/api/menu.js';
 import { useAuthStore } from '@/store/auth.js';
 import { apiValidateCoupon } from '@/api/coupons.js';
@@ -71,6 +72,8 @@ export default function CheckoutPage({ lang }) {
   const [address, setAddress] = useState('');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState(null);
+  const [resent, setResent] = useState(false);
+  const unverified = user && user.emailVerified === false;
   const [busy, setBusy] = useState(false);
   // One key per checkout attempt: a double-click or retry replays safely
   // instead of placing the order twice (doc 9.4 idempotency).
@@ -112,11 +115,31 @@ export default function CheckoutPage({ lang }) {
     }
   };
 
+  const onResend = async () => {
+    try {
+      await apiResendVerification();
+      setResent(true);
+    } catch {
+      setResent(false);
+    }
+  };
+
   return (
     <section className="mx-auto w-full max-w-md px-5 pb-16">
       <h2 className="mb-6 text-center text-3xl font-black text-primary [text-shadow:0_0_14px_rgba(255,150,20,.6)]">
         {t(lang, 'checkoutTitle')}
       </h2>
+
+      {unverified && (
+        <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-accent bg-card p-4 text-sm">
+          <p className="text-foreground">{t(lang, 'emailVerifyNotice')}</p>
+          {resent ? (
+            <p className="font-semibold text-accent">{t(lang, 'resendVerificationSent')}</p>
+          ) : (
+            <Button variant="ghost" type="button" onClick={onResend}>{t(lang, 'resendVerification')}</Button>
+          )}
+        </div>
+      )}
 
       <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-border bg-card p-4">
         {lines.map((line) => (

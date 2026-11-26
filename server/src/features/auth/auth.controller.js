@@ -44,6 +44,20 @@ export const register = catchAsync(async (req, res) => {
   sendSuccess(res, 201, { user: user.toPublicJSON(), accessToken });
 });
 
+export const verifyEmail = catchAsync(async (req, res) => {
+  const { token } = req.body || {};
+  if (typeof token !== 'string' || !token) {
+    throw new AppError(400, 'VALIDATION_ERROR', 'لينك التأكيد ناقص', 'The verification link is incomplete');
+  }
+  const { user } = await authService.verifyEmail(token);
+  sendSuccess(res, 200, { user: user.toPublicJSON() });
+});
+
+export const resendVerification = catchAsync(async (req, res) => {
+  await authService.resendVerification(req.user);
+  sendSuccess(res, 200, { sent: true });
+});
+
 export const login = catchAsync(async (req, res) => {
   const { email, password } = req.body || {};
   if (typeof email !== 'string' || typeof password !== 'string') {

@@ -17,6 +17,16 @@ export async function apiRefresh() {
   return data;
 }
 
+export async function apiVerifyEmail(token) {
+  const { data } = await request('/api/auth/verify-email', { method: 'POST', body: { token } });
+  return data;
+}
+
+export async function apiResendVerification() {
+  const { data } = await request('/api/auth/resend-verification', { method: 'POST' });
+  return data;
+}
+
 export async function apiLogout() {
   await request('/api/auth/logout', { method: 'POST' });
 }

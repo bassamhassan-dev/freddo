@@ -28,6 +28,8 @@ const authLimiter = rateLimit({
 const router = Router();
 
 router.post('/register', authLimiter, controller.register);
+router.post('/verify-email', authLimiter, controller.verifyEmail);
+router.post('/resend-verification', authLimiter, requireAuth, controller.resendVerification);
 router.post('/login', authLimiter, controller.login);
 router.post('/refresh', controller.refresh);
 router.post('/logout', controller.logout);

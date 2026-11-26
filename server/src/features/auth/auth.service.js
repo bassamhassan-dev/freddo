@@ -1,5 +1,7 @@
+import crypto from 'node:crypto';
 import mongoose from 'mongoose';
 import User from './user.model.js';
+import { sendVerificationEmail } from '../../services/mail.service.js';
 import RefreshToken from './refreshToken.model.js';
 import { AppError } from '../../utils/AppError.js';
 import { ROLES } from '../../utils/roles.js';
@@ -34,10 +36,32 @@ export async function issueSession(user) {
 // Public registration creates customers only (doc 3.2). Any role sent in
 // the payload is ignored by picking fields explicitly - mass assignment is
 // impossible because the request body is never spread into the document.
+// Registration issues a session right away (the customer can browse and
+// fill a cart), but the account starts unverified: ordering is blocked
+// until the emailed link is clicked. The raw token goes only to the
+// inbox; we store its sha256 hash with a 24-hour expiry.
+function newVerificationToken() {
+  const raw = crypto.randomBytes(32).toString('hex');
+  return {
+    raw,
+    hash: crypto.createHash('sha256').update(raw).digest('hex'),
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  };
+}
+
+async function issueVerification(user) {
+  const token = newVerificationToken();
+  user.verificationTokenHash = token.hash;
+  user.verificationTokenExpiresAt = token.expiresAt;
+  await user.save();
+  await sendVerificationEmail(user, token.raw);
+}
+
 export async function registerCustomer({ name, email, password }) {
   const passwordHash = await User.hashPassword(password);
   try {
     const user = await User.create({ name, email, passwordHash, role: ROLES.CUSTOMER });
+    await issueVerification(user);
     return { user, ...(await issueSession(user)) };
   } catch (err) {
     if (err.code === 11000) {
@@ -45,6 +69,26 @@ export async function registerCustomer({ name, email, password }) {
     }
     throw err;
   }
+}
+
+export async function verifyEmail(rawToken) {
+  const hash = crypto.createHash('sha256').update(String(rawToken || '')).digest('hex');
+  const user = await User.findOne({ verificationTokenHash: hash }).select('+verificationTokenHash +verificationTokenExpiresAt');
+  if (!user || !user.verificationTokenExpiresAt || user.verificationTokenExpiresAt < new Date()) {
+    throw new AppError(400, 'INVALID_VERIFICATION_TOKEN', 'اللينك ده مش صالح أو خلص، اطلب لينك جديد', 'This link is invalid or expired, request a new one');
+  }
+  user.emailVerifiedAt = user.emailVerifiedAt || new Date();
+  user.verificationTokenHash = undefined;
+  user.verificationTokenExpiresAt = undefined;
+  await user.save();
+  return { user };
+}
+
+export async function resendVerification(user) {
+  if (user.emailVerifiedAt) {
+    throw new AppError(400, 'ALREADY_VERIFIED', 'إيميلك مؤكد بالفعل', 'Your email is already verified');
+  }
+  await issueVerification(user);
 }
 
 export async function login({ email, password }) {

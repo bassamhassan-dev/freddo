@@ -13,6 +13,7 @@ import OrderConfirmationPage from '@/pages/OrderConfirmationPage.jsx';
 import LoginPage from '@/pages/LoginPage.jsx';
 import OAuthCallbackPage from '@/pages/OAuthCallbackPage.jsx';
 import RegisterPage from '@/pages/RegisterPage.jsx';
+import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import AccountPage from '@/pages/AccountPage.jsx';
 import WorkspaceStubPage from '@/pages/WorkspaceStubPage.jsx';
 import AdminPage from '@/pages/AdminPage.jsx';
@@ -141,6 +142,7 @@ export default function App() {
             <Route path="/login" element={<LoginPage lang={lang} />} />
             <Route path="/oauth/callback" element={<OAuthCallbackPage lang={lang} />} />
             <Route path="/register" element={<RegisterPage lang={lang} />} />
+            <Route path="/verify-email" element={<VerifyEmailPage lang={lang} />} />
             <Route
               path="/account"
               element={
