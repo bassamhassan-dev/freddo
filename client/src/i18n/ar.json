@@ -1,5 +1,16 @@
 {
   "appName": "فريدو كافيه",
   "tagline": "قهوة تستاهل السهر",
-  "welcome": "أهلاً بيك في فريدو"
+  "welcome": "أهلاً بيك في فريدو",
+  "menuTitle": "المنيو",
+  "menuSubtitle": "اختار اللي يفتح نفسك",
+  "menuLoading": "بنجهّز المنيو...",
+  "menuError": "المنيو ماتحمّلش. اتأكد إن السيرفر شغال وجرب تاني.",
+  "menuEmpty": "المنيو فاضي دلوقتي، ارجعلنا كمان شوية.",
+  "menuRetry": "حاول تاني",
+  "allCategories": "الكل",
+  "featured": "مميز",
+  "bestSeller": "الأكثر مبيعًا",
+  "from": "يبدأ من",
+  "languageSwitch": "English"
 }

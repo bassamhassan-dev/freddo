@@ -1,5 +1,16 @@
 {
   "appName": "Freddo Cafe",
   "tagline": "Coffee worth staying up for",
-  "welcome": "Welcome to Freddo"
+  "welcome": "Welcome to Freddo",
+  "menuTitle": "Menu",
+  "menuSubtitle": "Pick what hits the spot",
+  "menuLoading": "Getting the menu ready...",
+  "menuError": "The menu did not load. Make sure the server is running and try again.",
+  "menuEmpty": "The menu is empty right now, check back soon.",
+  "menuRetry": "Try again",
+  "allCategories": "All",
+  "featured": "Featured",
+  "bestSeller": "Best seller",
+  "from": "from",
+  "languageSwitch": "عربي"
 }
