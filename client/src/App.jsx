@@ -22,7 +22,8 @@ import ContactPage from '@/pages/ContactPage.jsx';
 import RequireRole from '@/components/RequireRole.jsx';
 import NotFoundPage from '@/pages/NotFoundPage.jsx';
 import HomeBanners from '@/components/HomeBanners.jsx';
-import { useContentStore, ct } from '@/store/content.js';
+import HeroSection from '@/components/HeroSection.jsx';
+import { useContentStore } from '@/store/content.js';
 
 export default function App() {
   const [lang, setLang] = useState(DEFAULT_LANG);
@@ -41,7 +42,7 @@ export default function App() {
     document.documentElement.dir = direction;
   }, [lang, direction]);
 
-  const { overrides, load } = useContentStore();
+  const load = useContentStore((s) => s.load);
   useEffect(() => { load(); }, [load]);
 
   return (
@@ -54,7 +55,7 @@ export default function App() {
               path="/"
               element={
                 <>
-                  <p className="mb-8 text-center text-lg font-semibold text-secondary">{ct(overrides, lang, 'tagline', t)}</p>
+                  <HeroSection lang={lang} />
                   <HomeBanners lang={lang} />
                   <MenuPage lang={lang} />
                 </>

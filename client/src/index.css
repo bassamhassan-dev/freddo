@@ -32,3 +32,27 @@
     background-attachment: fixed;
   }
 }
+
+/* Sprint 18: the Freddo glow. One slow pulse on the neon wordmark - an
+   ambient identity animation, not a distraction. */
+@keyframes freddo-glow {
+  0%, 100% { text-shadow: 0 0 12px rgba(255, 178, 26, 0.55), 0 0 42px rgba(255, 150, 20, 0.25); }
+  50% { text-shadow: 0 0 22px rgba(255, 178, 26, 0.95), 0 0 70px rgba(255, 150, 20, 0.45); }
+}
+.animate-freddo-glow {
+  animation: freddo-glow 3.2s ease-in-out infinite;
+}
+
+/* Rising steam wisps for the hero/auth mark: three blurred bars drifting
+   up and fading, staggered by their inline animation-delay. */
+@keyframes freddo-steam {
+  0% { transform: translateY(6px) scaleY(0.6); opacity: 0; }
+  35% { opacity: 0.85; }
+  100% { transform: translateY(-14px) scaleY(1.15); opacity: 0; }
+}
+.steam-wisp {
+  animation: freddo-steam 2.6s ease-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-freddo-glow, .steam-wisp { animation: none; }
+}

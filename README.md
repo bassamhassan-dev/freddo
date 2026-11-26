@@ -1,6 +1,8 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 17: OAuth sign-in
+MERN monorepo (MongoDB, Express, React, Node). Sprint 18: visual
+identity - always-on homepage hero, glowing Freddo mark + steam animation
+on hero/login/register, register confirm-password. Sprint 17: OAuth sign-in
 (Google + Facebook) - full authorization-code flow, verified-email account
 linking, env-gated provider buttons, signed-state CSRF. Sprint 16:
 Cloudinary
@@ -34,7 +36,7 @@ menu API + the Tailwind/shadcn frontend in Arabic (RTL) and English.
 - `client/` - React frontend (Vite, Tailwind CSS, shadcn-style components)
 - `docs/` - walkthroughs and decisions (Egyptian Arabic:
   `docs/WALKTHROUGH.md` and `docs/WALKTHROUGH-SPRINT1.md` through
-  `docs/WALKTHROUGH-SPRINT17.md`, one per sprint).
+  `docs/WALKTHROUGH-SPRINT18.md`, one per sprint).
   `docs/OVERNIGHT-SUMMARY.md` is the 27-Nov overnight build summary
   (Egyptian Arabic). `docs/CONVENTIONS.md` is the standing blueprint every sprint follows
   (layering, error handling, response shape, naming, and the reasoning

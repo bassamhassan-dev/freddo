@@ -5,6 +5,7 @@ import { homeForRole } from '@/auth/roleRedirect.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 import OAuthButtons from '@/components/OAuthButtons.jsx';
+import FreddoMark from '@/components/FreddoMark.jsx';
 
 // The one login page for all roles (doc 3.1). The role returned by the
 // backend decides where the user lands - the page never asks for it.
@@ -46,6 +47,9 @@ export default function LoginPage({ lang }) {
         {t(lang, 'loginTitle')}
       </h2>
       <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+        <div className="mb-2 flex justify-center">
+          <FreddoMark />
+        </div>
         <label className="flex flex-col gap-1 text-sm font-semibold text-secondary">
           {t(lang, 'email')}
           <input

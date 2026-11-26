@@ -4,6 +4,7 @@ import { useAuthStore } from '@/store/auth.js';
 import { t } from '@/i18n/index.js';
 import { Button } from '@/components/ui/button';
 import OAuthButtons from '@/components/OAuthButtons.jsx';
+import FreddoMark from '@/components/FreddoMark.jsx';
 
 // Public registration creates customer accounts only (doc 3.2) - the
 // backend ignores any role field, and this form never sends one.
@@ -13,6 +14,7 @@ export default function RegisterPage({ lang }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirm, setConfirm] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
 
@@ -20,6 +22,13 @@ export default function RegisterPage({ lang }) {
     event.preventDefault();
     setBusy(true);
     setError(null);
+    // Confirm-password is checked on the client only; the server keeps
+    // validating the real password rules (doc 3.2).
+    if (password !== confirm) {
+      setError(t(lang, 'passwordMismatch'));
+      setBusy(false);
+      return;
+    }
     try {
       await register({ name, email, password });
       navigate('/', { replace: true }); // customers land on the menu
@@ -36,6 +45,9 @@ export default function RegisterPage({ lang }) {
         {t(lang, 'registerTitle')}
       </h2>
       <form onSubmit={onSubmit} className="flex flex-col gap-4 rounded-2xl border border-border bg-card p-6">
+        <div className="mb-2 flex justify-center">
+          <FreddoMark />
+        </div>
         <label className="flex flex-col gap-1 text-sm font-semibold text-secondary">
           {t(lang, 'fullName')}
           <input
@@ -70,6 +82,17 @@ export default function RegisterPage({ lang }) {
             className="rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-primary"
           />
           <span className="text-xs font-normal text-muted">{t(lang, 'passwordHint')}</span>
+        </label>
+        <label className="flex flex-col gap-1 text-sm font-semibold text-secondary">
+          {t(lang, 'confirmPassword')}
+          <input
+            type="password"
+            required
+            autoComplete="new-password"
+            value={confirm}
+            onChange={(e) => setConfirm(e.target.value)}
+            className="rounded-lg border border-border bg-background px-3 py-2 text-foreground outline-none focus:border-primary"
+          />
         </label>
         {error && <p className="text-sm font-semibold text-red-400">{error}</p>}
         <Button type="submit" disabled={busy}>

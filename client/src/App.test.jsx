@@ -50,7 +50,8 @@ describe('App smoke test', () => {
     render(<App />);
     const header = screen.getByRole('banner');
     expect(header.parentElement.getAttribute('dir')).toBe('rtl');
-    expect(screen.getByText('FREDDO')).toBeTruthy();
+    // Header + hero both carry the wordmark since Sprint 18.
+    expect(screen.getAllByText('FREDDO').length).toBeGreaterThan(0);
     // The menu loads from the (mocked) API and shows Arabic names.
     await waitFor(() => expect(screen.getByText('سبانيش لاتيه')).toBeTruthy());
     expect(screen.getByText('قهوة ساخنة')).toBeTruthy();

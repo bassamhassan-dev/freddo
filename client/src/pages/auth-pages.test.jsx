@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter } from 'react-router-dom';
 import LoginPage from './LoginPage.jsx';
@@ -58,5 +58,26 @@ describe('role redirect map (doc 3.1)', () => {
     expect(homeForRole('barista')).toBe('/barista');
     expect(homeForRole('customer')).toBe('/');
     expect(homeForRole('whatever')).toBe('/');
+  });
+});
+
+describe('RegisterPage confirm password (Sprint 18)', () => {
+  it('blocks submit with a bilingual mismatch message and never calls the API', async () => {
+    render(
+      <MemoryRouter>
+        <RegisterPage lang="ar" />
+      </MemoryRouter>
+    );
+    fireEvent.change(screen.getByLabelText('الاسم بالكامل'), { target: { value: 'باسم' } });
+    fireEvent.change(screen.getByLabelText('الإيميل'), { target: { value: 'b@freddo.com' } });
+    // the password label also contains the hint text, so match by prefix
+    fireEvent.change(screen.getAllByLabelText(/الباسورد/)[0], { target: { value: 'secret123' } });
+    fireEvent.change(screen.getByLabelText('تأكيد الباسورد'), { target: { value: 'different1' } });
+    fireEvent.click(screen.getByRole('button', { name: 'سجّل' }));
+    expect(await screen.findByText('الباسوردين مش متطابقين')).toBeTruthy();
+    // the OAuth buttons probe /api/auth/oauth/providers on mount; the
+    // register call itself must never fire
+    const urls = fetch.mock.calls.map((c) => String(c[0]));
+    expect(urls.some((u) => u.includes('/api/auth/register'))).toBe(false);
   });
 });

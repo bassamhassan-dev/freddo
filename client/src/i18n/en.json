@@ -234,5 +234,7 @@
   "oauthErr_OAUTH_FAILED": "Sign-in did not complete, try again",
   "oauthErr_OAUTH_EMAIL_REQUIRED": "We need your email from the sign-in provider",
   "oauthErr_OAUTH_EMAIL_UNVERIFIED": "This email is not verified with the sign-in provider",
-  "oauthErr_AUTH_INACTIVE": "This account is disabled, contact the café"
+  "oauthErr_AUTH_INACTIVE": "This account is disabled, contact the café",
+  "confirmPassword": "Confirm password",
+  "passwordMismatch": "Passwords do not match"
 }
