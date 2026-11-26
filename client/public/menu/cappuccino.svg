@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#2a1707"/><stop offset="60%" stop-color="#0b0806"/>
+    </radialGradient>
+  </defs>
+  <rect width="200" height="160" fill="url(#bg)"/>
+  <path d="M60 60 h80 v40 a40 40 0 0 1 -80 0 z" fill="none" stroke="#ffb21a" stroke-width="6"/><path d="M140 68 h14 a16 16 0 0 1 0 32 h-14" fill="none" stroke="#ffb21a" stroke-width="6"/><path d="M75 45 q6 -10 0 -20 M100 45 q6 -10 0 -20 M125 45 q6 -10 0 -20" stroke="#ffd27a" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <text x="100" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="bold" fill="#f6e7cf">Cappuccino</text>
+</svg>

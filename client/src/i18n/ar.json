@@ -236,5 +236,9 @@
   "oauthErr_OAUTH_EMAIL_UNVERIFIED": "الإيميل ده مش مؤكد عند مزود الدخول",
   "oauthErr_AUTH_INACTIVE": "الحساب ده متوقف، كلم الإدارة",
   "confirmPassword": "تأكيد الباسورد",
-  "passwordMismatch": "الباسوردين مش متطابقين"
+  "passwordMismatch": "الباسوردين مش متطابقين",
+  "menuImageChange": "تغيير الصورة",
+  "menuImageSave": "حفظ الصورة",
+  "menuImageSaved": "اتحفظت الصورة",
+  "menuImageUrlPlaceholder": "رابط الصورة (https أو مسار داخلي)"
 }

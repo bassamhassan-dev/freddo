@@ -41,5 +41,6 @@ router.patch('/accounts/:id/status', controller.setAccountStatus);
 router.patch('/accounts/:id/role', controller.setAccountRole);
 router.get('/menu', controller.listMenu);
 router.patch('/menu/:id/availability', controller.setAvailability);
+router.patch('/menu/:id/image', controller.setMenuImage);
 
 export default router;

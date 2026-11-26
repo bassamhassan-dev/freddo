@@ -4,6 +4,7 @@ import { connectDB } from '../config/db.js';
 import MenuItem from '../features/menu/menuItem.model.js';
 import User from '../features/auth/user.model.js';
 import Table from '../features/reservations/table.model.js';
+import Banner from '../features/banners/banner.model.js';
 import { ROLES } from '../utils/roles.js';
 
 // Sample menu data for local development. Run with: npm run seed -w server
@@ -238,8 +239,32 @@ async function seed() {
   }
 
   for (const item of items) {
-    await MenuItem.updateOne({ slug: item.slug }, { $set: item }, { upsert: true });
+    // Images are seeded separately and only when the item has none, so an
+    // image the admin replaced through Cloudinary survives a re-seed.
+    const { slug } = item;
+    await MenuItem.updateOne({ slug }, { $set: item }, { upsert: true });
+    await MenuItem.updateOne(
+      { slug, $or: [{ images: { $exists: false } }, { images: { $size: 0 } }] },
+      { $set: { images: [{ url: `/menu/${slug}.svg`, alt: item.name }] } }
+    );
     upserted += 1;
+  }
+
+  // Sample homepage banners so the slider/secondary slots are visible on a
+  // fresh setup. Upserted by English title; the admin can edit or delete
+  // them like any banner (Sprint 13/16).
+  const sampleBanners = [
+    { placement: 'main', title: { ar: 'عرض الأسبوع', en: 'Deal of the week' }, description: { ar: 'خصم ٢٥٪ على السبانش لاتيه', en: '25% off Spanish Latte' }, imageUrl: '/banners/offer-main.svg', ctaText: { ar: 'اطلب دلوقتي', en: 'Order now' }, ctaLink: '/item/spanish-latte', sortOrder: 0 },
+    { placement: 'main', title: { ar: 'وصل جديد', en: 'Just landed' }, description: { ar: 'تسوية فريدو الخاصة', en: 'The Freddo house roast' }, imageUrl: '/banners/new-roast-main.svg', sortOrder: 1 },
+    { placement: 'secondary_left', title: { ar: 'احجز ترابيزتك', en: 'Book your table' }, description: { ar: 'مكانك جاهز على مدار اليوم', en: 'Your spot is ready all day' }, imageUrl: '/banners/book-secondary.svg', ctaLink: '/reservations', sortOrder: 0 },
+    { placement: 'secondary_right', title: { ar: 'نقاط الولاء', en: 'Loyalty points' }, description: { ar: 'اكسب نقطة مع كل طلب مكتمل', en: 'Earn a point with every completed order' }, imageUrl: '/banners/loyalty-secondary.svg', ctaLink: '/account', sortOrder: 0 },
+  ];
+  for (const banner of sampleBanners) {
+    await Banner.updateOne(
+      { placement: banner.placement, 'title.en': banner.title.en },
+      { $setOnInsert: banner },
+      { upsert: true }
+    );
   }
   const total = await MenuItem.countDocuments();
   console.log(`Seed done: ${upserted} items upserted, ${total} total in menuitems / تم تحميل المنيو`);

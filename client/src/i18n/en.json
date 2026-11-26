@@ -236,5 +236,9 @@
   "oauthErr_OAUTH_EMAIL_UNVERIFIED": "This email is not verified with the sign-in provider",
   "oauthErr_AUTH_INACTIVE": "This account is disabled, contact the café",
   "confirmPassword": "Confirm password",
-  "passwordMismatch": "Passwords do not match"
+  "passwordMismatch": "Passwords do not match",
+  "menuImageChange": "Change image",
+  "menuImageSave": "Save image",
+  "menuImageSaved": "Image saved",
+  "menuImageUrlPlaceholder": "Image URL (https or site-relative path)"
 }

@@ -1,5 +1,6 @@
 import Order from '../orders/order.model.js';
 import MenuItem from '../menu/menuItem.model.js';
+import { deleteImage } from '../uploads/cloudinary.service.js';
 import Table from '../reservations/table.model.js';
 import { applyTransition } from '../orders/order.service.js';
 import { ORDER_STATUSES } from '../orders/order.model.js';
@@ -100,4 +101,33 @@ export const setAccountRole = catchAsync(async (req, res) => {
 export const listTables = catchAsync(async (req, res) => {
   const tables = await Table.find({ isActive: true }).sort({ capacity: 1, number: 1 }).lean();
   res.json({ success: true, data: { tables } });
+});
+
+// PATCH /api/admin/menu/:id/image { url } - point an item at a new image.
+// Accepts an https URL (a Cloudinary upload) or a site-relative path served
+// by the client (/menu/x.svg). When the old image was a Cloudinary asset it
+// is deleted so the account does not fill with orphans.
+export const setMenuImage = catchAsync(async (req, res) => {
+  const { url } = req.body || {};
+  if (typeof url !== 'string' || url.length > 2000 ||
+      !(/^https:\/\/.+/.test(url) || /^\/[A-Za-z0-9][\w./-]*$/.test(url))) {
+    return res.status(400).json({
+      success: false,
+      error: { code: 'IMAGE_URL_INVALID', message: { ar: 'رابط الصورة غير صالح', en: 'Invalid image URL' } },
+    });
+  }
+  const item = await MenuItem.findById(req.params.id);
+  if (!item) {
+    return res.status(404).json({
+      success: false,
+      error: { code: 'ITEM_NOT_FOUND', message: { ar: 'الصنف غير موجود', en: 'Item not found' } },
+    });
+  }
+  const previous = item.images?.[0];
+  item.images = [{ url, alt: item.name }];
+  await item.save();
+  // Cleanup is best-effort: the image is already swapped, a failed
+  // Cloudinary delete should not roll it back.
+  if (previous?.storageId) await deleteImage(previous.storageId).catch(() => {});
+  res.json({ success: true, data: { item } });
 });

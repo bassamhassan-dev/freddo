@@ -173,3 +173,49 @@ test('admin menu list includes unavailable items', async () => {
   assert.equal(res.body.data.items.length, 1);
   assert.equal(res.body.data.items[0].slug, 'hidden-gem');
 });
+
+test('admin swaps a menu item image: validation, 404, role enforcement', async () => {
+  const admin = await makeUser('a5@example.com', ROLES.ADMIN);
+  const customer = await makeUser('c4@example.com', ROLES.CUSTOMER);
+  const item = await MenuItem.create({
+    slug: 'mocha',
+    name: { ar: 'موكا', en: 'Mocha' },
+    description: { ar: 'وصف', en: 'desc' },
+    category: { slug: 'hot-coffee', name: { ar: 'قهوة', en: 'Coffee' } },
+    basePrice: 55,
+    images: [{ url: 'https://res.cloudinary.com/x/old.jpg', storageId: 'old-id', alt: { ar: 'موكا', en: 'Mocha' } }],
+  });
+
+  // Role enforcement.
+  assert.equal((await api(`/menu/${item._id}/image`, { method: 'PATCH', body: { url: 'https://a.com/x.jpg' } })).status, 401);
+  assert.equal((await api(`/menu/${item._id}/image`, { method: 'PATCH', token: customer.token, body: { url: 'https://a.com/x.jpg' } })).status, 403);
+
+  // URL validation: only https or a site-relative path.
+  for (const url of ['javascript:alert(1)', 'ftp://a.com/x', 'http://a.com/x', 'not-a-url', '//evil.com/x']) {
+    const res = await api(`/menu/${item._id}/image`, { method: 'PATCH', token: admin.token, body: { url } });
+    assert.equal(res.status, 400, url);
+    assert.equal(res.body.error.code, 'IMAGE_URL_INVALID');
+  }
+
+  // Unknown item.
+  const missing = await api(`/menu/${new mongoose.Types.ObjectId()}/image`, {
+    method: 'PATCH', token: admin.token, body: { url: 'https://a.com/x.jpg' },
+  });
+  assert.equal(missing.status, 404);
+
+  // https swap replaces the old Cloudinary image and its storageId.
+  const swap = await api(`/menu/${item._id}/image`, {
+    method: 'PATCH', token: admin.token, body: { url: 'https://res.cloudinary.com/x/new.jpg' },
+  });
+  assert.equal(swap.status, 200);
+  assert.equal(swap.body.data.item.images[0].url, 'https://res.cloudinary.com/x/new.jpg');
+  assert.equal(swap.body.data.item.images[0].storageId, undefined);
+
+  // Site-relative path (the seeded SVGs) is accepted too.
+  const local = await api(`/menu/${item._id}/image`, {
+    method: 'PATCH', token: admin.token, body: { url: '/menu/mocha.svg' },
+  });
+  assert.equal(local.status, 200);
+  const saved = await MenuItem.findById(item._id);
+  assert.equal(saved.images[0].url, '/menu/mocha.svg');
+});

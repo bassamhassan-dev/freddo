@@ -17,6 +17,16 @@ export async function apiAdminMenu() {
   return data;
 }
 
+// Swap a menu item's image (doc 19): a Cloudinary URL from the uploads
+// endpoint or any https/site-relative URL typed by hand.
+export async function apiSetMenuImage(id, url) {
+  const { data } = await request(`/api/admin/menu/${id}/image`, {
+    method: 'PATCH',
+    body: { url },
+  });
+  return data;
+}
+
 export async function apiSetAvailability(id, isAvailable) {
   const { data } = await request(`/api/admin/menu/${id}/availability`, {
     method: 'PATCH',

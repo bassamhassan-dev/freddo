@@ -95,6 +95,13 @@ export default function ItemDetailPage({ lang }) {
   return (
     <section className="mx-auto w-full max-w-2xl px-5 pb-16">
       <h2 className="mb-1 text-3xl font-black text-foreground">{item.name[lang]}</h2>
+      {item.images?.[0]?.url ? (
+        <img
+          src={item.images[0].url}
+          alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
+          className="mb-5 w-full rounded-xl object-cover"
+        />
+      ) : null}
       <p className="mb-6 text-secondary">{item.description[lang]}</p>
 
       {(item.variants || []).length > 0 && (

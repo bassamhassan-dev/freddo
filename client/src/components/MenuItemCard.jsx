@@ -20,6 +20,14 @@ export default function MenuItemCard({ item, lang }) {
   return (
     <Card className="flex h-full flex-col transition-colors hover:border-primary/60">
       <Link to={`/item/${item.slug}`} className="flex h-full flex-col" aria-label={item.name[lang]}>
+      {item.images?.[0]?.url ? (
+        <img
+          src={item.images[0].url}
+          alt={item.images[0].alt?.[lang] || item.images[0].alt?.en || item.name[lang]}
+          className="h-36 w-full rounded-t-xl object-cover"
+          loading="lazy"
+        />
+      ) : null}
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle>{item.name[lang]}</CardTitle>

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import AdminBanners from '@/components/AdminBanners.jsx';
+import AdminMenuImage from '@/components/AdminMenuImage.jsx';
 import AdminAnalytics from '@/components/AdminAnalytics.jsx';
 import AdminContent from '@/components/AdminContent.jsx';
 
@@ -165,9 +166,12 @@ export default function AdminPage({ lang }) {
                   <span className="font-bold text-foreground">{item.name[lang]}</span>
                   <span className="ms-2 text-xs text-muted-foreground">{item.category.name[lang]}</span>
                 </div>
-                <Button size="sm" variant={item.isAvailable ? 'default' : 'ghost'} onClick={() => toggle(item._id, !item.isAvailable)}>
-                  {item.isAvailable ? t(lang, 'available') : t(lang, 'unavailable')}
-                </Button>
+                <div className="flex items-center gap-2">
+                  <AdminMenuImage lang={lang} item={item} onSaved={loadMenu} />
+                  <Button size="sm" variant={item.isAvailable ? 'default' : 'ghost'} onClick={() => toggle(item._id, !item.isAvailable)}>
+                    {item.isAvailable ? t(lang, 'available') : t(lang, 'unavailable')}
+                  </Button>
+                </div>
               </div>
             ))}
           </div>

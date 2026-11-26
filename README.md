@@ -1,6 +1,7 @@
 # Freddo Cafe Platform
 
-MERN monorepo (MongoDB, Express, React, Node). Sprint 18: visual
+MERN monorepo (MongoDB, Express, React, Node). Sprint 19: menu
+images end to end (seeded SVGs, admin image swap). Sprint 18: visual
 identity - always-on homepage hero, glowing Freddo mark + steam animation
 on hero/login/register, register confirm-password. Sprint 17: OAuth sign-in
 (Google + Facebook) - full authorization-code flow, verified-email account
@@ -150,6 +151,9 @@ npm run seed         # loads 11 sample bilingual menu items (safe to re-run)
 - `POST /api/contact` - public, rate-limited contact form
 - `GET /api/loyalty/mine` - the customer's points balance + recent ledger
 - `GET /api/admin/analytics?from&to` - the operational dashboard (admin)
+- `PATCH /api/admin/menu/:id/image` - swap a menu item's image (admin);
+  accepts an https URL or a site-relative path, deletes the old Cloudinary
+  asset best-effort
 - `POST /api/admin/uploads` - image upload to Cloudinary (admin; 503
   `CLOUDINARY_NOT_CONFIGURED` until the env vars are set);
   `GET /api/admin/uploads/status` reports whether uploads are live
