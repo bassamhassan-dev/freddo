@@ -4,6 +4,7 @@ import { AppError } from '../../utils/AppError.js';
 import {
   OAUTH_PROVIDERS,
   configuredProviders,
+  oauthDiagnostics,
   isProviderConfigured,
   buildAuthUrl,
 } from './oauth.providers.js';
@@ -30,6 +31,14 @@ export const providers = catchAsync(async (req, res) => {
   sendSuccess(res, 200, { providers: configuredProviders() });
 });
 
+// GET /api/auth/oauth/status - which provider env vars are present (names
+// only, never values), plus the exact redirect URI Google/Facebook must list.
+export const status = catchAsync(async (req, res) => {
+  const diag = oauthDiagnostics();
+  for (const p of Object.keys(diag)) diag[p].redirectUri = redirectUriFor(req, p);
+  sendSuccess(res, 200, { providers: diag, clientUrl: clientUrl() });
+});
+
 // GET /api/auth/oauth/:provider - bounce the browser to the provider's
 // consent screen with a signed, 10-minute state (our CSRF token).
 export const start = catchAsync(async (req, res) => {
@@ -47,6 +56,12 @@ export const start = catchAsync(async (req, res) => {
 export const callback = catchAsync(async (req, res) => {
   const provider = checkProvider(req);
   const { code, state } = req.query;
+  if (req.query.error) {
+    // The user pressed cancel / the provider refused (e.g. access_denied).
+    console.warn(`[oauth] ${provider} returned error=${String(req.query.error).slice(0, 80)}`);
+    res.redirect(`${clientUrl()}/login?oauthError=OAUTH_DENIED`);
+    return;
+  }
   if (!code || !state || !verifyOAuthState(state, provider)) {
     res.redirect(`${clientUrl()}/login?oauthError=OAUTH_STATE`);
     return;
@@ -62,6 +77,9 @@ export const callback = catchAsync(async (req, res) => {
     });
     res.redirect(`${clientUrl()}/oauth/callback`);
   } catch (err) {
+    // Log the real reason (provider error text, no secrets) - the browser only
+    // gets a generic code, so without this a failure would be silent.
+    console.error(`[oauth] ${provider} callback failed: ${err.message}`);
     const code2 = err.code && String(err.code).startsWith('OAUTH') ? err.code
       : err.code === 'AUTH_INACTIVE' ? 'AUTH_INACTIVE' : 'OAUTH_FAILED';
     res.redirect(`${clientUrl()}/login?oauthError=${code2}`);

@@ -2,6 +2,7 @@ import 'dotenv/config';
 import { createServer } from 'node:http';
 import app from './app.js';
 import { connectDB } from './config/db.js';
+import { oauthDiagnostics } from './features/auth/oauth.providers.js';
 import { attachChatSocket } from './features/chat/chat.socket.js';
 
 const PORT = process.env.PORT || 5000;
@@ -23,6 +24,14 @@ async function start() {
   attachChatSocket(server);
   server.listen(PORT, () => {
     console.log(`Freddo API listening on http://localhost:${PORT}`);
+    // Config report: names only, never values.
+    for (const [name, d] of Object.entries(oauthDiagnostics())) {
+      console.log(d.configured
+        ? `[config] ${name} sign-in: ON (callback ${d.callbackPath})`
+        : `[config] ${name} sign-in: OFF, missing ${d.missing.join(', ')}`);
+      d.problems.forEach((x) => console.warn(`[config] ${name}: ${x}`));
+    }
+    console.log(`[config] SMTP email: ${process.env.SMTP_HOST ? `ON (${process.env.SMTP_HOST})` : 'OFF, SMTP_HOST missing'}`);
   });
 }
 

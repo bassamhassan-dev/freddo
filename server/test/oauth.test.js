@@ -115,3 +115,31 @@ test('bad state, unverified email and missing email bounce back to login with an
 
   assert.equal(await User.countDocuments(), 0); // none of the failures created anyone
 });
+
+test('status endpoint reports config by name only, never secret values, with the exact redirect URI', async () => {
+  const res = await fetch(`${baseUrl}/api/auth/oauth/status`);
+  const text = await res.text();
+  assert.ok(!text.includes('gsecret'));
+  const { data } = JSON.parse(text);
+  assert.equal(data.providers.google.configured, true);
+  assert.equal(data.providers.google.redirectUri, `${baseUrl}/api/auth/oauth/google/callback`);
+  assert.deepEqual(data.providers.facebook.missing, ['FACEBOOK_APP_ID', 'FACEBOOK_APP_SECRET']);
+  assert.ok(data.providers.google.problems.some((p) => p.includes('apps.googleusercontent.com')));
+});
+
+test('a provider refusal (cancel) maps to OAUTH_DENIED, and a failed exchange is logged with its reason', async () => {
+  const denied = await fetch(`${baseUrl}/api/auth/oauth/google/callback?error=access_denied`, { redirect: 'manual' });
+  assert.ok(denied.headers.get('location').includes('oauthError=OAUTH_DENIED'));
+
+  setProviderHttpForTests(async () => { throw new Error('google token exchange failed: redirect_uri_mismatch'); });
+  const logged = [];
+  const orig = console.error;
+  console.error = (...a) => logged.push(a.join(' '));
+  try {
+    const res = await fetch(`${baseUrl}/api/auth/oauth/google/callback?code=abc&state=${signOAuthState('google')}`, { redirect: 'manual' });
+    assert.ok(res.headers.get('location').includes('oauthError=OAUTH_FAILED'));
+  } finally {
+    console.error = orig;
+  }
+  assert.ok(logged.some((l) => l.includes('redirect_uri_mismatch')));
+});

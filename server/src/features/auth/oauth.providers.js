@@ -35,6 +35,30 @@ export function configuredProviders() {
   return Object.fromEntries(OAUTH_PROVIDERS.map((p) => [p, isProviderConfigured(p)]));
 }
 
+// Safe config report: names and shapes only, never values. Used by the
+// startup log and GET /api/auth/oauth/status so a "button does nothing"
+// problem can be diagnosed without anyone pasting a secret.
+export function oauthDiagnostics() {
+  const out = {};
+  for (const provider of OAUTH_PROVIDERS) {
+    const names = PROVIDERS[provider].env;
+    const missing = names.filter((n) => !process.env[n]);
+    const problems = [];
+    for (const n of names) {
+      const v = process.env[n];
+      if (!v) continue;
+      if (v !== v.trim()) problems.push(`${n} has a space before/after the value`);
+      if (/^["'].*["']$/.test(v.trim())) problems.push(`${n} is wrapped in quotes, remove them`);
+    }
+    const id = process.env[names[0]];
+    if (provider === 'google' && id && !id.trim().endsWith('.apps.googleusercontent.com')) {
+      problems.push('GOOGLE_CLIENT_ID should end with .apps.googleusercontent.com');
+    }
+    out[provider] = { configured: missing.length === 0, missing, problems, callbackPath: `/api/auth/oauth/${provider}/callback` };
+  }
+  return out;
+}
+
 export function buildAuthUrl(provider, { state, redirectUri }) {
   const cfg = PROVIDERS[provider];
   const clientId = process.env[cfg.env[0]];
@@ -65,7 +89,7 @@ async function defaultFetchProfile(provider, code, redirectUri) {
       }),
     });
     const token = await tokenRes.json();
-    if (!tokenRes.ok || !token.access_token) throw new Error('google token exchange failed');
+    if (!tokenRes.ok || !token.access_token) throw new Error(`google token exchange failed: ${token.error || tokenRes.status} ${token.error_description || ''}`.trim());
     const profileRes = await fetch('https://openidconnect.googleapis.com/v1/userinfo', {
       headers: { authorization: `Bearer ${token.access_token}` },
     });
@@ -85,7 +109,7 @@ async function defaultFetchProfile(provider, code, redirectUri) {
   });
   const tokenRes = await fetch(tokenUrl);
   const token = await tokenRes.json();
-  if (!tokenRes.ok || !token.access_token) throw new Error('facebook token exchange failed');
+  if (!tokenRes.ok || !token.access_token) throw new Error(`facebook token exchange failed: ${token.error?.message || tokenRes.status}`);
   const profileUrl = new URL('https://graph.facebook.com/v19.0/me');
   profileUrl.search = new URLSearchParams({ fields: 'id,name,email', access_token: token.access_token });
   const profileRes = await fetch(profileUrl);

@@ -234,6 +234,8 @@
   "oauthFacebook": "الدخول بفيسبوك",
   "oauthWorking": "بنكمل تسجيل الدخول...",
   "oauthErr_OAUTH_STATE": "رابط الدخول منتهي أو مش صحيح، جرب تاني",
+  "oauthErr_OAUTH_DENIED": "رجعنا من جوجل/فيسبوك من غير إذن، جرب تاني",
+  "oauthErr_AUTH_INACTIVE": "الحساب ده متوقف، كلم الإدارة",
   "oauthErr_OAUTH_FAILED": "تسجيل الدخول ماكتملش، جرب تاني",
   "oauthErr_OAUTH_EMAIL_REQUIRED": "محتاجين إيميلك من مزود الدخول",
   "oauthErr_OAUTH_EMAIL_UNVERIFIED": "الإيميل ده مش مؤكد عند مزود الدخول",

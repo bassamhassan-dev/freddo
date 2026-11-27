@@ -105,3 +105,10 @@ npm run create-admin -w server
 npm run dev
 ```
 الواجهة على http://localhost:5173 والسيرفر على http://localhost:5000.
+
+## لو زرار Google/Facebook مش شغال (تشخيص سريع)
+
+1. شغّل السيرفر وبص على أول الـ terminal: هتلاقي سطور `[config] google sign-in: ON/OFF`. لو OFF هيقولك أنهي متغير ناقص. أي تحذير (مسافة أو علامات تنصيص أو ID مش بينتهي بـ `.apps.googleusercontent.com`) هيظهر برضه. القيم السرية عمرها ما بتتطبع.
+2. افتح في المتصفح `http://localhost:5000/api/auth/oauth/status`: بيعرض الناقص، والـ redirect URI بالظبط اللي لازم تحطه في Google Console.
+3. لو الدخول فشل بعد ما اخترت الحساب، السبب الحقيقي (زي `redirect_uri_mismatch` أو `invalid_client`) بيتكتب في terminal السيرفر بسطر `[oauth] ... failed`.
+4. الملف لازم يكون `server/.env` والسيرفر يتعمله restart بعد أي تعديل.

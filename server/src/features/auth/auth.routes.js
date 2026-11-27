@@ -39,6 +39,7 @@ router.patch('/me', requireAuth, controller.updateMe);
 router.post('/me/avatar', requireAuth, upload.single('image'), controller.uploadAvatar);
 
 router.get('/oauth/providers', oauthController.providers);
+router.get('/oauth/status', oauthController.status);
 router.get('/oauth/:provider', oauthController.start);
 router.get('/oauth/:provider/callback', oauthController.callback);
 
