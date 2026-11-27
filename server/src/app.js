@@ -31,6 +31,10 @@ const app = express();
 
 // Security headers by default (doc 22); credentials:true lets the Vite dev
 // origin send the refresh cookie across ports in development.
+// Behind a hosting proxy (Render, Railway, Nginx) the request arrives as http;
+// trusting the first proxy makes req.protocol https, which the OAuth redirect
+// URI and the Secure cookie both depend on.
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 app.use(helmet());
 app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
 app.use(express.json());

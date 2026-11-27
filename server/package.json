@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "test": "node --test",
     "seed": "node src/seed/seed.js",
-    "import-menu": "node src/seed/importMenu.js"
+    "import-menu": "node src/seed/importMenu.js",
+    "create-admin": "node src/seed/createAdmin.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

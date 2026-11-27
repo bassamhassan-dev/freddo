@@ -64,3 +64,19 @@ test('the demo seed refuses production, real users and real orders unless forced
   await Order.collection.insertOne({ orderNumber: 'FR-ABC123' });
   await assert.rejects(assertSafeToSeed({ env: { ADMIN_EMAIL: 'boss@freddo.cafe' }, argv: [] }), /real order/);
 });
+
+import { ensureAdmin } from '../src/seed/createAdmin.js';
+test('create-admin makes one admin, never changes an existing account unless asked', async () => {
+  await assert.rejects(ensureAdmin({ email: 'bad', password: 'longenough1' }), /ADMIN_EMAIL/);
+  await assert.rejects(ensureAdmin({ email: 'a@x.com', password: 'short' }), /8 characters/);
+  assert.equal((await ensureAdmin({ email: 'A@x.com', password: 'longenough1' })).status, 'created');
+  const first = await User.findOne({ email: 'a@x.com' }).select('+passwordHash');
+  assert.equal(first.role, 'admin');
+  assert.equal((await ensureAdmin({ email: 'a@x.com', password: 'another-pass-2' })).status, 'exists');
+  assert.equal((await User.findOne({ email: 'a@x.com' }).select('+passwordHash')).passwordHash, first.passwordHash);
+  assert.equal((await ensureAdmin({ email: 'a@x.com', password: 'another-pass-2', resetPassword: true })).status, 'password-reset');
+  assert.notEqual((await User.findOne({ email: 'a@x.com' }).select('+passwordHash')).passwordHash, first.passwordHash);
+  await User.create({ name: 'Cust', email: 'c@x.com', passwordHash: 'x'.repeat(20) });
+  await assert.rejects(ensureAdmin({ email: 'c@x.com', password: 'longenough1' }), /already exists as a customer/);
+  assert.equal(await Order.countDocuments(), 0);
+});

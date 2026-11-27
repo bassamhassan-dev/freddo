@@ -63,8 +63,12 @@
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* "backwards", never "both" or "forwards": a finished animation that keeps
+   a transform turns <main> into the containing block of every position:fixed
+   child, which pushed admin and barista modals thousands of pixels down the
+   page (Sprint 40). */
 .animate-fade-up {
-  animation: fade-up 0.45s ease-out both;
+  animation: fade-up 0.45s ease-out backwards;
 }
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-up { animation: none; }
